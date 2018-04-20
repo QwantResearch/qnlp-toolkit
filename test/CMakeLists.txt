@@ -1,4 +1,4 @@
-PROJECT(qtokenizer)
+PROJECT(qnlp-toolkit)
 
 # include_directories(BEFORE ${CMAKE_SOURCE_DIR}/src)
 

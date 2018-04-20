@@ -7,6 +7,7 @@
 #include <string>
 #include <vector>
 #include <map>
+#include <boost/locale.hpp>
 
 using namespace std;
 
@@ -29,6 +30,8 @@ class Tokenizer {
         string tokenize_sentence_to_string(string &text);
         vector<string> tokenize(void);
         string tokenize_to_string(void);
+        string normalize(string &token);
+        vector<string> normalize(vector<string> &vecToken);
 
         bool read (string &token, bool newdoc);
 

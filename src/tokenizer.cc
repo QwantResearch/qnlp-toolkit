@@ -3,6 +3,22 @@
 using namespace qnlp;
 
 
+vector< string > Tokenizer::normalize(vector< string > &vecToken)
+{
+    vector< string > to_return;
+    for (int l_inc=0; l_inc < (int) vecToken.size() ; l_inc++)
+    {
+        to_return.push_back(normalize(vecToken.at(l_inc)));
+    }
+    return to_return;
+    
+}
+string Tokenizer::normalize(string &token)
+{
+    return  boost::locale::conv::utf_to_utf<char>(token.c_str());
+}
+
+
 vector<string> Tokenizer::tokenize_sentence(string& text)
 {
     istringstream iss(text);
@@ -20,19 +36,21 @@ vector<string> Tokenizer::tokenize_sentence(string& text)
     {
             to_return.push_back(l_token);
     }
-    return to_return;
+    return normalize(to_return);
 }
 
 string Tokenizer::tokenize_sentence_to_string(string& text)
 {
     vector<string> tokenized=tokenize_sentence(text);
     ostringstream oss;
+    string next;
     string pred;
     for (int l_inc=0; l_inc < (int) tokenized.size() ; l_inc++)
     {
-        if ((l_inc == 0) || (pred == "\n")) oss << tokenized.at(l_inc);
-        else oss << " " << tokenized.at(l_inc);
-        pred=tokenized.at(l_inc);
+        next=tokenized.at(l_inc);
+        if ((l_inc == 0) || (pred == "\n") || (next == "\n")) oss << next;
+        else oss << " " << next;
+        pred=next;
     }
     return oss.str();
 }
@@ -52,7 +70,7 @@ vector<string> Tokenizer::tokenize(void)
     {
             to_return.push_back(l_token);
     }
-    return to_return;
+    return normalize(to_return);
 }
 
 string Tokenizer::tokenize_to_string(void)
@@ -60,13 +78,17 @@ string Tokenizer::tokenize_to_string(void)
     vector<string> tokenized=tokenize();
     ostringstream oss;
     string pred;
+    string next;
+    string output;
     for (int l_inc=0; l_inc < (int) tokenized.size() ; l_inc++)
     {
-        if ((l_inc == 0) || (pred == "\n")) oss << tokenized.at(l_inc);
-        else oss << " " << tokenized.at(l_inc);
-        pred=tokenized.at(l_inc);
+        next=tokenized.at(l_inc);
+        if ((l_inc == 0) || (pred == "\n") || (next == "\n")) oss << next;
+        else oss << " " << next;
+        pred=next;
     }
-    return oss.str();
+    output=oss.str();
+    return normalize(output);
 }
 
 bool Tokenizer::read (string& token, bool newdoc) {
@@ -77,9 +99,6 @@ bool Tokenizer::read (string& token, bool newdoc) {
     xmlDom dom;
 
     while ((c = sb->sbumpc()) != EOF) {
-//         cerr << "|"<< token << "|"<< endl;
-//         cerr << "|"<< c << "|"<< endl;
-
         if (syntax == XHTML) {
             if (parserXHTML(c, dom) == 1) {
                 if (dom.tag == flag) 
@@ -195,53 +214,54 @@ bool Tokenizer::proc_empty (string& token, char& c) {
     return false;
 }
 
-
-bool Tokenizer::dot_proc(string& token, char& c) {
+bool Tokenizer::dot_proc(string& token, char& c)
+{
     token.push_back(c);
-
-    size_t tklen = token.size();
-    if (tklen < 3) return false;
-
-    if (is_nbr(token)) {
-        if (token[tklen-3] <= 0x39 
-            && token[tklen-3] >= 0x30 
-            && token[tklen-2] == '.' && 
-            seps(token[tklen-1])){
+    int tksize=(int)token.size();
+    if (is_nbr(token)) 
+    {
+        if (tksize > 2 && token[tksize-3] <= '\x039' && token[tksize-3] >= '\x030' && token[tksize-2] == '.' && seps(token[tksize-1]))
+        {
             
-            c = sb->sungetc();
-            c = sb->sungetc();
-
-            sb->sputbackc(token[tklen-1]);
-
-            token = token.substr(0,tklen-2);
-
+            c=sb->sungetc();
+            c=sb->sungetc();
+            sb->sputbackc(token[tksize-1]);
+            token=token.substr(0,tksize-2);
             return true;
         }
         return false;
-
-    } else if (is_abrv(token)) {
-        if ((token[tklen-2] < 0x5B && token[tklen-2] > 0x40) || (tklen == 2 && (token[0]=='e' || token[0]=='i'  || token[0]=='c'))){
-            if ((c = sb->sbumpc()) != EOF){
-                if (!seps_wide(c)){
+    }
+    else if (is_abrv(token)) 
+    {
+        if ((tksize >= 2 && token[tksize-2]<'\x05B' && token[tksize-2]>'\x040') || (tksize == 2 && (token[0]=='e' || token[0]=='i'  || token[0]=='c')))
+        {
+            if ((c = sb->sbumpc()) != EOF)
+            {
+                if (!seps_wide(c))
+                {
+                    
                     token.push_back(c);
                     return false;
-                } else {
+                }
+                else
+                {
                     sb->sungetc();
                     return true;
                 }
-
-            } else {
+            }
+            else
+            {
                 return true;
             }
         }
         return true;
-
-    } else {
-        c = sb->sungetc();
-        token = token.substr(0, tklen-1);
+    }
+    else
+    {
+        c=sb->sungetc();
+        token=token.substr(0,(tksize)-1);
         return true;
     }
-
     return true;
 }
 
@@ -254,7 +274,7 @@ bool Tokenizer::comma_proc (string& token, char& c) {
                 token.push_back(c);
                 return false;
             } else {
-                token = token.substr(0,token.size()-1);
+                token = token.substr(0,(int)token.size()-1);
                 sb->sungetc();
                 sb->sputbackc(',');
                 return true;
@@ -264,7 +284,7 @@ bool Tokenizer::comma_proc (string& token, char& c) {
 
     } else {
         c = sb->sungetc();
-        token = token.substr(0,token.size()-1);
+        token = token.substr(0,(int)token.size()-1);
         return true;
     }
 
@@ -273,29 +293,26 @@ bool Tokenizer::comma_proc (string& token, char& c) {
 
 
 bool Tokenizer::is_abrv (string& token) {
-    size_t tklen = token.size();
+    int tksize = (int)token.size();
 
-    if (token.find(".") != tklen-1) return true;
-
-    int l_i = 0;
-    while (l_i < abrvs.size()) {
-        if (token.find(abrvs.at(l_i)) > 0) return true;
+    if ((int)token.find(".") != (tksize-1)) return true;
+    int l_i =0;
+    while (l_i < (int)abrvs.size())
+    {
+        if ((int)token.find(abrvs.at(l_i)) > -1 ) {return true;}
         l_i++;
     }
-
-    if (tklen > 1) {
-        if (token[tklen-2] == '.' && token[tklen-1] == '.') return false;
-        if (token.find(".") == tklen-1) return false;
-        if ((token[tklen-2] < 0x5B && token[tklen-2] > 0x40) || (tklen == 2 && (token[0]=='e' || token[0]=='i' || token[0]=='c'))) return true;
-    }
+    if (tksize >= 2 && token[tksize-2]== '.' && token[tksize-1]=='.') return false;
+    if (tksize > 2 && (int)token.find(".") == (tksize-1)) return false;
+    if ((tksize >= 2 && token[tksize-2]<'\x05B' && token[tksize-2]>'\x040') || (tksize == 2 && (token[0]=='e' || token[0]=='i' || token[0]=='c'))) return true;
     return false;
 }
 
 bool Tokenizer::is_nbr(string& token) {
-    size_t tklen = token.size();
+    int tksize = (int)token.size();
 
     int l_i =0;
-    while (l_i < tklen) {
+    while (l_i < tksize) {
         if (l_i == 0 && token[0] == '-') {
             l_i++;
             continue;
@@ -332,7 +349,6 @@ bool Tokenizer::seps_wide (char& c) {
     if (c <= '\x02f' && c > 0) {
         return true;
     } else {
-//         return (c >= '\x03a' && c <= '\x040') || (c >= '\x05b' && c <= '\x060') || (c >= '\x07b' && c <= '\x07e');
         return (c >= '\x03a' && c <= '\x040') || (c >= '\x05b' && c <= '\x060') || (c >= '\x07b' && c <= '\x07e');
     }
 }
@@ -424,103 +440,3 @@ void Tokenizer::add_seps(char& c, string& lang, string& token)
     return;
 }
 
-
-// bool Tokenizer::dot_processing(string& token, char& c)
-// {
-//     token.push_back(c);
-//     if (test_nbr(token)) 
-//     {
-//         if ((int)token.size() > 2 && token[(int)token.size()-3] <= '\x039' && token[(int)token.size()-3] >= '\x030' && token[(int)token.size()-2] == '.' && separatorRulesInline(token[(int)token.size()-1]))
-//         {
-//             
-//             c=_sb->sungetc();
-//             c=_sb->sungetc();
-//             _sb->sputbackc(token[(int)token.size()-1]);
-//             token=token.substr(0,(int)token.size()-2);
-//             return true;
-//         }
-//         return false;
-//     }
-//     else if (test_abrv(token)) 
-//     {
-//         if ((token.size() >= 2 && token[token.size()-2]<'\x05B' && token[token.size()-2]>'\x040') || (token.size() == 2 && (token[0]=='e' || token[0]=='i'  || token[0]=='c')))
-//         {
-//             if ((c = _sb->sbumpc()) != EOF)
-//             {
-//                 if (!separatorRules(c))
-//                 {
-//                     
-//                     token.push_back(c);
-//                     return false;
-//                 }
-//                 else
-//                 {
-//                     _sb->sungetc();
-//                     return true;
-//                 }
-//             }
-//             else
-//             {
-//                 return true;
-//             }
-//         }
-//         return true;
-//     }
-//     else
-//     {
-//         c=_sb->sungetc();
-//         token=token.substr(0,((int)token.size())-1);
-//         return true;
-//     }
-//     return true;
-// }
-// 
-// bool Tokenizer::comma_processing(string& token, char& c)
-// {
-//     token.push_back(c);
-//     if (test_nbr(token)) 
-//     {
-//         if ((c = _sb->sbumpc()) != EOF)
-//         {
-//             if (!separatorRulesInline(c))
-//             {
-//                 token.push_back(c);
-//                 return false;
-//             }
-//             else
-//             {
-//                 token=token.substr(0,((int)token.size())-1);
-//                 _sb->sungetc();
-//                 _sb->sputbackc(',');
-//                 return true;
-//             }
-//         }
-//         return true;
-//     }
-//     else
-//     {
-//         c=_sb->sungetc();
-//         token=token.substr(0,((int)token.size())-1);
-//         return true;
-//     }
-//     return true;
-// }
-// 
-// bool Tokenizer::test_nbr(string& token)
-// {
-//     int l_i =0;
-//     while (l_i < (int)token.size())
-//     {
-//         if (l_i == 0 && token[0] == '-') { l_i++; continue;} 
-//         if ((token[l_i] <= '\x039' && token[l_i] >= '\x030') || token[l_i] == '.'  || token[l_i] == ',')
-//         {
-//             l_i++;
-//         }
-//         else
-//         {
-//             return false;
-//         }
-//         l_i++;
-//     }
-//     return true;
-// }

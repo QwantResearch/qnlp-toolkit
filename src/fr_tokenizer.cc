@@ -21,14 +21,15 @@ bool Tokenizer_fr::proc(string& token, char& c) {
         {
             case '\'':
                 token.push_back(c);
+                if ((int)token.size() == 2 && token[0]=='O') return false;
                 if ((int)token.find("jourd") > -1) return false;
                 if ((int)token.find("ock") > -1) return false;
                 if ((int)token.find("-d") > -1) return false;
                 if ((int)token.find("-l") > -1) return false;
                 if ((int)token.find("squ") > -1) return true;
-                if (token.size() >= 2 && token[0]=='q' && token[1]=='u') return true;
-                if (token.size() == 2) return true;
-                if (token.size() >= 3) {token=token.substr(0,((int)token.size())-1);sb->sungetc();return true;}
+                if ((int)token.size() >= 2 && token[0]=='q' && token[1]=='u') return true;
+                if ((int)token.size() == 2) return true;
+                if ((int)token.size() >= 3) {token=token.substr(0,((int)token.size())-1);sb->sungetc();return true;}
                 break;
             case '.':
                 if (dot_proc(token,c)) return true;

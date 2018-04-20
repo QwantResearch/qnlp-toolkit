@@ -6,14 +6,19 @@
 
 #include "utf8/utf8.h"
 #include "utils.h"
+// #include "common/logging.h"
 
 using namespace std;
 
-std::vector<std::vector<std::string>> BPE::Preprocess(const std::vector<std::string> input) {
+std::vector<bpeFactors> BPE::Preprocess(const std::vector<bpeFactors> input) const {
   return Encode(input);
 }
 
-std::vector<std::string> BPE::Postprocess(const std::vector<std::string> input) {
+std::vector<std::string> BPE::Preprocess(const std::vector<std::string> input) const {
+  return Encode(input);
+}
+
+std::vector<std::string> BPE::Postprocess(const std::vector<std::string> input) const {
   std::vector<std::string> debped;
   std::stringstream currWord;
   for (const auto& word : input) {
@@ -26,17 +31,28 @@ std::vector<std::string> BPE::Postprocess(const std::vector<std::string> input) 
       currWord.clear();
     }
   }
+  std::string tailWord = currWord.str();
+  if (tailWord.size() != 0) {
+      debped.push_back(tailWord);
+  }
   return debped;
 }
 
 BPE::BPE()
   : sep_("@@") {}
 
-BPE::BPE(std::ifstream&& file,  const std::string sep)
+BPE::BPE(std::ifstream&& file, const std::string sep)
   : sep_(sep) {
   std::string inputLine;
   size_t index = 0;
+  bool firstLine = true;
   while (std::getline(file, inputLine)) {
+    if (firstLine) {
+      firstLine = false;
+      if (inputLine.find("#version: 0.2") != std::string::npos) {
+        cerr << "WARNING! BPE VERSION 0.2 IS NOT SUPPORTED!"<< endl;
+      }
+    }
     std::vector<std::string> code;
     Split(inputLine, code);
     bpeCodes_[make_pair(code[0], code[1])] = index++;
@@ -51,6 +67,21 @@ std::vector<std::string> BPE::Segment(const std::string& sentence) {
   Split(sentence, words);
 
   for (auto& word : words) {
+    if (word.empty()) continue;
+    auto codes = Encode(word);
+    for (size_t i = 0; i < codes.size() - 1; ++i) {
+      tokens.emplace_back(codes[i]);
+    }
+    tokens.push_back(codes.back());
+  }
+  return tokens;
+}
+
+std::vector<std::string> BPE::Segment(std::vector <std::string>& sentence) {
+  std::vector<std::string> tokens;
+//   Split(sentence, words);
+
+  for (auto& word : sentence) {
     if (word.empty()) continue;
     auto codes = Encode(word);
     for (size_t i = 0; i < codes.size() - 1; ++i) {
@@ -81,7 +112,7 @@ void BPE::PrintSegment(const std::string& sentence) {
   }
 }
 
-std::set<BPE::BPEPair> BPE::GetPairs(const std::vector<std::string>& word) {
+std::set<BPE::BPEPair> BPE::GetPairs(const std::vector<std::string>& word) const {
   std::set<BPE::BPEPair> pairSet;
   for (size_t i = 1; i < word.size(); ++i) {
     pairSet.emplace(word[i-1], word[i]);
@@ -89,7 +120,7 @@ std::set<BPE::BPEPair> BPE::GetPairs(const std::vector<std::string>& word) {
   return pairSet;
 }
 
-const BPE::BPEPair* BPE::FindBestBigram(const std::set<BPEPair>& pairs) {
+const BPE::BPEPair* BPE::FindBestBigram(const std::set<BPEPair>& pairs) const {
   size_t minDist = bpeCodes_.size();
   auto best = bpeCodes_.begin();
 
@@ -111,7 +142,7 @@ const BPE::BPEPair* BPE::FindBestBigram(const std::set<BPEPair>& pairs) {
   }
 }
 
-std::vector<std::string>& BPE::Encode(const std::string& word) {
+std::vector<std::string>& BPE::Encode(const std::string& word) const {
   if (IsCached(word)) {
     return cache_[word];
   }
@@ -177,16 +208,30 @@ std::vector<std::string>& BPE::Encode(const std::string& word) {
   return cache_[word];
 }
 
-std::vector<std::vector<std::string>> BPE::Encode(const std::vector<std::string>& words) {
+std::vector<bpeFactors> BPE::Encode(const std::vector<bpeFactors>& words) const {
+  // split the word into it's BPE parts and append a copy of word's factors to
+  // each of the parts
   std::vector<std::vector<std::string>> result;
+  for (const bpeFactors& factorlist : words) {
+    std::string word = factorlist[0];
+    std::vector<std::string>& encoded = Encode(word);
+    for (const auto& bpePart : encoded)
+    {
+      result.push_back(bpeFactors());
+      bpeFactors& current = result.back();
+      current.push_back(bpePart);
+      current.insert(current.end(), ++factorlist.begin(), factorlist.end());
+    }
+  }
+  return result;
+}
+
+std::vector<std::string> BPE::Encode(const std::vector<std::string>& words) const {
+  std::vector<std::string> result;
   for (const auto& word : words) {
     auto& encoded = Encode(word);
-    //result.insert(result.end(), encoded.begin(), encoded.end());
-    result.push_back(encoded);
+    result.insert(result.end(), encoded.begin(), encoded.end());
   }
-  // std::cerr << "BPE: ";
-  // for (auto& code: result) std::cerr << code << " " ;
-  // std::cerr << std::endl;
   return result;
 }
 
@@ -220,66 +265,84 @@ bool BPE::EndsWith(std::string const &fullString, std::string const suffix) cons
 }
 
 
-string BPE::apply_bpe(string &input)
-{
-//     cerr << input << endl;
-    stringstream l_out;
-    l_out.str("");
-    vector<string> vec0;
-    string l_tmp="";
-    l_tmp.clear();
-    for (int l_inc=0; l_inc < (int)input.size(); l_inc++)
-    {
-        if (input[l_inc] != ' ')
-        {
-            l_tmp.push_back(input[l_inc]);
-        }
-        else
-        {
-            if (!l_tmp.empty())
-            {
-                vec0.push_back(l_tmp);
-                l_tmp.clear();
-            }
-        }
-    }
-    vector<vector<string>> vec=Preprocess(vec0);
-    for (int i=0; i < (int)vec.size(); i++)
-    {
-        for(int j=0; j < (int)vec.at(i).size(); j++)
-        {
-              if (i == (int)vec.size()-1  && j == (int)vec.at(i).size()-1) l_out << vec.at(i).at(j);
-              else l_out << vec.at(i).at(j)  << " ";
-        }
-    }
-    return l_out.str();
-}
+  // string BPE::apply_bpe(string &input)
+  // {
+  // //     cerr << input << endl;
+  //     stringstream l_out;
+  //     l_out.str("");
+  //     vector<string> vec0=Segment(input);
+  //     string l_tmp="";
+  //     l_tmp.clear();
+  //     for (int l_inc=0; l_inc < (int)input.size(); l_inc++)
+  //     {
+  //         if (input[l_inc] != ' ')
+  //         {
+  //             l_tmp.push_back(input[l_inc]);
+  //         }
+  //         else
+  //         {
+  //             if (!l_tmp.empty())
+  //             {
+  //                 vec0.push_back(l_tmp);
+  //                 l_tmp.clear();
+  //             }
+  //         }
+  //     }
+  //     vector<vector<string>> vec=Preprocess(vec0);
+  //     for (int i=0; i < (int)vec.size(); i++)
+  //     {
+  //         for(int j=0; j < (int)vec.at(i).size(); j++)
+  //         {
+  //               if (i == (int)vec.size()-1  && j == (int)vec.at(i).size()-1) l_out << vec.at(i).at(j);
+  //               else l_out << vec.at(i).at(j)  << " ";
+  //         }
+  //     }
+  //     return l_out.str();
+  // }
 
 vector<string> BPE::apply_bpe(vector<string> &input)
 {
-//     cerr << input << endl;
-    vector<string> output;
-    stringstream l_out;
-    l_out.str("");
-    vector<vector<string>> vec=Preprocess(input);
-    for (int i=0; i < (int)vec.size(); i++)
-    {
-        for(int j=0; j < (int)vec.at(i).size(); j++)
-        {
-            output.push_back(vec.at(i).at(j));
-        }
-    }
-    return output;
+    return Segment(input);
+}
+
+vector<string> BPE::apply_bpe(string &input)
+{
+    return Segment(input);
 }
 
 string BPE::apply_bpe_to_string(vector<string> &input)
 {
-    vector<string> output=apply_bpe(input);
+    cerr << "ici" << endl;
+    vector<string> output=Segment(input);
     stringstream l_out;
+    string pred, next;
     l_out.str("");
     for (int i=0; i < (int)output.size(); i++)
     {
-        l_out << output[i];
+        next=output.at(i);
+        if ((i == 0) || (pred == "\n") || (next == "\n")) l_out << next;
+        else l_out << " " << next;
+        pred=next;
+//         l_out << output[i] << " ";
+    }
+    return l_out.str();
+}
+
+
+string BPE::apply_bpe_to_string(string &input)
+{
+    cerr << "ici" << endl;
+    vector<string> output=Segment(input);
+    stringstream l_out;
+    string pred, next;
+    l_out.str("");
+    for (int i=0; i < (int)output.size(); i++)
+    {
+        next=output.at(i);
+        if ((i == 0) || (pred == "\n") || (next == "\n")) l_out << next;
+        else l_out << " " << next;
+        pred=next;
+//         l_out << output[i] << " ";
     }
     return l_out.str();
 }

@@ -35,7 +35,7 @@ void usage()
             "--lowercased (-c)        put the sequence in lowercase (default false)\n"
             "--underscore (-u)        split using underscores (default false)\n"
             "--aggressive (-a)        equivalent to --dash and --underscore and every separators\n"
-            "--BPE (-B)               Use Byte Pair Encoding preprocessing\n"
+            "--BPE (-b)               Use Byte Pair Encoding preprocessing\n"
             "--embmodel (-e)          Load fasttext embeddings/prediction model\n"
             "--qlassify (-q)          predict class according the model loaded (need embmodel)\n"
             "--qvectorize (-v)        give vector representation for the sentence/query (need embmodel)\n"
@@ -47,14 +47,17 @@ void usage()
 
 void ProcessArgs(int argc, char** argv)
 {
-    const char* const short_opts = "dcual:t:h";
+    const char* const short_opts = "vqdcual:b:e:t:h";
     const option long_opts[] = {
             {"dash", 0, nullptr, 'd'},
             {"lowercased", 0, nullptr, 'c'},
             {"underscore", 0, nullptr, 'u'},
             {"aggressive", 0, nullptr, 'a'},
+            {"qclassify", 0, nullptr, 'q'},
+            {"qvectorize", 0, nullptr, 'v'},
             {"lang", 1, nullptr, 'l'},
-            {"BPE", 1, nullptr, 'B'},
+            {"BPE", 1, nullptr, 'b'},
+            {"embmodel", 1, nullptr, 'e'},
 //             {"threads", 1, nullptr, 't'},
             {"help", 0, nullptr, 'h'},
             {nullptr, 0, nullptr, 0}
@@ -91,7 +94,7 @@ void ProcessArgs(int argc, char** argv)
             l_lang = optarg;
             break;
 
-        case 'B':
+        case 'b':
             l_BPE = optarg;
             break;
 

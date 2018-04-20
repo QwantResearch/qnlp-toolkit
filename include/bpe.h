@@ -9,6 +9,7 @@
 
 #include "processor.h"
 
+
 template<class T>
 inline void hash_combine(std::size_t & seed, const T & v)
 {
@@ -30,6 +31,8 @@ namespace std
     };
 }
 
+typedef std::vector<std::string> bpeFactors;
+
 class BPE : public Processor {
   using BPEPair = std::pair<std::string, std::string>;
 
@@ -40,24 +43,28 @@ class BPE : public Processor {
     BPE(const std::string& path, const std::string sep = "@@");
 
     std::vector<std::string> Segment(const std::string& sentence);
+    std::vector<std::string> Segment(std::vector<std::string>& sentence);
 
     void PrintSegment(const std::string& sentence);
 
-    std::vector<std::string>& Encode(const std::string& word);
+    std::vector<std::string>& Encode(const std::string& word) const;
 
-    std::vector<std::vector<std::string>> Encode(const std::vector<std::string>& words);
+    std::vector<bpeFactors> Encode(const std::vector<bpeFactors>& words) const;
+    std::vector<std::string> Encode(const std::vector<std::string>& words) const;
 
-    std::vector<std::vector<std::string>> Preprocess(const std::vector<std::string> input);
-    std::vector<std::string> Postprocess(const std::vector<std::string> input);
-    std::string apply_bpe(std::string &input);
+    std::vector<std::string> Preprocess(const std::vector<std::string> input) const;
+    std::vector<bpeFactors> Preprocess(const std::vector<bpeFactors> input) const;
+    std::vector<std::string> Postprocess(const std::vector<std::string> input) const;
+
+    std::vector<std::string> apply_bpe(std::string &input);
     std::vector<std::string> apply_bpe(std::vector<std::string> &input);
+    std::string apply_bpe_to_string(std::string &input);
     std::string apply_bpe_to_string(std::vector<std::string> &input);
-
     virtual ~BPE() {}
   private:
-    std::set<BPEPair> GetPairs(const std::vector<std::string>& word);
+    std::set<BPEPair> GetPairs(const std::vector<std::string>& word) const;
 
-    const BPEPair* FindBestBigram(const std::set<BPEPair>& pairs);
+    const BPEPair* FindBestBigram(const std::set<BPEPair>& pairs) const;
 
     bool IsCached(const std::string& word) const;
 
@@ -67,8 +74,10 @@ class BPE : public Processor {
 
     std::unordered_map<BPEPair, size_t> bpeCodes_;
     const std::string sep_;
-
-    std::unordered_map<std::string, std::vector<std::string>> cache_;
+    mutable std::unordered_map<std::string, std::vector<std::string>> cache_;
 
 
 };
+
+
+

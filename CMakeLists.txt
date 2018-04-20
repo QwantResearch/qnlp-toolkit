@@ -1,6 +1,9 @@
 cmake_minimum_required(VERSION 2.6)
 
 PROJECT(qnlp-toolkit)
+
+SET(CMAKE_BUILD_TYPE Debug) 
+
 SET(USERHOME "$ENV{HOME}")
 #if you don't want the full compiler output, remove the following line
 SET(CMAKE_VERBOSE_MAKEFILE ON)
@@ -15,6 +18,7 @@ include_directories(./include)
 ADD_DEFINITIONS(-Wall -O2 -static -std=c++0x -Wunused-local-typedefs )
 
 #list all source files here
+add_subdirectory(src)
 add_subdirectory(test)
 # add_subdirectory(src)
 

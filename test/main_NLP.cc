@@ -35,7 +35,10 @@ void usage()
             "--lowercased (-c)        put the sequence in lowercase (default false)\n"
             "--underscore (-u)        split using underscores (default false)\n"
             "--aggressive (-a)        equivalent to --dash and --underscore and every separators\n"
-            "--BPE (-B)        equivalent to --dash and --underscore and every separators\n"
+            "--BPE (-B)               Use Byte Pair Encoding preprocessing\n"
+            "--embmodel (-e)          Load fasttext embeddings/prediction model\n"
+            "--qlassify (-q)          predict class according the model loaded (need embmodel)\n"
+            "--qvectorize (-v)        give vector representation for the sentence/query (need embmodel)\n"
             "--lang <val> (-l)        set language (required)\n"
 //             "--threads <val> (-t)     set number of threads (default 4)\n"
             "--help (-h)             Show this message\n";

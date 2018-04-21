@@ -15,6 +15,7 @@ vector< string > Tokenizer::normalize(vector< string > &vecToken)
 }
 string Tokenizer::normalize(string &token)
 {
+    if (token[(int)token.size()-1] == ' ') token=token.substr(0,((int)token.size())-1);
     return  boost::locale::conv::utf_to_utf<char>(token.c_str());
 }
 

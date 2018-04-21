@@ -158,7 +158,7 @@ std::vector<std::string>& BPE::Encode(const std::string& word) const {
 //   vWord[(int)vWord.size()-1] = _end;
 //   vWord[(int)vWord.size()-1].repl
 //   str.erase(remove_if(str.begin(), str.end(), ::isspace), str.end());
-//   for (int i=0; i< vWord.size() ; i++) cerr << "Entry: "<< vWord[i] << endl;
+//   for (int i=0; i< vWord.size() ; i++) cerr << "Entry: |"<< vWord[i]<< "|" << endl;
   
   auto pairs = GetPairs(vWord);
 

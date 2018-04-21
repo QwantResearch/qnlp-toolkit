@@ -125,6 +125,7 @@ const BPE::BPEPair* BPE::FindBestBigram(const std::set<BPEPair>& pairs) const {
   auto best = bpeCodes_.begin();
 
   for (const auto& pair : pairs) {
+//     cerr << pair.first << endl;
     auto it = bpeCodes_.find(pair);
     if (it == bpeCodes_.end()) {
       continue;
@@ -143,16 +144,26 @@ const BPE::BPEPair* BPE::FindBestBigram(const std::set<BPEPair>& pairs) const {
 }
 
 std::vector<std::string>& BPE::Encode(const std::string& word) const {
+//   cerr << "Entry: "<< word << endl;
+  string _end("</w>");
   if (IsCached(word)) {
     return cache_[word];
   }
 
   std::vector<std::string> vWord = SplitWordIntoLetters(word);
-  vWord.push_back("</w>");
-
+//   vWord.push_back("</w>");
+  vWord[(int)vWord.size()-1] = vWord[(int)vWord.size()-1]+_end;
+//   _end=vWord[(int)vWord.size()-1]+_end;
+//   _end.erase(remove_if(_end.begin(), _end.end(), ::isspace), _end.end());
+//   vWord[(int)vWord.size()-1] = _end;
+//   vWord[(int)vWord.size()-1].repl
+//   str.erase(remove_if(str.begin(), str.end(), ::isspace), str.end());
+//   for (int i=0; i< vWord.size() ; i++) cerr << "Entry: "<< vWord[i] << endl;
+  
   auto pairs = GetPairs(vWord);
 
   while (true) {
+//     for (int i=0; i< pairs.size() ; i++) cerr << "pairs: "<< pairs[i]->first << endl;
     const BPEPair* bigram = FindBestBigram(pairs);
     if (bigram == nullptr) {
       break;
@@ -180,6 +191,8 @@ std::vector<std::string>& BPE::Encode(const std::string& word) const {
         it += 1;
       }
     }
+//     cerr << "NewWord: **********************"<< endl;
+//     for (int i=0; i< newWord.size() ; i++) cerr << "NewWord: "<< newWord[i] << endl;
     std::swap(vWord, newWord);
     if (newWord.size() == 1) {
       break;
@@ -312,7 +325,7 @@ vector<string> BPE::apply_bpe(string &input)
 
 string BPE::apply_bpe_to_string(vector<string> &input)
 {
-    cerr << "ici" << endl;
+//     cerr << "ici" << endl;
     vector<string> output=Segment(input);
     stringstream l_out;
     string pred, next;
@@ -331,7 +344,7 @@ string BPE::apply_bpe_to_string(vector<string> &input)
 
 string BPE::apply_bpe_to_string(string &input)
 {
-    cerr << "ici" << endl;
+//     cerr << "ici" << endl;
     vector<string> output=Segment(input);
     stringstream l_out;
     string pred, next;

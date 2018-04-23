@@ -9,6 +9,7 @@
 // #include "common/logging.h"
 
 using namespace std;
+using namespace qnlp;
 
 std::vector<bpeFactors> BPE::Preprocess(const std::vector<bpeFactors> input) const {
   return Encode(input);

@@ -9,7 +9,6 @@
 
 #include "processor.h"
 
-
 template<class T>
 inline void hash_combine(std::size_t & seed, const T & v)
 {
@@ -30,6 +29,8 @@ namespace std
           }
     };
 }
+
+namespace qnlp {
 
 typedef std::vector<std::string> bpeFactors;
 
@@ -79,5 +80,5 @@ class BPE : public Processor {
 
 };
 
-
+}
 

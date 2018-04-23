@@ -30,4 +30,5 @@ SET_TARGET_PROPERTIES(qnlp-static PROPERTIES OUTPUT_NAME qnlp)
 
 install(TARGETS qnlp qnlp-static DESTINATION lib)
 # install(TARGETS qnlp-x DESTINATION bin)
-install(FILES ${CMAKE_SOURCE_DIR}/include/tokenizer.h ${CMAKE_SOURCE_DIR}/include/embeddings.h ${CMAKE_SOURCE_DIR}/include/bpe.h DESTINATION include/qnlp)
+install(FILES ${CMAKE_SOURCE_DIR}/include/tokenizer.h ${CMAKE_SOURCE_DIR}/include/embeddings.h ${CMAKE_SOURCE_DIR}/include/bpe.h ${CMAKE_SOURCE_DIR}/include/fr_tokenizer.h ${CMAKE_SOURCE_DIR}/include/en_tokenizer.h ${CMAKE_SOURCE_DIR}/include/utils.h ${CMAKE_SOURCE_DIR}/include/processor.h DESTINATION include/qnlp)
+install(FILES ${CMAKE_SOURCE_DIR}/include/utf8/core.h ${CMAKE_SOURCE_DIR}/include/utf8/checked.h ${CMAKE_SOURCE_DIR}/include/utf8/unchecked.h ${CMAKE_SOURCE_DIR}/include/utf8/utf8.h DESTINATION include/qnlp/utf8)

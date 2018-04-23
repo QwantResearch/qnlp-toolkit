@@ -1,4 +1,4 @@
-PROJECT(qnlp-toolkit)
+PROJECT(qnlp)
 
 include_directories(BEFORE ${CMAKE_SOURCE_DIR}/src)
 # 
@@ -24,7 +24,7 @@ add_executable(qnlp-x ${NLP_SRCS})
 # SET(CMAKE_FIND_LIBRARY_SUFFIXES ".a")
 # SET(BUILD_SHARED_LIBRARIES OFF)
 # SET(CMAKE_EXE_LINKER_FLAGS "-static")
-target_link_libraries(qnlp-x fasttext)
+target_link_libraries(qnlp-x fasttext boost_regex)
 # 
 # add_library(qnlp SHARED ${NLP_SRCS_LIBS})
 # ADD_LIBRARY(qnlp-static STATIC ${NLP_SRCS_LIBS})

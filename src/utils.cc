@@ -1,11 +1,8 @@
 #include "utils.h"
-#include <iostream>
-#include <sstream>
-#include <regex>
 
-void Trim(std::string& s) {
-  boost::trim_if(s, boost::is_any_of(" \t\n"));
-}
+// void Trim(std::string& s) {
+//   boost::trim_if(s, boost::is_any_of(" \t\n"));
+// }
 
 void Split(const std::string& line, std::vector<std::string>& pieces, const std::string del) {
   size_t begin = 0;
@@ -46,14 +43,14 @@ bool EndsWith(std::string const &fullString, std::string const suffix) {
   }
 }
 
-std::string EscapeRegex(std::string text) {
-  std::stringstream result;
-  for(char& c: text) {
-    if(c == '.' || c == '^' || c == '$' || c == '|' || c == '(' || c == ')' || c == '[' || c == ']' || c == '{' || c == '}' || c == '*' || c == '+' || c == '?' || c == '\\') {
-	result << '\\';
-    }
-    result << c;
-  }
-  return result.str();
-}
+// std::string EscapeRegex(std::string text) {
+//   std::stringstream result;
+//   for(char& c: text) {
+//     if(c == '.' || c == '^' || c == '$' || c == '|' || c == '(' || c == ')' || c == '[' || c == ']' || c == '{' || c == '}' || c == '*' || c == '+' || c == '?' || c == '\\') {
+// 	result << '\\';
+//     }
+//     result << c;
+//   }
+//   return result.str();
+// }
 

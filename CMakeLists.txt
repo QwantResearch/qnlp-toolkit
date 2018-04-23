@@ -1,26 +1,70 @@
-cmake_minimum_required(VERSION 2.6)
+cmake_minimum_required(VERSION 3.1.0)
+project(qnlp)
 
-PROJECT(qnlp-toolkit)
-
-SET(CMAKE_BUILD_TYPE Debug) 
-
-SET(USERHOME "$ENV{HOME}")
-#if you don't want the full compiler output, remove the following line
+set(CMAKE_CXX_STANDARD 11)
+set(CMAKE_BUILD_TYPE Release)
 SET(CMAKE_VERBOSE_MAKEFILE ON)
-SET(CMAKE_CXX_FLAGS " -Wno-deprecated -Wunused-local-typedefs -Wsign-compare " CACHE STRING "Flags used by the C++ compiler" FORCE )
-#add_definitions(-DCMAKE_INSTALL_PREFIX=YOUR INSTALL DIR HERE!!!)
-add_definitions(-DIBPP_LINUX -DIBPP_GCC)
-# include_directories(YOUR INCLUDE DIR HERE!!!)
-# link_directories(YOUR LIB DIR HERE!!!)
-#include_directories(/usr/local/include)
-#link_directories(/usr/local/lib)
-include_directories(./include)
-ADD_DEFINITIONS(-Wall -O2 -static -std=c++0x -Wunused-local-typedefs )
 
-#list all source files here
-add_subdirectory(src)
+MESSAGE( STATUS "CMAKE_CXX_FLAGS:         " ${CMAKE_CXX_FLAGS})
+find_package(OpenMP)
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${OpenMP_CXX_FLAGS}")
+MESSAGE( STATUS "CMAKE_CXX_FLAGS:         " ${CMAKE_CXX_FLAGS})
+
+include_directories(${CMAKE_CURRENT_SOURCE_DIR}/include)
+
+
+
+# option(BUILD_SHARED_LIBS "Build shared libraries" ON)
+# SET(CMAKE_VERBOSE_MAKEFILE ON)
+
+# set(CMAKE_CXX_FLAGS "-fPIC -O3 -Ofast -m64 -march=native -funroll-loops -ffinite-math-only -Wno-unused-result -Wno-deprecated -pthread -g -pg")
+
+# set(CMAKE_CXX_STANDARD 11)
+
+find_package(Boost)
+
+if(Boost_FOUND)
+    include_directories(${Boost_INCLUDE_DIRS})
+    set(EXT_LIBS ${Boost_LIBRARIES})
+else(Boost_FOUND)
+    message(SEND_ERROR "Cannot find Boost libraries. Terminating." )
+endif(Boost_FOUND)
+
+# Set Release build type by default to get sane performance.
+# if(NOT CMAKE_BUILD_TYPE)
+#   set(CMAKE_BUILD_TYPE Release)
+# endif(NOT CMAKE_BUILD_TYPE)
+
+message(STATUS "Build type: " ${CMAKE_BUILD_TYPE})
+
+# include_directories(${CMAKE_CURRENT_SOURCE_DIR}/include)
+# set(INCLUDE_DIRECTORIES
+#   ${CMAKE_CURRENT_SOURCE_DIR}/include
+#   )
+
+set(SOURCES
+  src/bpe.cc  
+  src/embeddings.cc  
+  src/en_tokenizer.cc  
+  src/fr_tokenizer.cc  
+  src/tokenizer.cc  
+  src/utils.cc
+  )
+  
+add_library(${PROJECT_NAME} SHARED ${SOURCES})
+
+target_link_libraries(${PROJECT_NAME} fasttext )
+# target_include_directories(${PROJECT_NAME} PUBLIC ${INCLUDE_DIRECTORIES})
+
 add_subdirectory(test)
-# add_subdirectory(src)
 
-
-
+install(
+  TARGETS ${PROJECT_NAME}
+  ARCHIVE DESTINATION lib/
+  LIBRARY DESTINATION lib/
+  )
+install(
+  DIRECTORY include
+  DESTINATION include/qnlp
+  FILES_MATCHING PATTERN "*.h*"
+  )

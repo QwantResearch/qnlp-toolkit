@@ -8,6 +8,8 @@
 #include <iterator>
 
 #include "processor.h"
+#include "utf8/utf8.h"
+#include "utils.h"
 
 template<class T>
 inline void hash_combine(std::size_t & seed, const T & v)

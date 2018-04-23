@@ -1,9 +1,10 @@
-cmake_minimum_required(VERSION 3.1.0)
+cmake_minimum_required(VERSION 3.0.0)
 project(qnlp)
 
-set(CMAKE_CXX_STANDARD 11)
+# set(CMAKE_CXX_STANDARD 11)
 set(CMAKE_BUILD_TYPE Release)
 SET(CMAKE_VERBOSE_MAKEFILE ON)
+set(CMAKE_CXX_FLAGS " -std=c++11 -fPIC -O3 -Ofast -m64 -march=native -funroll-loops -ffinite-math-only -Wno-unused-result -Wno-deprecated -pthread -g -pg")
 
 MESSAGE( STATUS "CMAKE_CXX_FLAGS:         " ${CMAKE_CXX_FLAGS})
 find_package(OpenMP)
@@ -17,7 +18,7 @@ include_directories(${CMAKE_CURRENT_SOURCE_DIR}/include)
 # option(BUILD_SHARED_LIBS "Build shared libraries" ON)
 # SET(CMAKE_VERBOSE_MAKEFILE ON)
 
-# set(CMAKE_CXX_FLAGS "-fPIC -O3 -Ofast -m64 -march=native -funroll-loops -ffinite-math-only -Wno-unused-result -Wno-deprecated -pthread -g -pg")
+# set(CMAKE_CXX_FLAGS " -std=c++11 -fPIC -O3 -Ofast -m64 -march=native -funroll-loops -ffinite-math-only -Wno-unused-result -Wno-deprecated -pthread -g -pg")
 
 # set(CMAKE_CXX_STANDARD 11)
 
@@ -64,7 +65,7 @@ install(
   LIBRARY DESTINATION lib/
   )
 install(
-  DIRECTORY include
+  DIRECTORY include/
   DESTINATION include/qnlp
   FILES_MATCHING PATTERN "*.h*"
   )

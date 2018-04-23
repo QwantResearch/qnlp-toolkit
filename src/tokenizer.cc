@@ -149,6 +149,7 @@ bool Tokenizer::proc (string& token, char& c) {
 
             default:
                 sb->sungetc();
+                return true;
                 break;
         }
         sb->sungetc();

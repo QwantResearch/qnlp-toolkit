@@ -120,23 +120,34 @@ int main ( int argc, char *argv[] )
     vector<string> l_output_vec;
     string l_token_pred;
     stringstream l_out;
+    string line;
     
     if ((int)l_BPE.size() == 0)
     {
         if (l_lang.compare("fr") == 0) 
         {
-            Tokenizer_fr l_tokenizer_fr(&cin,Tokenizer::PLAIN, l_cased,l_underscore,l_dash, l_aggressive);
-            l_output = l_tokenizer_fr.tokenize_to_string();
+            Tokenizer_fr l_tokenizer_fr(Tokenizer::PLAIN, l_cased,l_underscore,l_dash, l_aggressive);
+            while (std::getline(std::cin, line))
+            {
+                cout << l_tokenizer_fr.tokenize_sentence_to_string(line);
+            }
+//             l_output = l_tokenizer_fr.tokenize_to_string();
         }
         else if (l_lang.compare("en") == 0) 
         {
-            Tokenizer_en l_tokenizer_en(&cin,Tokenizer::PLAIN, l_cased,l_underscore,l_dash, l_aggressive);
-            l_output = l_tokenizer_en.tokenize_to_string();
+            Tokenizer_en l_tokenizer_en(Tokenizer::PLAIN, l_cased,l_underscore,l_dash, l_aggressive);
+            while (std::getline(std::cin, line))
+            {
+                cout << l_tokenizer_en.tokenize_sentence_to_string(line);
+            }
         }
         else
         {
-            Tokenizer l_tokenizer(&cin,Tokenizer::PLAIN, l_cased,l_underscore,l_dash, l_aggressive);
-            l_output = l_tokenizer.tokenize_to_string();
+            Tokenizer l_tokenizer(Tokenizer::PLAIN, l_cased,l_underscore,l_dash, l_aggressive);
+            while (std::getline(std::cin, line))
+            {
+                cout << l_tokenizer.tokenize_sentence_to_string(line);
+            }
         }
 //         if ((int)l_BPE.size() > 0)
 //         {
@@ -149,17 +160,17 @@ int main ( int argc, char *argv[] )
     {
         if (l_lang.compare("fr") == 0) 
         {
-            Tokenizer_fr l_tokenizer_fr(&cin,Tokenizer::PLAIN, l_cased,l_underscore,l_dash, l_aggressive);
+            Tokenizer_fr l_tokenizer_fr(Tokenizer::PLAIN, l_cased,l_underscore,l_dash, l_aggressive);
             l_output_vec = l_tokenizer_fr.tokenize();
         }
         else if (l_lang.compare("en") == 0) 
         {
-            Tokenizer_en l_tokenizer_en(&cin,Tokenizer::PLAIN, l_cased,l_underscore,l_dash, l_aggressive);
+            Tokenizer_en l_tokenizer_en(Tokenizer::PLAIN, l_cased,l_underscore,l_dash, l_aggressive);
             l_output_vec = l_tokenizer_en.tokenize();
         }
         else
         {
-            Tokenizer l_tokenizer(&cin,Tokenizer::PLAIN, l_cased,l_underscore,l_dash, l_aggressive);
+            Tokenizer l_tokenizer(Tokenizer::PLAIN, l_cased,l_underscore,l_dash, l_aggressive);
             l_output_vec = l_tokenizer.tokenize();
         }
             BPE bpemodel(l_BPE);

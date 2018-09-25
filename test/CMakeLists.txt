@@ -1,6 +1,12 @@
 PROJECT(qnlp)
 
 include_directories(BEFORE ${CMAKE_SOURCE_DIR}/src)
+include_directories(${CMAKE_CURRENT_SOURCE_DIR}/include)
+include_directories(${CMAKE_CURRENT_SOURCE_DIR}/externals/snowball/include)
+# include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../libstemmer/runtime)
+# include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../libstemmer/src_c)
+link_directories(${CMAKE_CURRENT_SOURCE_DIR}/externals/snowball/lib)
+
 # 
 # SET(CMAKE_BUILD_TYPE Debug) 
 # 
@@ -11,6 +17,7 @@ SET(NLP_SRCS_LIBS
     ${CMAKE_SOURCE_DIR}/src/en_tokenizer.cc
     ${CMAKE_SOURCE_DIR}/src/bpe.cc
     ${CMAKE_SOURCE_DIR}/src/utils.cc
+    ${CMAKE_SOURCE_DIR}/src/stemmer.cc
 )
 
 SET(NLP_SRCS
@@ -24,7 +31,7 @@ add_executable(qnlp-x ${NLP_SRCS})
 # SET(CMAKE_FIND_LIBRARY_SUFFIXES ".a")
 # SET(BUILD_SHARED_LIBRARIES OFF)
 # SET(CMAKE_EXE_LINKER_FLAGS "-static")
-target_link_libraries(qnlp-x fasttext boost_regex)
+target_link_libraries(qnlp-x fasttext boost_regex snowball)
 # 
 # add_library(qnlp SHARED ${NLP_SRCS_LIBS})
 # ADD_LIBRARY(qnlp-static STATIC ${NLP_SRCS_LIBS})

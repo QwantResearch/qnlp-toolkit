@@ -10,6 +10,7 @@
 #include "fr_tokenizer.h"
 #include "en_tokenizer.h"
 #include "bpe.h"
+#include "stemmer.h"
 
 
 using namespace std;
@@ -22,6 +23,7 @@ bool l_aggressive=false;
 bool l_underscore=false;
 bool l_cased=false;
 bool l_dash=false;
+bool l_stem=false;
 string l_lang="";
 string l_BPE="";
 int l_threads=4;
@@ -31,6 +33,7 @@ int l_threads=4;
 void usage()
 {
     cout << 
+            "--stem (-s)              stem outputs (default false)\n"
             "--dash (-d)              split using dashes (default false)\n"
             "--lowercased (-c)        put the sequence in lowercase (default false)\n"
             "--underscore (-u)        split using underscores (default false)\n"
@@ -47,8 +50,9 @@ void usage()
 
 void ProcessArgs(int argc, char** argv)
 {
-    const char* const short_opts = "vqdcual:b:e:t:h";
+    const char* const short_opts = "svqdcual:b:e:t:h";
     const option long_opts[] = {
+            {"stem", 0, nullptr, 's'},
             {"dash", 0, nullptr, 'd'},
             {"lowercased", 0, nullptr, 'c'},
             {"underscore", 0, nullptr, 'u'},
@@ -72,6 +76,10 @@ void ProcessArgs(int argc, char** argv)
 
         switch (opt)
         {
+        case 's':
+            l_stem = true;
+            break;
+
         case 'd':
             l_dash = true;
             break;
@@ -113,6 +121,19 @@ void ProcessArgs(int argc, char** argv)
     }
 }
 
+
+string stemming(string input , bool l_stemming)
+{
+    vector<string> line_splited;
+    string tmp_output;
+    if (l_stemming)
+    {
+        Stemmer s(l_lang.c_str());
+        return s.stem_sentence(input);
+    }
+    return input;
+}
+
 int main ( int argc, char *argv[] )
 {
     ProcessArgs(argc, argv);
@@ -129,7 +150,7 @@ int main ( int argc, char *argv[] )
             Tokenizer_fr l_tokenizer_fr(Tokenizer::PLAIN, l_cased,l_underscore,l_dash, l_aggressive);
             while (std::getline(std::cin, line))
             {
-                cout << l_tokenizer_fr.tokenize_sentence_to_string(line);
+                cout << stemming(l_tokenizer_fr.tokenize_sentence_to_string(line),l_stem)<< endl;
             }
 //             l_output = l_tokenizer_fr.tokenize_to_string();
         }
@@ -138,7 +159,7 @@ int main ( int argc, char *argv[] )
             Tokenizer_en l_tokenizer_en(Tokenizer::PLAIN, l_cased,l_underscore,l_dash, l_aggressive);
             while (std::getline(std::cin, line))
             {
-                cout << l_tokenizer_en.tokenize_sentence_to_string(line);
+                cout << stemming(l_tokenizer_en.tokenize_sentence_to_string(line),l_stem)<< endl;
             }
         }
         else
@@ -146,7 +167,7 @@ int main ( int argc, char *argv[] )
             Tokenizer l_tokenizer(Tokenizer::PLAIN, l_cased,l_underscore,l_dash, l_aggressive);
             while (std::getline(std::cin, line))
             {
-                cout << l_tokenizer.tokenize_sentence_to_string(line);
+                cout << stemming(l_tokenizer.tokenize_sentence_to_string(line),l_stem)<< endl;
             }
         }
 //         if ((int)l_BPE.size() > 0)
@@ -176,6 +197,20 @@ int main ( int argc, char *argv[] )
             BPE bpemodel(l_BPE);
             l_output=bpemodel.apply_bpe_to_string(l_output_vec);
     }
+//     if (l_stem)
+//     {
+//         vector<string> line_splited;
+//         string tmp_output;
+//         Stemmer s(l_lang.c_str());
+//         Split(l_output,line_splited," ");
+//         for (int i=0; i<(int)line_splited.size(); i++)
+//         {
+//             if (i != 0) tmp_output.append(" ");
+//             
+//             tmp_output.append(s.stem(line_splited.at(i)));
+//         }
+//         cerr << "THE CERR "<< tmp_output << endl;
+//     }
     cout << l_output;
     return EXIT_SUCCESS;
 }

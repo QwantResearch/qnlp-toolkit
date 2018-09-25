@@ -4,7 +4,7 @@ project(qnlp)
 # set(CMAKE_CXX_STANDARD 11)
 set(CMAKE_BUILD_TYPE Release)
 SET(CMAKE_VERBOSE_MAKEFILE ON)
-set(CMAKE_CXX_FLAGS " -std=c++11 -fPIC -O3 -Ofast -m64 -march=native -funroll-loops -ffinite-math-only -Wno-unused-result -Wno-deprecated -pthread -g -pg")
+set(CMAKE_CXX_FLAGS " -std=c++11 -fPIC -O3 -Ofast -m64 -march=native -funroll-loops -ffinite-math-only -Wno-unused-result -Wno-deprecated -pthread -g -pg -fpermissive")
 
 MESSAGE( STATUS "CMAKE_CXX_FLAGS:         " ${CMAKE_CXX_FLAGS})
 find_package(OpenMP)
@@ -12,7 +12,10 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${OpenMP_CXX_FLAGS}")
 MESSAGE( STATUS "CMAKE_CXX_FLAGS:         " ${CMAKE_CXX_FLAGS})
 
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/include)
-
+include_directories(${CMAKE_CURRENT_SOURCE_DIR}/externals/snowball/include)
+# include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../libstemmer/runtime)
+# include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../libstemmer/src_c)
+link_directories(${CMAKE_CURRENT_SOURCE_DIR}/externals/snowball/lib)
 
 
 # option(BUILD_SHARED_LIBS "Build shared libraries" ON)
@@ -30,6 +33,9 @@ if(Boost_FOUND)
 else(Boost_FOUND)
     message(SEND_ERROR "Cannot find Boost libraries. Terminating." )
 endif(Boost_FOUND)
+
+
+add_subdirectory(externals/snowball)
 
 # Set Release build type by default to get sane performance.
 # if(NOT CMAKE_BUILD_TYPE)
@@ -49,12 +55,13 @@ set(SOURCES
   src/en_tokenizer.cc  
   src/fr_tokenizer.cc  
   src/tokenizer.cc  
+  src/stemmer.cc  
   src/utils.cc
   )
   
 add_library(${PROJECT_NAME} SHARED ${SOURCES})
 
-target_link_libraries(${PROJECT_NAME} fasttext )
+target_link_libraries(${PROJECT_NAME} fasttext snowball)
 # target_include_directories(${PROJECT_NAME} PUBLIC ${INCLUDE_DIRECTORIES})
 
 add_subdirectory(test)

@@ -1,11 +1,13 @@
 PROJECT(qnlp)
 
 include_directories(BEFORE ${CMAKE_SOURCE_DIR}/src)
-include_directories(${CMAKE_CURRENT_SOURCE_DIR}/include)
-include_directories(${CMAKE_CURRENT_SOURCE_DIR}/externals/snowball/include)
+include_directories(${CMAKE_SOURCE_DIR}/include)
+# include_directories(${CMAKE_CURRENT_SOURCE_DIR}/externals/snowball/include)
 # include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../libstemmer/runtime)
 # include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../libstemmer/src_c)
-link_directories(${CMAKE_CURRENT_SOURCE_DIR}/externals/snowball/lib)
+link_directories(/usr/local/lib)
+
+# link_directories(${CMAKE_CURRENT_SOURCE_DIR}/externals/snowball/lib)
 
 # 
 # SET(CMAKE_BUILD_TYPE Debug) 

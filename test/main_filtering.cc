@@ -133,10 +133,6 @@ void ProcessArgs(int argc, char** argv)
 int main ( int argc, char *argv[] )
 {
     ProcessArgs(argc, argv);
-    string l_output;
-    vector<string> l_output_vec;
-    string l_token_pred;
-    stringstream l_out;
     string line_src;
     string line_tgt;
     int length_src;
@@ -153,11 +149,16 @@ int main ( int argc, char *argv[] )
     ofstream output_tgt(fulloutput_tgt,ios::out);
     long l_input_cpt = 0;
     long l_output_cpt = 0;
+    cerr << "qnlp-filtering: processing " << fullinput_src << " & "<< fullinput_tgt << " to " << l_output << ", cutoff " << l_minlength << "-" << l_maxlength << ", ratio" << l_ratio << endl;
     if (input_src && input_tgt)
     {
         while (getline(input_src,line_src) && getline(input_tgt,line_tgt))
         {
             l_input_cpt++;
+            if (l_input_cpt % 10000 == 0) cerr << ".";
+            if (l_input_cpt % 100000 == 0) cerr << "(" << l_input_cpt << ")";
+            vec_line_src.clear();
+            vec_line_tgt.clear();
             Split(line_src,vec_line_src," ");
             Split(line_tgt,vec_line_tgt," ");
             length_src=(int)vec_line_src.size();
@@ -167,7 +168,8 @@ int main ( int argc, char *argv[] )
             {
                 if ((float)length_src/(float)length_tgt > l_ratio || (float)length_tgt/(float)length_src > l_ratio ) l_ratio_bool = false;
             }
-            if (length_src < l_maxlength && length_src > l_minlength && length_tgt < l_maxlength && length_tgt > l_minlength && l_ratio_bool)
+            
+            if (length_src <= l_maxlength && length_src >= l_minlength && length_tgt <= l_maxlength && length_tgt >= l_minlength && l_ratio_bool)
             {
                 output_src << line_src;
                 output_tgt << line_tgt;
@@ -175,6 +177,7 @@ int main ( int argc, char *argv[] )
             }
         }
     }
+    cerr << endl;
     input_src.close();
     input_tgt.close();
     output_src.close();

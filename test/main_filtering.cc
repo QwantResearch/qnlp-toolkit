@@ -155,23 +155,24 @@ int main ( int argc, char *argv[] )
     long l_output_cpt = 0;
     if (input_src && input_tgt)
     {
-        getline(input_src,line_src);
-        l_input_cpt++;
-        Split(line_src,vec_line_src," ");
-        getline(input_tgt,line_tgt);
-        Split(line_tgt,vec_line_tgt," ");
-        length_src=(int)vec_line_src.size();
-        length_tgt=(int)vec_line_tgt.size();
-        bool l_ratio_bool = true;
-        if (l_ratio != -1)
+        while (getline(input_src,line_src) && getline(input_tgt,line_tgt))
         {
-            if ((float)length_src/(float)length_tgt > l_ratio || (float)length_tgt/(float)length_src > l_ratio ) l_ratio_bool = false;
-        }
-        if (length_src < l_maxlength && length_src > l_minlength && length_tgt < l_maxlength && length_tgt > l_minlength && l_ratio_bool)
-        {
-            output_src << line_src;
-            output_tgt << line_tgt;
-            l_output_cpt++;
+            l_input_cpt++;
+            Split(line_src,vec_line_src," ");
+            Split(line_tgt,vec_line_tgt," ");
+            length_src=(int)vec_line_src.size();
+            length_tgt=(int)vec_line_tgt.size();
+            bool l_ratio_bool = true;
+            if (l_ratio != -1)
+            {
+                if ((float)length_src/(float)length_tgt > l_ratio || (float)length_tgt/(float)length_src > l_ratio ) l_ratio_bool = false;
+            }
+            if (length_src < l_maxlength && length_src > l_minlength && length_tgt < l_maxlength && length_tgt > l_minlength && l_ratio_bool)
+            {
+                output_src << line_src;
+                output_tgt << line_tgt;
+                l_output_cpt++;
+            }
         }
     }
     input_src.close();

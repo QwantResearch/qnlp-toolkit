@@ -171,8 +171,8 @@ int main ( int argc, char *argv[] )
             
             if (length_src <= l_maxlength && length_src >= l_minlength && length_tgt <= l_maxlength && length_tgt >= l_minlength && l_ratio_bool)
             {
-                output_src << line_src;
-                output_tgt << line_tgt;
+                output_src << line_src << endl;
+                output_tgt << line_tgt << endl;
                 l_output_cpt++;
             }
         }

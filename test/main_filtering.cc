@@ -23,7 +23,7 @@ using namespace std;
 // bool l_underscore=false;
 // bool l_cased=false;
 // bool l_dash=false;
-// bool l_stem=false;
+bool l_gz=false;
 string l_input="";
 string l_output="";
 string l_src="";
@@ -44,6 +44,7 @@ void usage()
             "--target (-t)        equivalent to --dash and --underscore and every separators\n"
             "--minlength (-l)        split using underscores (default false)\n"
             "--maxlength (-L)        equivalent to --dash and --underscore and every separators\n"
+            "--gzip (-g)        equivalent to --dash and --underscore and every separators\n"
 //             "--BPE (-b)               Use Byte Pair Encoding preprocessing\n"
 //             "--embmodel (-e)          Load fasttext embeddings/prediction model\n"
 //             "--qlassify (-q)          predict class according the model loaded (need embmodel)\n"
@@ -56,7 +57,7 @@ void usage()
 
 void ProcessArgs(int argc, char** argv)
 {
-    const char* const short_opts = "r:i:o:s:t:h";
+    const char* const short_opts = "gr:i:o:s:l:L:t:h";
     const option long_opts[] = {
             {"ratio", 1, nullptr, 'r'},
             {"input", 1, nullptr, 'i'},
@@ -67,6 +68,7 @@ void ProcessArgs(int argc, char** argv)
             {"maxlength", 1, nullptr, 'L'},
 //             {"embmodel", 1, nullptr, 'e'},
 //             {"threads", 1, nullptr, 't'},
+            {"gzip", 0, nullptr, 'g'},
             {"help", 0, nullptr, 'h'},
             {nullptr, 0, nullptr, 0}
     };
@@ -106,6 +108,10 @@ void ProcessArgs(int argc, char** argv)
             
         case 't':
             l_tgt = optarg;
+            break;
+
+        case 'g':
+            l_gz = true;
             break;
 
         case 'h': // -h or --help

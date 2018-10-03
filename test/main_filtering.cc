@@ -24,6 +24,7 @@ using namespace std;
 // bool l_cased=false;
 // bool l_dash=false;
 bool l_gz=false;
+bool l_analyse=false;
 string l_input="";
 string l_output="";
 string l_src="";
@@ -37,14 +38,15 @@ int l_maxlength=-1;
 void usage()
 {
     cout << 
-            "--ratio (-r)              stem outputs (default false)\n"
-            "--input (-i)              split using dashes (default false)\n"
-            "--output (-o)        put the sequence in lowercase (default false)\n"
-            "--source (-s)        split using underscores (default false)\n"
-            "--target (-t)        equivalent to --dash and --underscore and every separators\n"
-            "--minlength (-l)        split using underscores (default false)\n"
-            "--maxlength (-L)        equivalent to --dash and --underscore and every separators\n"
-            "--gzip (-g)        equivalent to --dash and --underscore and every separators\n"
+            "--analyse (-a)       analyse corpus length repartition\n"
+            "--ratio (-r)         use a length ratio to filter bitext\n"
+            "--input (-i)         generic coprus name to read\n"
+            "--output (-o)        generic coprus name to write\n"
+            "--source (-s)        source language (extention)\n"
+            "--target (-t)        target language (extention)\n"
+            "--minlength (-l)     min sentence length to filter\n"
+            "--maxlength (-L)     min sentence length to filter\n"
+            "--gzip (-g)          process gzip files (unavailable)\n"
 //             "--BPE (-b)               Use Byte Pair Encoding preprocessing\n"
 //             "--embmodel (-e)          Load fasttext embeddings/prediction model\n"
 //             "--qlassify (-q)          predict class according the model loaded (need embmodel)\n"
@@ -57,7 +59,7 @@ void usage()
 
 void ProcessArgs(int argc, char** argv)
 {
-    const char* const short_opts = "gr:i:o:s:l:L:t:h";
+    const char* const short_opts = "agr:i:o:s:l:L:t:h";
     const option long_opts[] = {
             {"ratio", 1, nullptr, 'r'},
             {"input", 1, nullptr, 'i'},
@@ -82,6 +84,9 @@ void ProcessArgs(int argc, char** argv)
 
         switch (opt)
         {
+        case 'a':
+            l_analyse = true;
+            break;
         case 'r':
             l_ratio = atof(optarg);
             break;
@@ -149,6 +154,8 @@ int main ( int argc, char *argv[] )
     ofstream output_tgt(fulloutput_tgt,ios::out);
     long l_input_cpt = 0;
     long l_output_cpt = 0;
+    bool l_ratio_bool;
+    vector <vector <float>> l_vec_analysis(1000);
     cerr << "qnlp-filtering: processing " << fullinput_src << " & "<< fullinput_tgt << " to " << l_output << ", cutoff " << l_minlength << "-" << l_maxlength << ", ratio" << l_ratio << endl;
     if (input_src && input_tgt)
     {
@@ -163,21 +170,63 @@ int main ( int argc, char *argv[] )
             Split(line_tgt,vec_line_tgt," ");
             length_src=(int)vec_line_src.size();
             length_tgt=(int)vec_line_tgt.size();
-            bool l_ratio_bool = true;
-            if (l_ratio != -1)
+            l_ratio_bool = true;
+            if (l_analyse)
             {
-                if ((float)length_src/(float)length_tgt > l_ratio || (float)length_tgt/(float)length_src > l_ratio ) l_ratio_bool = false;
+                if ((int)l_vec_analysis.at(length_src).size() == 0)
+                {
+                    l_vec_analysis.at(length_src).push_back(1);
+                    l_vec_analysis.at(length_src).push_back((float)length_src);
+                    l_vec_analysis.at(length_src).push_back((float)length_tgt);
+                    if ((float)length_src/(float)length_tgt > l_ratio || (float)length_tgt/(float)length_src > l_ratio )
+                    {
+                        l_vec_analysis.at(length_src).push_back(1);
+                    }
+                    else
+                    {
+                        l_vec_analysis.at(length_src).push_back(0);
+                    }
+                      
+                }
+                else
+                {
+                    l_vec_analysis.at(length_src).at(0)=l_vec_analysis.at(length_src).at(0)+1;
+                    l_vec_analysis.at(length_src).at(1)=l_vec_analysis.at(length_src).at(1)+(float)length_src;
+                    l_vec_analysis.at(length_src).at(2)=l_vec_analysis.at(length_src).at(2)+(float)length_tgt;
+                    if ((float)length_src/(float)length_tgt > l_ratio || (float)length_tgt/(float)length_src > l_ratio )
+                    {
+                        l_vec_analysis.at(length_src).at(3)=l_vec_analysis.at(length_src).at(3)+1;
+                    }
+                }
             }
-            
-            if (length_src <= l_maxlength && length_src >= l_minlength && length_tgt <= l_maxlength && length_tgt >= l_minlength && l_ratio_bool)
+            else
             {
-                output_src << line_src << endl;
-                output_tgt << line_tgt << endl;
-                l_output_cpt++;
+                if (l_ratio != -1)
+                {
+                    if ((float)length_src/(float)length_tgt > l_ratio || (float)length_tgt/(float)length_src > l_ratio ) l_ratio_bool = false;
+                }
+                
+                if (length_src <= l_maxlength && length_src >= l_minlength && length_tgt <= l_maxlength && length_tgt >= l_minlength && l_ratio_bool)
+                {
+                    output_src << line_src << endl;
+                    output_tgt << line_tgt << endl;
+                    l_output_cpt++;
+                }
             }
         }
     }
     cerr << endl;
+    if (l_analyse)
+    {
+        for (int i=0; i<(int)l_vec_analysis.size(); i++)
+        {
+            if ((int)l_vec_analysis.at(i).size() > 0)
+            {
+                output_src << i << "\t" << l_vec_analysis.at(i).at(0) << "\t" << l_vec_analysis.at(i).at(1) << "\t" << l_vec_analysis.at(i).at(2) << "\t" << l_vec_analysis.at(i).at(2)/l_vec_analysis.at(i).at(1) << "\t" << l_vec_analysis.at(i).at(3) << "\t" << l_vec_analysis.at(i).at(3)/l_vec_analysis.at(i).at(0) << endl;
+                output_tgt << i << "\t" << l_vec_analysis.at(i).at(0) << "\t" << l_vec_analysis.at(i).at(1) << "\t" << l_vec_analysis.at(i).at(2) << "\t" << l_vec_analysis.at(i).at(2)/l_vec_analysis.at(i).at(1) << "\t" << l_vec_analysis.at(i).at(3) << "\t" << l_vec_analysis.at(i).at(3)/l_vec_analysis.at(i).at(0) << endl;
+            }
+        }
+    }
     input_src.close();
     input_tgt.close();
     output_src.close();

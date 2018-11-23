@@ -442,3 +442,8 @@ void Tokenizer::add_seps(char& c, string& lang, string& token)
     return;
 }
 
+string Tokenizer::getlang()
+{
+    return lang;
+}
+

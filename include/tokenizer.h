@@ -20,11 +20,11 @@ class Tokenizer {
         /** Constructor of the class tokenizer */
         Tokenizer (istream* in, int syntax=PLAIN, bool lowercased=true, bool underscore=true, bool dash=true, bool aggressive=true):
             in(in), syntax(syntax), lowercased(lowercased), underscore(underscore), dash(dash), aggressive(aggressive)
-            {sb = in->rdbuf();}
+            {sb = in->rdbuf();lang="gen";}
 
         Tokenizer (int syntax=PLAIN, bool lowercased=true, bool underscore=true, bool dash=true, bool aggressive=true):
             syntax(syntax), lowercased(lowercased), underscore(underscore), dash(dash), aggressive(aggressive)
-            {istringstream iss("");sb = iss.rdbuf();}
+            {istringstream iss("");sb = iss.rdbuf();lang="gen";}
 
         vector<string> tokenize_sentence(string &text);
         string tokenize_sentence_to_string(string &text);
@@ -65,10 +65,12 @@ class Tokenizer {
             string content;
             int status;
         };
+        string getlang();
 
     protected:
         virtual bool proc (string& token, char& c);
         virtual bool proc_empty (string& token, char& c);
+        string lang;
 
         istream* in;
         streambuf* sb;

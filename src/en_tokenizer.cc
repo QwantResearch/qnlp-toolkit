@@ -56,6 +56,14 @@ bool Tokenizer_en::proc(string& token, char& c)
                             sb->sungetc();
                             return true;
                         }
+                        if (tksize > 2 && c=='s')
+                        {
+                            sb->sungetc();
+                            sb->sputbackc('\'');
+                            sb->sputbackc('s');
+                            token=token.substr(0,(tksize)-1);
+                            return true;
+                        }
                         token.push_back(c);
                         // sb->sungetc();
                         return true;
@@ -97,7 +105,7 @@ bool Tokenizer_en::proc_empty(string& token, char& c)
                 if (c == 't' || c == 's')
                 {
                     token.push_back(c);
-                    return false;
+                    return true;
                 }
                 else
                 {

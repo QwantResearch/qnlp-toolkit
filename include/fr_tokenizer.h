@@ -9,9 +9,9 @@ namespace qnlp {
         public:
           
             Tokenizer_fr (istream* in, int syntax=PLAIN, bool lowercased=true, bool underscore=true, bool dash=true, bool aggressive=true):
-                Tokenizer(in, syntax, lowercased, underscore, dash, aggressive){};
+                Tokenizer(in, syntax, lowercased, underscore, dash, aggressive){lang="fr";};
             Tokenizer_fr (int syntax=PLAIN, bool lowercased=true, bool underscore=true, bool dash=true, bool aggressive=true):
-                Tokenizer (syntax, lowercased, underscore, dash, aggressive){};
+                Tokenizer (syntax, lowercased, underscore, dash, aggressive){lang="fr";};
             
         protected:
             bool proc (string& token, char& c);

@@ -174,10 +174,10 @@ int main ( int argc, char *argv[] )
     long l_input_cpt = 0;
     long l_output_cpt = 0;
     bool l_ratio_bool;
-    vector <vector <float>> l_vec_analysis(1000);
-    vector <vector <float>> l_vec_analysis_rev(1000);
-    vector <float> l_vec_cut_off(1000,0.0);
-    vector <float> l_vec_cut_off_rev(1000,0.0);
+    vector <vector <float>> l_vec_analysis(10000);
+    vector <vector <float>> l_vec_analysis_rev(10000);
+    vector <float> l_vec_cut_off(10000,0.0);
+    vector <float> l_vec_cut_off_rev(10000,0.0);
     if (input_src && input_tgt)
     {
         while (getline(input_src,line_src) && getline(input_tgt,line_tgt))
@@ -346,7 +346,7 @@ int main ( int argc, char *argv[] )
                     }
                     j++;
                 }
-                if (l_vec_cut_off.at(i)==0) l_vec_cut_off.at(i)=1000;
+                if (l_vec_cut_off.at(i)==0) l_vec_cut_off.at(i)=10000;
                 output_src << endl;
             }
         }
@@ -374,7 +374,7 @@ int main ( int argc, char *argv[] )
                     }
                     j++;
                 }
-                if (l_vec_cut_off_rev.at(i)==0) l_vec_cut_off_rev.at(i)=1000;
+                if (l_vec_cut_off_rev.at(i)==0) l_vec_cut_off_rev.at(i)=10000;
                 output_tgt << endl;
             }
         }

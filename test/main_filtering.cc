@@ -147,6 +147,7 @@ void ProcessArgs(int argc, char** argv)
 int main ( int argc, char *argv[] )
 {
     ProcessArgs(argc, argv);
+    int max_length=1000;
     string line_src;
     string line_tgt;
     int length_src;
@@ -174,10 +175,10 @@ int main ( int argc, char *argv[] )
     long l_input_cpt = 0;
     long l_output_cpt = 0;
     bool l_ratio_bool;
-    vector <vector <float>> l_vec_analysis(10000);
-    vector <vector <float>> l_vec_analysis_rev(10000);
-    vector <float> l_vec_cut_off(10000,0.0);
-    vector <float> l_vec_cut_off_rev(10000,0.0);
+    vector <vector <float>> l_vec_analysis(max_length);
+    vector <vector <float>> l_vec_analysis_rev(max_length);
+    vector <float> l_vec_cut_off(max_length,0.0);
+    vector <float> l_vec_cut_off_rev(max_length,0.0);
     if (input_src && input_tgt)
     {
         while (getline(input_src,line_src) && getline(input_tgt,line_tgt))
@@ -192,15 +193,82 @@ int main ( int argc, char *argv[] )
             length_src=(int)vec_line_src.size();
             length_tgt=(int)vec_line_tgt.size();
             l_ratio_bool = true;
-            if (l_maxpc != -1 )
+            if (length_src < max_length && length_tgt < max_length)
             {
-                if ((int)l_vec_analysis.at(length_src).size() == 0)
+                if (l_maxpc != -1 )
                 {
-                    l_vec_analysis.at(length_src).push_back(1);
-                    l_vec_analysis.at(length_src).push_back((float)length_src);
-                    l_vec_analysis.at(length_src).push_back((float)length_tgt);
-                    for (l_ratio = 1.0 ; l_ratio < 3.0 ; l_ratio=l_ratio+0.1)
+                    if ((int)l_vec_analysis.at(length_src).size() == 0)
                     {
+                        l_vec_analysis.at(length_src).push_back(1);
+                        l_vec_analysis.at(length_src).push_back((float)length_src);
+                        l_vec_analysis.at(length_src).push_back((float)length_tgt);
+                        for (l_ratio = 1.0 ; l_ratio < 3.0 ; l_ratio=l_ratio+0.1)
+                        {
+                            if ((float)length_src/(float)length_tgt > l_ratio || (float)length_tgt/(float)length_src > l_ratio )
+                            {
+                                l_vec_analysis.at(length_src).push_back(1);
+                            }
+                            else
+                            {
+                                l_vec_analysis.at(length_src).push_back(0);
+                            }
+                        }
+                    }
+                    else
+                    {
+                        l_vec_analysis.at(length_src).at(0)=l_vec_analysis.at(length_src).at(0)+1;
+                        l_vec_analysis.at(length_src).at(1)=l_vec_analysis.at(length_src).at(1)+(float)length_src;
+                        l_vec_analysis.at(length_src).at(2)=l_vec_analysis.at(length_src).at(2)+(float)length_tgt;
+                        int j=3;
+                        for (l_ratio = 1.0 ; l_ratio < 3.0 ; l_ratio=l_ratio+0.1)
+                        {
+                            if ((float)length_src/(float)length_tgt > l_ratio || (float)length_tgt/(float)length_src > l_ratio )
+                            {
+                                l_vec_analysis.at(length_src).at(j)=l_vec_analysis.at(length_src).at(j)+1;
+                            }
+                            j++;
+                        }
+                    }
+                    if ((int)l_vec_analysis_rev.at(length_tgt).size() == 0)
+                    {
+                        l_vec_analysis_rev.at(length_tgt).push_back(1);
+                        l_vec_analysis_rev.at(length_tgt).push_back((float)length_tgt);
+                        l_vec_analysis_rev.at(length_tgt).push_back((float)length_src);
+                        for (l_ratio = 1.0 ; l_ratio < 3.0 ; l_ratio=l_ratio+0.1)
+                        {
+                            if ((float)length_tgt/(float)length_src > l_ratio || (float)length_src/(float)length_tgt > l_ratio )
+                            {
+                                l_vec_analysis_rev.at(length_tgt).push_back(1);
+                            }
+                            else
+                            {
+                                l_vec_analysis_rev.at(length_tgt).push_back(0);
+                            }
+                        }
+                    }
+                    else
+                    {
+                        l_vec_analysis_rev.at(length_tgt).at(0)=l_vec_analysis_rev.at(length_tgt).at(0)+1;
+                        l_vec_analysis_rev.at(length_tgt).at(1)=l_vec_analysis_rev.at(length_tgt).at(1)+(float)length_tgt;
+                        l_vec_analysis_rev.at(length_tgt).at(2)=l_vec_analysis_rev.at(length_tgt).at(2)+(float)length_src;
+                        int j=3;
+                        for (l_ratio = 1.0 ; l_ratio < 3.0 ; l_ratio=l_ratio+0.1)
+                        {
+                            if ((float)length_tgt/(float)length_src > l_ratio || (float)length_src/(float)length_tgt > l_ratio )
+                            {
+                                l_vec_analysis_rev.at(length_tgt).at(j)=l_vec_analysis_rev.at(length_tgt).at(j)+1;
+                            }
+                            j++;
+                        }
+                    }
+                }
+                else if (l_analyse)
+                {
+                    if ((int)l_vec_analysis.at(length_src).size() == 0)
+                    {
+                        l_vec_analysis.at(length_src).push_back(1);
+                        l_vec_analysis.at(length_src).push_back((float)length_src);
+                        l_vec_analysis.at(length_src).push_back((float)length_tgt);
                         if ((float)length_src/(float)length_tgt > l_ratio || (float)length_tgt/(float)length_src > l_ratio )
                         {
                             l_vec_analysis.at(length_src).push_back(1);
@@ -209,30 +277,23 @@ int main ( int argc, char *argv[] )
                         {
                             l_vec_analysis.at(length_src).push_back(0);
                         }
+                          
                     }
-                }
-                else
-                {
-                    l_vec_analysis.at(length_src).at(0)=l_vec_analysis.at(length_src).at(0)+1;
-                    l_vec_analysis.at(length_src).at(1)=l_vec_analysis.at(length_src).at(1)+(float)length_src;
-                    l_vec_analysis.at(length_src).at(2)=l_vec_analysis.at(length_src).at(2)+(float)length_tgt;
-                    int j=3;
-                    for (l_ratio = 1.0 ; l_ratio < 3.0 ; l_ratio=l_ratio+0.1)
+                    else
                     {
+                        l_vec_analysis.at(length_src).at(0)=l_vec_analysis.at(length_src).at(0)+1;
+                        l_vec_analysis.at(length_src).at(1)=l_vec_analysis.at(length_src).at(1)+(float)length_src;
+                        l_vec_analysis.at(length_src).at(2)=l_vec_analysis.at(length_src).at(2)+(float)length_tgt;
                         if ((float)length_src/(float)length_tgt > l_ratio || (float)length_tgt/(float)length_src > l_ratio )
                         {
-                            l_vec_analysis.at(length_src).at(j)=l_vec_analysis.at(length_src).at(j)+1;
+                            l_vec_analysis.at(length_src).at(3)=l_vec_analysis.at(length_src).at(3)+1;
                         }
-                        j++;
                     }
-                }
-                if ((int)l_vec_analysis_rev.at(length_tgt).size() == 0)
-                {
-                    l_vec_analysis_rev.at(length_tgt).push_back(1);
-                    l_vec_analysis_rev.at(length_tgt).push_back((float)length_tgt);
-                    l_vec_analysis_rev.at(length_tgt).push_back((float)length_src);
-                    for (l_ratio = 1.0 ; l_ratio < 3.0 ; l_ratio=l_ratio+0.1)
+                    if ((int)l_vec_analysis_rev.at(length_tgt).size() == 0)
                     {
+                        l_vec_analysis_rev.at(length_tgt).push_back(1);
+                        l_vec_analysis_rev.at(length_tgt).push_back((float)length_tgt);
+                        l_vec_analysis_rev.at(length_tgt).push_back((float)length_src);
                         if ((float)length_tgt/(float)length_src > l_ratio || (float)length_src/(float)length_tgt > l_ratio )
                         {
                             l_vec_analysis_rev.at(length_tgt).push_back(1);
@@ -242,87 +303,30 @@ int main ( int argc, char *argv[] )
                             l_vec_analysis_rev.at(length_tgt).push_back(0);
                         }
                     }
-                }
-                else
-                {
-                    l_vec_analysis_rev.at(length_tgt).at(0)=l_vec_analysis_rev.at(length_tgt).at(0)+1;
-                    l_vec_analysis_rev.at(length_tgt).at(1)=l_vec_analysis_rev.at(length_tgt).at(1)+(float)length_tgt;
-                    l_vec_analysis_rev.at(length_tgt).at(2)=l_vec_analysis_rev.at(length_tgt).at(2)+(float)length_src;
-                    int j=3;
-                    for (l_ratio = 1.0 ; l_ratio < 3.0 ; l_ratio=l_ratio+0.1)
+                    else
                     {
+                        l_vec_analysis_rev.at(length_tgt).at(0)=l_vec_analysis_rev.at(length_tgt).at(0)+1;
+                        l_vec_analysis_rev.at(length_tgt).at(1)=l_vec_analysis_rev.at(length_tgt).at(1)+(float)length_tgt;
+                        l_vec_analysis_rev.at(length_tgt).at(2)=l_vec_analysis_rev.at(length_tgt).at(2)+(float)length_src;
                         if ((float)length_tgt/(float)length_src > l_ratio || (float)length_src/(float)length_tgt > l_ratio )
                         {
-                            l_vec_analysis_rev.at(length_tgt).at(j)=l_vec_analysis_rev.at(length_tgt).at(j)+1;
+                            l_vec_analysis.at(length_tgt).at(3)=l_vec_analysis.at(length_tgt).at(3)+1;
                         }
-                        j++;
-                    }
-                }
-            }
-            else if (l_analyse)
-            {
-                if ((int)l_vec_analysis.at(length_src).size() == 0)
-                {
-                    l_vec_analysis.at(length_src).push_back(1);
-                    l_vec_analysis.at(length_src).push_back((float)length_src);
-                    l_vec_analysis.at(length_src).push_back((float)length_tgt);
-                    if ((float)length_src/(float)length_tgt > l_ratio || (float)length_tgt/(float)length_src > l_ratio )
-                    {
-                        l_vec_analysis.at(length_src).push_back(1);
-                    }
-                    else
-                    {
-                        l_vec_analysis.at(length_src).push_back(0);
-                    }
-                      
-                }
-                else
-                {
-                    l_vec_analysis.at(length_src).at(0)=l_vec_analysis.at(length_src).at(0)+1;
-                    l_vec_analysis.at(length_src).at(1)=l_vec_analysis.at(length_src).at(1)+(float)length_src;
-                    l_vec_analysis.at(length_src).at(2)=l_vec_analysis.at(length_src).at(2)+(float)length_tgt;
-                    if ((float)length_src/(float)length_tgt > l_ratio || (float)length_tgt/(float)length_src > l_ratio )
-                    {
-                        l_vec_analysis.at(length_src).at(3)=l_vec_analysis.at(length_src).at(3)+1;
-                    }
-                }
-                if ((int)l_vec_analysis_rev.at(length_tgt).size() == 0)
-                {
-                    l_vec_analysis_rev.at(length_tgt).push_back(1);
-                    l_vec_analysis_rev.at(length_tgt).push_back((float)length_tgt);
-                    l_vec_analysis_rev.at(length_tgt).push_back((float)length_src);
-                    if ((float)length_tgt/(float)length_src > l_ratio || (float)length_src/(float)length_tgt > l_ratio )
-                    {
-                        l_vec_analysis_rev.at(length_tgt).push_back(1);
-                    }
-                    else
-                    {
-                        l_vec_analysis_rev.at(length_tgt).push_back(0);
                     }
                 }
                 else
                 {
-                    l_vec_analysis_rev.at(length_tgt).at(0)=l_vec_analysis_rev.at(length_tgt).at(0)+1;
-                    l_vec_analysis_rev.at(length_tgt).at(1)=l_vec_analysis_rev.at(length_tgt).at(1)+(float)length_tgt;
-                    l_vec_analysis_rev.at(length_tgt).at(2)=l_vec_analysis_rev.at(length_tgt).at(2)+(float)length_src;
-                    if ((float)length_tgt/(float)length_src > l_ratio || (float)length_src/(float)length_tgt > l_ratio )
+                    if (l_ratio != -1)
                     {
-                        l_vec_analysis.at(length_tgt).at(3)=l_vec_analysis.at(length_tgt).at(3)+1;
+                        if ((float)length_src/(float)length_tgt > l_ratio || (float)length_tgt/(float)length_src > l_ratio ) l_ratio_bool = false;
                     }
-                }
-            }
-            else
-            {
-                if (l_ratio != -1)
-                {
-                    if ((float)length_src/(float)length_tgt > l_ratio || (float)length_tgt/(float)length_src > l_ratio ) l_ratio_bool = false;
-                }
-                
-                if (length_src <= l_maxlength && length_src >= l_minlength && length_tgt <= l_maxlength && length_tgt >= l_minlength && l_ratio_bool)
-                {
-                    output_src << line_src << endl;
-                    output_tgt << line_tgt << endl;
-                    l_output_cpt++;
+                    
+                    if (length_src <= l_maxlength && length_src >= l_minlength && length_tgt <= l_maxlength && length_tgt >= l_minlength && l_ratio_bool)
+                    {
+                        output_src << line_src << endl;
+                        output_tgt << line_tgt << endl;
+                        l_output_cpt++;
+                    }
                 }
             }
         }
@@ -346,7 +350,7 @@ int main ( int argc, char *argv[] )
                     }
                     j++;
                 }
-                if (l_vec_cut_off.at(i)==0) l_vec_cut_off.at(i)=10000;
+                if (l_vec_cut_off.at(i)==0) l_vec_cut_off.at(i)=max_length;
                 output_src << endl;
             }
         }
@@ -374,7 +378,7 @@ int main ( int argc, char *argv[] )
                     }
                     j++;
                 }
-                if (l_vec_cut_off_rev.at(i)==0) l_vec_cut_off_rev.at(i)=10000;
+                if (l_vec_cut_off_rev.at(i)==0) l_vec_cut_off_rev.at(i)=max_length;
                 output_tgt << endl;
             }
         }
@@ -415,6 +419,7 @@ int main ( int argc, char *argv[] )
                 length_src=(int)vec_line_src.size();
                 length_tgt=(int)vec_line_tgt.size();
                 l_ratio_bool = true;
+                if (length_src < max_length && length_tgt < max_length)
                 {
                     l_ratio = l_vec_cut_off.at(length_src);
                     if (l_ratio > l_vec_cut_off_rev.at(length_tgt)) l_ratio = l_vec_cut_off_rev.at(length_tgt);

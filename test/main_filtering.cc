@@ -137,6 +137,7 @@ void ProcessArgs(int argc, char** argv)
     if (l_input == "" || l_output == "" || l_src == "" || l_tgt == "" || l_minlength < 0 || l_maxlength < 0)
     {
         cerr << "Error" <<endl;
+        cerr << "Input file:\t" <<l_input << endl << "Output file:\t" <<  l_output << endl << "Source language:\t" <<  l_src << endl << "Target language:\t" <<  l_tgt << endl << "Minimum length:\t" <<  l_minlength << endl << "Maximum length:\t" <<  l_maxlength << endl;
         usage();
         exit(1);
     }

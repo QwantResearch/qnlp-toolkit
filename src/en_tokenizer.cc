@@ -113,7 +113,6 @@ bool Tokenizer_en::proc_empty(string& token, char& c)
                 if (c == 't' || c == 's')
                 {
                     token.push_back(c);
-                    cerr << c << endl;
                     char c_tmp=c;
                     if ((c = sb->sbumpc()) != EOF)
                     {

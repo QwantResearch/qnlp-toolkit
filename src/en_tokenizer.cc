@@ -64,10 +64,8 @@ bool Tokenizer_en::proc(string& token, char& c)
                             token=token.substr(0,(tksize)-1);
                             return true;
                         }
-                        cerr << token << endl;
                         if (seps(c))
                         {
-                            cerr << token << endl;
                             sb->sungetc();
                             sb->sputbackc('\'');
                             sb->sputbackc(c);

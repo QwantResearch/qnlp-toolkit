@@ -28,4 +28,8 @@ This a wrapper the the Byte Pair Encoding algorithme applied to words. The main 
 To propose a BPE training step.
 ### References
 > [Sennrich, 2016a]	Rico Sennrich, Barry Haddow and Alexandra Birch: "Neural Machine Translation of Rare Words with Subword Units" in Proceedings of the 54th Annual Meeting of the Association for Computational Linguistics (ACL 2016). Berlin, Germany, 2016. qtokenizer
->
+
+## qStemmer
+For many users, one needs a stemmer for Information Retreival. As State-of-the-Art stemmer, we included the Snowball Stemmer, for all language available.
+### References
+http://snowballstem.org/

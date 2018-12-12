@@ -1,6 +1,6 @@
 # Qnlp-ToolKit
 
-This toolkit ais to assemble the whole tools and libraries available for NLP rpocessing at Qwant.
+This toolkit ais to assemble the whole tools and libraries available for NLP pre-processing at Qwant.
 
 # Tools available
 ## qtokenizer

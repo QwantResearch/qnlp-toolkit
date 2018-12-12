@@ -150,7 +150,7 @@ int main ( int argc, char *argv[] )
             Tokenizer_fr l_tokenizer_fr(Tokenizer::PLAIN, l_cased,l_underscore,l_dash, l_aggressive);
             while (std::getline(std::cin, line))
             {
-                string to_tokenize=line.replace(line.find("’"),3,"'");
+                string to_tokenize=line;
                 cerr << to_tokenize << endl;
                 cout << stemming(l_tokenizer_fr.tokenize_sentence_to_string(to_tokenize),l_stem)<< endl;
             }
@@ -161,7 +161,7 @@ int main ( int argc, char *argv[] )
             Tokenizer_en l_tokenizer_en(Tokenizer::PLAIN, l_cased,l_underscore,l_dash, l_aggressive);
             while (std::getline(std::cin, line))
             {
-                string to_tokenize=line.replace(line.find("’"),3,"'");
+                string to_tokenize=line;
                 cerr << to_tokenize << endl;
                 cout << stemming(l_tokenizer_en.tokenize_sentence_to_string(line),l_stem)<< endl;
             }
@@ -171,7 +171,7 @@ int main ( int argc, char *argv[] )
             Tokenizer l_tokenizer(Tokenizer::PLAIN, l_cased,l_underscore,l_dash, l_aggressive);
             while (std::getline(std::cin, line))
             {
-                string to_tokenize=line.replace(line.find("’"),3,"'");
+                string to_tokenize=line;
                 cerr << to_tokenize << endl;
                 cout << stemming(l_tokenizer.tokenize_sentence_to_string(line),l_stem)<< endl;
             }

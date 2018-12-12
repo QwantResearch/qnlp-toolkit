@@ -29,7 +29,7 @@ bool Tokenizer_en::proc(string& token, char& c)
                 tksize=(int)token.size();
                 if ((c = sb->sbumpc()) != EOF)
                 {
-                    if (tksize == 2 && token[0]=='O')
+                    if (tksize == 2 && (token[0]=='O' || token[0]=='o'))
                     {
                         token.push_back(c);
                         return false;
@@ -54,6 +54,11 @@ bool Tokenizer_en::proc(string& token, char& c)
                         if (tksize == 2 && token[0]!='n')
                         {
                             sb->sungetc();
+                            if (token[0]=='I' || token[0]=='i')
+                            {
+                                sb->sputbackc('\'');
+                                token=token.substr(0,(tksize)-1);
+                            }
                             return true;
                         }
                         if (tksize > 2 && c=='s')
@@ -63,6 +68,18 @@ bool Tokenizer_en::proc(string& token, char& c)
                             sb->sputbackc('s');
                             token=token.substr(0,(tksize)-1);
                             return true;
+                        }
+                        if (tksize > 2)
+                        {
+                            if (((token[0]=='Y' || token[0]=='y') && (token[1]=='O' || token[1]=='o') && (token[2]=='U' || token[2]=='u')) || 
+                              ((token[0]=='S' || token[0]=='s') && (token[1]=='H' || token[1]=='h') && (token[2]=='E' || token[2]=='e')) ||
+                              ((token[0]=='H' || token[0]=='h') && (token[1]=='E' || token[1]=='e'))) 
+                            {
+                                sb->sungetc();
+                                sb->sputbackc('\'');
+                                token=token.substr(0,(tksize)-1);
+                                return true;
+                            }                            
                         }
                         if (seps(c))
                         {
@@ -110,19 +127,25 @@ bool Tokenizer_en::proc_empty(string& token, char& c)
             token.push_back(c);
             if ((c = sb->sbumpc()) != EOF)
             {
-                if (c == 't' || c == 's')
+                if (c == 't' || c == 's' || c == 'm' || c == 'r')
                 {
                     token.push_back(c);
                     char c_tmp=c;
                     if ((c = sb->sbumpc()) != EOF)
                     {
-                        if (! seps(c))
+                        if (! seps(c) && c != 'e')
                         {
                             sb->sungetc();
                             sb->sputbackc(c_tmp);
+                            sb->sputbackc(c);
                             token=token.substr(0,((int)token.size())-1);
                             return true;
                         }
+                        else
+                        {
+                            if (c == 'e') token.push_back(c);
+                        }
+                        
                     }
                     return true;
                 }

@@ -151,7 +151,6 @@ int main ( int argc, char *argv[] )
             while (std::getline(std::cin, line))
             {
                 string to_tokenize=line;
-                cerr << to_tokenize << endl;
                 cout << stemming(l_tokenizer_fr.tokenize_sentence_to_string(to_tokenize),l_stem)<< endl;
             }
 //             l_output = l_tokenizer_fr.tokenize_to_string();
@@ -162,7 +161,6 @@ int main ( int argc, char *argv[] )
             while (std::getline(std::cin, line))
             {
                 string to_tokenize=line;
-                cerr << to_tokenize << endl;
                 cout << stemming(l_tokenizer_en.tokenize_sentence_to_string(line),l_stem)<< endl;
             }
         }
@@ -172,7 +170,6 @@ int main ( int argc, char *argv[] )
             while (std::getline(std::cin, line))
             {
                 string to_tokenize=line;
-                cerr << to_tokenize << endl;
                 cout << stemming(l_tokenizer.tokenize_sentence_to_string(line),l_stem)<< endl;
             }
         }

@@ -133,12 +133,15 @@ bool Tokenizer_en::proc_empty(string& token, char& c)
                     char c_tmp=c;
                     if ((c = sb->sbumpc()) != EOF)
                     {
-                        if (! seps(c) && c != 'e')
+                        if (! seps(c) && c != 'e' )
                         {
                             sb->sungetc();
-                            sb->sputbackc(c_tmp);
+                            if (c != '\'' )
+                            {
+                                sb->sputbackc(c_tmp);
+                                token=token.substr(0,((int)token.size())-1);
+                            }
                             sb->sputbackc(c);
-                            token=token.substr(0,((int)token.size())-1);
                             return true;
                         }
                         else

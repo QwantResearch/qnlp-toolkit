@@ -143,7 +143,7 @@ string stemming(string input , bool l_stemming)
     }
     return input;
 }
-vector<string> stemming(vector<string> input , bool l_stemming)
+vector<string> stemming(vector<string> &input , bool l_stemming)
 {
     if (l_stemming)
     {
@@ -153,7 +153,7 @@ vector<string> stemming(vector<string> input , bool l_stemming)
     return input;
 }
 
-vector<string> filtering_stopwords(vector<string> input , bool l_stopwords)
+vector<string> filtering_stopwords(vector<string> &input , bool l_stopwords)
 {
     if (l_stopwords)
     {
@@ -202,7 +202,7 @@ int main ( int argc, char *argv[] )
         {
             l_output=qnlp::Join(l_output_vec," ");      
         }
+        cout << l_output << endl;
     }
-    cout << l_output << endl;
     return EXIT_SUCCESS;
 }

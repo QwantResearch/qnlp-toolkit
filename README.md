@@ -33,3 +33,11 @@ To propose a BPE training step.
 For many users, one needs a stemmer for Information Retreival. As State-of-the-Art stemmer, we included the Snowball Stemmer, for all language available.
 ### References
 http://snowballstem.org/
+
+## qStopWords
+In Information Retrieval, it is common to use stop-words list. This is now part of the qnlp-toolkit, for French, English, Portugese, Italian, Spanish and Dutch. The list comes from the website https://www.ranks.nl
+
+### References
+https://www.ranks.nl
+### TODO
+Add other european languages.

@@ -19,6 +19,7 @@ class Stemmer {
         string stem(string word);
         const sb_symbol* stem(const char* word);
         string stem_sentence(string sentence);
+        vector<string> stem_sentence_vector(vector<string> sentence);
         ~Stemmer();
         void stem(istringstream & f_in, ostringstream & f_out);
     private:

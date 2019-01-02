@@ -1,10 +1,11 @@
+
 #include "utils.h"
 
 // void Trim(std::string& s) {
 //   boost::trim_if(s, boost::is_any_of(" \t\n"));
 // }
 
-void Split(const std::string& line, std::vector<std::string>& pieces, const std::string del) {
+void qnlp::Split(const std::string& line, std::vector<std::string>& pieces, const std::string del) {
   size_t begin = 0;
   size_t pos = 0;
   std::string token;
@@ -23,7 +24,7 @@ void Split(const std::string& line, std::vector<std::string>& pieces, const std:
     pieces.push_back(token);
 }
 
-std::string Join(const std::vector<std::string>& words, const std::string del) {
+std::string qnlp::Join(const std::vector<std::string>& words, const std::string del) {
   std::stringstream ss;
   if (words.empty()) {
     return "";
@@ -35,7 +36,7 @@ std::string Join(const std::vector<std::string>& words, const std::string del) {
   return ss.str();
 }
 
-bool EndsWith(std::string const &fullString, std::string const suffix) {
+bool qnlp::EndsWith(std::string const &fullString, std::string const suffix) {
   if (fullString.length() >= suffix.length()) {
     return (0 == fullString.compare(fullString.length() - suffix.length(), suffix.length(), suffix));
   } else {
@@ -53,4 +54,3 @@ bool EndsWith(std::string const &fullString, std::string const suffix) {
 //   }
 //   return result.str();
 // }
-

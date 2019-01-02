@@ -37,6 +37,16 @@ string qnlp::Stemmer::stem_sentence(string sentence)
     return to_return;
 }
 
+vector<string> qnlp::Stemmer::stem_sentence_vector(vector<string> sentence)
+{
+    vector<string>  to_return;
+    for (int i=0; i<(int)sentence.size(); i++)
+    {
+        to_return.push_back(stem(sentence.at(i)));
+    }
+    return to_return;
+}
+
 qnlp::Stemmer::~Stemmer()
 {
     sb_stemmer_delete(_stemmer);

@@ -11,6 +11,8 @@
 #include "en_tokenizer.h"
 #include "bpe.h"
 #include "stemmer.h"
+#include "stopwords.h"
+#include "utils.h"
 
 
 using namespace std;
@@ -24,6 +26,7 @@ bool l_underscore=false;
 bool l_cased=false;
 bool l_dash=false;
 bool l_stem=false;
+bool l_stopwords=false;
 string l_lang="";
 string l_BPE="";
 int l_threads=4;
@@ -37,6 +40,7 @@ void usage()
             "--dash (-d)              split using dashes (default false)\n"
             "--lowercased (-c)        put the sequence in lowercase (default false)\n"
             "--underscore (-u)        split using underscores (default false)\n"
+            "--stopwords (-w)         remove stopwords (default false)\n"
             "--aggressive (-a)        equivalent to --dash and --underscore and every separators\n"
             "--BPE (-b)               Use Byte Pair Encoding preprocessing\n"
             "--embmodel (-e)          Load fasttext embeddings/prediction model\n"
@@ -50,7 +54,7 @@ void usage()
 
 void ProcessArgs(int argc, char** argv)
 {
-    const char* const short_opts = "svqdcual:b:e:t:h";
+    const char* const short_opts = "svwqdcual:b:e:t:h";
     const option long_opts[] = {
             {"stem", 0, nullptr, 's'},
             {"dash", 0, nullptr, 'd'},
@@ -59,6 +63,7 @@ void ProcessArgs(int argc, char** argv)
             {"aggressive", 0, nullptr, 'a'},
             {"qclassify", 0, nullptr, 'q'},
             {"qvectorize", 0, nullptr, 'v'},
+            {"stopwords", 0, nullptr, 'w'},
             {"lang", 1, nullptr, 'l'},
             {"BPE", 1, nullptr, 'b'},
             {"embmodel", 1, nullptr, 'e'},
@@ -92,6 +97,10 @@ void ProcessArgs(int argc, char** argv)
             l_underscore = true;
             break;
 
+        case 'w':
+            l_stopwords = true;
+            break;
+
         case 'a':
             l_dash = true;
             l_underscore = true;
@@ -122,6 +131,7 @@ void ProcessArgs(int argc, char** argv)
 }
 
 
+
 string stemming(string input , bool l_stemming)
 {
     vector<string> line_splited;
@@ -130,6 +140,25 @@ string stemming(string input , bool l_stemming)
     {
         Stemmer s(l_lang.c_str());
         return s.stem_sentence(input);
+    }
+    return input;
+}
+vector<string> stemming(vector<string> input , bool l_stemming)
+{
+    if (l_stemming)
+    {
+        Stemmer s(l_lang.c_str());
+        return s.stem_sentence_vector(input);
+    }
+    return input;
+}
+
+vector<string> filtering_stopwords(vector<string> input , bool l_stopwords)
+{
+    if (l_stopwords)
+    {
+        Stopwords sw;
+        return sw.filter_stopwords(input,l_lang);
     }
     return input;
 }
@@ -143,77 +172,37 @@ int main ( int argc, char *argv[] )
     stringstream l_out;
     string line;
     
-    if ((int)l_BPE.size() == 0)
+    while (std::getline(std::cin, line))
     {
+        string to_tokenize=line;
         if (l_lang.compare("fr") == 0) 
         {
             Tokenizer_fr l_tokenizer_fr(Tokenizer::PLAIN, l_cased,l_underscore,l_dash, l_aggressive);
-            while (std::getline(std::cin, line))
-            {
-                string to_tokenize=line;
-                cout << stemming(l_tokenizer_fr.tokenize_sentence_to_string(to_tokenize),l_stem)<< endl;
-            }
-//             l_output = l_tokenizer_fr.tokenize_to_string();
+            l_output_vec = l_tokenizer_fr.tokenize_sentence(to_tokenize);
         }
         else if (l_lang.compare("en") == 0) 
         {
             Tokenizer_en l_tokenizer_en(Tokenizer::PLAIN, l_cased,l_underscore,l_dash, l_aggressive);
-            while (std::getline(std::cin, line))
-            {
-                string to_tokenize=line;
-                cout << stemming(l_tokenizer_en.tokenize_sentence_to_string(line),l_stem)<< endl;
-            }
+            l_output_vec = l_tokenizer_en.tokenize_sentence(to_tokenize);
         }
         else
         {
             Tokenizer l_tokenizer(Tokenizer::PLAIN, l_cased,l_underscore,l_dash, l_aggressive);
-            while (std::getline(std::cin, line))
-            {
-                string to_tokenize=line;
-                cout << stemming(l_tokenizer.tokenize_sentence_to_string(line),l_stem)<< endl;
-            }
+            l_output_vec = l_tokenizer.tokenize_sentence(to_tokenize);
         }
-//         if ((int)l_BPE.size() > 0)
-//         {
-//             BPE bpemodel(l_BPE);
-//     //         l_out << " ||| ";
-//             l_output = bpemodel.apply_bpe(l_output);
-//         }
-    }
-    else
-    {
-        if (l_lang.compare("fr") == 0) 
+        l_output_vec = stemming(l_output_vec,l_stem);
+        l_output_vec = filtering_stopwords(l_output_vec,l_stopwords);
+        if ((int)l_BPE.size() != 0)
         {
-            Tokenizer_fr l_tokenizer_fr(Tokenizer::PLAIN, l_cased,l_underscore,l_dash, l_aggressive);
-            l_output_vec = l_tokenizer_fr.tokenize();
-        }
-        else if (l_lang.compare("en") == 0) 
-        {
-            Tokenizer_en l_tokenizer_en(Tokenizer::PLAIN, l_cased,l_underscore,l_dash, l_aggressive);
-            l_output_vec = l_tokenizer_en.tokenize();
-        }
-        else
-        {
-            Tokenizer l_tokenizer(Tokenizer::PLAIN, l_cased,l_underscore,l_dash, l_aggressive);
-            l_output_vec = l_tokenizer.tokenize();
-        }
+            
             BPE bpemodel(l_BPE);
             l_output=bpemodel.apply_bpe_to_string(l_output_vec);
+        }
+        else
+        {
+            l_output=qnlp::Join(l_output_vec," ");      
+        }
     }
-//     if (l_stem)
-//     {
-//         vector<string> line_splited;
-//         string tmp_output;
-//         Stemmer s(l_lang.c_str());
-//         Split(l_output,line_splited," ");
-//         for (int i=0; i<(int)line_splited.size(); i++)
-//         {
-//             if (i != 0) tmp_output.append(" ");
-//             
-//             tmp_output.append(s.stem(line_splited.at(i)));
-//         }
-//         cerr << "THE CERR "<< tmp_output << endl;
-//     }
-    cout << l_output;
+    cout << l_output << endl;
     return EXIT_SUCCESS;
 }

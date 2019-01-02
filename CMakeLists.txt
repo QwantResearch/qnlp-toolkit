@@ -66,7 +66,9 @@ set(SOURCES
   ${CMAKE_SOURCE_DIR}/src/fr_tokenizer.cc  
   ${CMAKE_SOURCE_DIR}/src/tokenizer.cc  
   ${CMAKE_SOURCE_DIR}/src/stemmer.cc  
+  ${CMAKE_SOURCE_DIR}/src/stopwords.cc
   ${CMAKE_SOURCE_DIR}/src/utils.cc
+  ${CMAKE_SOURCE_DIR}/src/stemmer.cc  
   )
   
 add_library(${PROJECT_NAME} SHARED ${SOURCES})

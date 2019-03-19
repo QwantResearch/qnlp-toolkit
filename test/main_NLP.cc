@@ -13,6 +13,7 @@
 #include "stemmer.h"
 #include "stopwords.h"
 #include "utils.h"
+#include "generalization.h"
 
 
 using namespace std;
@@ -26,6 +27,7 @@ bool l_underscore=false;
 bool l_cased=false;
 bool l_dash=false;
 bool l_stem=false;
+bool l_generalize=false;
 bool l_stopwords=false;
 string l_lang="";
 string l_BPE="";
@@ -43,6 +45,7 @@ void usage()
             "--stopwords (-w)         remove stopwords (default false)\n"
             "--aggressive (-a)        equivalent to --dash and --underscore and every separators\n"
             "--BPE (-b)               Use Byte Pair Encoding preprocessing\n"
+            "--generalize (-g)        remove numbers and replace them with a tag XNUMBER\n"
             "--embmodel (-e)          Load fasttext embeddings/prediction model\n"
             "--qlassify (-q)          predict class according the model loaded (need embmodel)\n"
             "--qvectorize (-v)        give vector representation for the sentence/query (need embmodel)\n"
@@ -54,9 +57,10 @@ void usage()
 
 void ProcessArgs(int argc, char** argv)
 {
-    const char* const short_opts = "svwqdcual:b:e:t:h";
+    const char* const short_opts = "gsvwqdcual:b:e:t:h";
     const option long_opts[] = {
             {"stem", 0, nullptr, 's'},
+            {"generalize", 0, nullptr, 'g'},
             {"dash", 0, nullptr, 'd'},
             {"lowercased", 0, nullptr, 'c'},
             {"underscore", 0, nullptr, 'u'},
@@ -83,6 +87,10 @@ void ProcessArgs(int argc, char** argv)
         {
         case 's':
             l_stem = true;
+            break;
+
+        case 'g':
+            l_generalize = true;
             break;
 
         case 'd':
@@ -163,6 +171,19 @@ vector<string> filtering_stopwords(vector<string> &input , bool l_stopwords)
     return input;
 }
 
+vector<string> generalize(vector<string> &input , bool l_generalize)
+{
+    vector<string> tmp;
+    if (l_generalize)
+    {
+        Generalization gen;
+//         dcerr << "herre" <<endl;
+        tmp=gen.filter_numbers(input);
+        return gen.filter_hours(tmp);
+    }
+    return input;
+}
+
 int main ( int argc, char *argv[] )
 {
     ProcessArgs(argc, argv);
@@ -192,6 +213,7 @@ int main ( int argc, char *argv[] )
         }
         l_output_vec = stemming(l_output_vec,l_stem);
         l_output_vec = filtering_stopwords(l_output_vec,l_stopwords);
+        l_output_vec = generalize(l_output_vec,l_generalize);
         if ((int)l_BPE.size() != 0)
         {
             

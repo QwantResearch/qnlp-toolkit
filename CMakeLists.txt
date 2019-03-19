@@ -69,6 +69,7 @@ set(SOURCES
   ${CMAKE_SOURCE_DIR}/src/stopwords.cc
   ${CMAKE_SOURCE_DIR}/src/utils.cc
   ${CMAKE_SOURCE_DIR}/src/stemmer.cc  
+  ${CMAKE_SOURCE_DIR}/src/generalization.cc
   )
   
 add_library(${PROJECT_NAME} SHARED ${SOURCES})

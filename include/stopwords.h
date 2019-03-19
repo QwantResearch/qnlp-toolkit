@@ -12,8 +12,8 @@ namespace qnlp {
 class Stopwords {
     public:
       Stopwords();
-      bool checkword(string token, string lang);
-      vector<string> filter_stopwords(vector<string> sentence,string lang);
+      bool checkword(string& token, string lang);
+      vector<string> filter_stopwords(vector< string >& sentence, string lang);
     private:
       std::unordered_map< string, std::unordered_map<string,int> > _list_stopwords;
       const vector<string> fr = {"alors","au","aucuns","aussi","autre","avant","avec","avoir","bon","car","ce","cela","ces","ceux","chaque","ci","comme","comment","dans","des","du","dedans","dehors","depuis","devrait","doit","donc","dos","début","elle","elles","en","encore","essai","est","et","eu","fait","faites","fois","font","hors","ici","il","ils","je","juste","la","le","les","leur","là","ma","maintenant","mais","mes","mine","moins","mon","mot","même","ni","nommés","notre","nous","ou","où","par","parce","pas","peut","peu","plupart","pour","pourquoi","quand","que","quel","quelle","quelles","quels","qui","sa","sans","ses","seulement","si","sien","son","sont","sous","soyez","sujet","sur","ta","tandis","tellement","tels","tes","ton","tous","tout","trop","très","tu","voient","vont","votre","vous","vu","ça","étaient","état","étions","été","être","l'"};

@@ -23,7 +23,7 @@ Stopwords::Stopwords()
 }
 
 
-bool Stopwords::checkword(string token, string lang)
+bool Stopwords::checkword(string& token, string lang)
 {
     std::unordered_map< string, std::unordered_map<string,int> >::iterator l_iterator=_list_stopwords.find(lang);
     if (l_iterator!=_list_stopwords.end())
@@ -37,7 +37,7 @@ bool Stopwords::checkword(string token, string lang)
     return false;
 }
 
-vector< string > Stopwords::filter_stopwords(vector< string > sentence, string lang)
+vector< string > Stopwords::filter_stopwords(vector< string >& sentence, string lang)
 {
     int l_iter = 0;
     vector<string> to_return;

@@ -40,7 +40,7 @@ class Embeddings {
         float getCosineSimilarity(fasttext::Vector vec1, fasttext::Vector vec2);
     private:
         fasttext::FastText _embmodel;
-        fasttext::Matrix* _wordVectors;
+         std::unique_ptr<fasttext::DenseMatrix>  _wordVectors;
         std::shared_ptr<const fasttext::Dictionary> _dict;
 };
 

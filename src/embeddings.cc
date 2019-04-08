@@ -7,8 +7,9 @@ Embeddings::Embeddings(string& filename)
     
     _embmodel.loadModel(filename);
     _dict = _embmodel.getDictionary();
-    _wordVectors = new fasttext::Matrix(_dict->nwords(), _embmodel.getDimension());
-    _embmodel.precomputeWordVectors((*_wordVectors));
+//      _wordVectors = new fasttext::Matrix(_dict->nwords(), _embmodel.getDimension());
+     _wordVectors = std::unique_ptr<fasttext::DenseMatrix>(new fasttext::DenseMatrix(_dict->nwords(), _embmodel.getDimension()));
+//     _embmodel.precomputeWordVectors((*_wordVectors));
 }
 
 Embeddings::Embeddings(void)
@@ -35,19 +36,22 @@ void Embeddings::getSentenceVector(string& sentence, fasttext::Vector& sentenceV
 
 vector< pair< fasttext::real, string > > Embeddings::queryWords(string& word,int nbest)
 {
-    fasttext::Vector wordVector(_embmodel.getDimension());
-    std::set<std::string> banSet;
-    banSet.clear();
-    banSet.insert(word);
-    _embmodel.getWordVector(wordVector, word);
-    return queryWords(wordVector,banSet,nbest);
+    return _embmodel.getNN(word,nbest);
+//     fasttext::Vector wordVector(_embmodel.getDimension());
+//     std::set<std::string> banSet;
+//     banSet.clear();
+//     banSet.insert(word);
+//     _embmodel.getWordVector(wordVector, word);
+//     return queryWords(wordVector,banSet,nbest);
   
 }
 
 vector< pair< fasttext::real, string > > Embeddings::queryWords(fasttext::Vector& wordVector, std::set<std::string> &banSet, int nbest)
 {
     std::vector<std::pair<fasttext::real, std::string>> to_return;
-    _embmodel.findNN((*_wordVectors), wordVector, nbest, banSet, to_return);
+    assert(_wordVectors);
+//     to_return= _embmodel.findNN(*_wordVectors, wordVector, nbest, banSet);
+    _embmodel.findNN(*_wordVectors, wordVector, nbest, banSet, to_return);
     return to_return;
 }
 
@@ -201,8 +205,10 @@ vector< pair< fasttext::real, string > > Embeddings::querySentenceEvolved(vector
 vector< pair< fasttext::real, string > > Embeddings::querySentence(fasttext::Vector& sentenceVector, std::set<std::string> &banSet, int nbest)
 {
     std::vector<std::pair<fasttext::real, std::string>> to_return;
-
-    _embmodel.findNN((*_wordVectors), sentenceVector, nbest, banSet, to_return);
+    assert(_wordVectors);
+//     to_return= 
+    _embmodel.findNN(*_wordVectors, sentenceVector, nbest, banSet, to_return);
+//     _embmodel.findNN((*_wordVectors), sentenceVector, nbest, banSet, to_return);
     return to_return;
 }
 
@@ -256,7 +262,7 @@ std::vector < std::pair < fasttext::real,std::string > > Embeddings::classifySen
     {
         ssSentence << sentence[l_inc] << " ";
     }
-    _embmodel.predict(ssSentence, nbest, to_return, threshold);
+    _embmodel.predictLine(ssSentence, to_return, nbest, threshold);
     return to_return;
 }
 
@@ -265,7 +271,7 @@ std::vector < std::pair < fasttext::real,std::string > > Embeddings::classifySen
     std::vector < std::pair < fasttext::real,std::string > > to_return;
     int l_inc = 0;
     std::stringstream ssSentence(sentence);
-    _embmodel.predict(ssSentence, nbest, to_return, threshold);
+    _embmodel.predictLine(ssSentence, to_return, nbest, threshold);
     return to_return;
 }
 

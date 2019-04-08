@@ -27,14 +27,14 @@ SET(CMAKE_INSTALL_RPATH_USE_LINK_PATH TRUE)
 
 # set(CMAKE_CXX_STANDARD 11)
 
-# find_package(Boost)
+find_package(Boost)
 
-# if(Boost_FOUND)
-#     include_directories(${Boost_INCLUDE_DIRS})
-#     set(EXT_LIBS ${Boost_LIBRARIES})
-# else(Boost_FOUND)
-#     message(SEND_ERROR "Cannot find Boost libraries. Terminating." )
-# endif(Boost_FOUND)
+if(Boost_FOUND)
+    include_directories(${Boost_INCLUDE_DIRS})
+    set(EXT_LIBS ${Boost_LIBRARIES})
+else(Boost_FOUND)
+    message(SEND_ERROR "Cannot find Boost libraries. Terminating." )
+endif(Boost_FOUND)
 
 # find_package(snowball)
 

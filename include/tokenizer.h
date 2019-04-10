@@ -15,7 +15,7 @@ namespace qnlp {
 
 class Tokenizer {
     public:
-        enum {PLAIN, XHTML};
+        enum {PLAIN, XHTML, CARACTER};
 
         /** Constructor of the class tokenizer */
         Tokenizer (istream* in, int syntax=PLAIN, bool lowercased=true, bool underscore=true, bool dash=true, bool aggressive=true):

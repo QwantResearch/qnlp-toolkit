@@ -130,6 +130,14 @@ bool Tokenizer::read (string& token, bool newdoc) {
                 token.push_back(c);
             } // separatorRules (c)
         } // do_read || syntax == PLAIN
+        if ( syntax == CARACTER) 
+        {
+            if (lowercased) c = tolower(c);
+            token.push_back(c);
+            if (c == ' ') token="▁";
+            else token=c;
+            return true;
+        } // syntax == CARACTER
     } // while
 
     return false;

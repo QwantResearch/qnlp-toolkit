@@ -193,29 +193,28 @@ int main ( int argc, char *argv[] )
     stringstream l_out;
     string line;
     Tokenizer* l_tokenizer;
+    if (l_lang.compare("fr") == 0) 
+    {
+        l_tokenizer = new Tokenizer_fr(Tokenizer::PLAIN, l_cased,l_underscore,l_dash, l_aggressive);
+//             l_output_vec = l_tokenizer_fr.tokenize_sentence(to_tokenize);
+    }
+    else if (l_lang.compare("en") == 0) 
+    {
+        l_tokenizer = new Tokenizer_en(Tokenizer::PLAIN, l_cased,l_underscore,l_dash, l_aggressive);
+//             l_output_vec = l_tokenizer_en.tokenize_sentence(to_tokenize);
+    }
+    else if (l_lang.compare("car") == 0) 
+    {
+        l_tokenizer = new Tokenizer(Tokenizer::CARACTER, l_cased,l_underscore,l_dash, l_aggressive);
+//             l_output_vec = l_tokenizer.tokenize_sentence(to_tokenize);
+    }
+    else
+    {
+        l_tokenizer = new Tokenizer(Tokenizer::PLAIN, l_cased,l_underscore,l_dash, l_aggressive);
+    }
     while (std::getline(std::cin, line))
     {
         string to_tokenize=line;
-        if (l_lang.compare("fr") == 0) 
-        {
-            l_tokenizer = new Tokenizer_fr(Tokenizer::PLAIN, l_cased,l_underscore,l_dash, l_aggressive);
-//             l_output_vec = l_tokenizer_fr.tokenize_sentence(to_tokenize);
-        }
-        else if (l_lang.compare("en") == 0) 
-        {
-            l_tokenizer = new Tokenizer_en(Tokenizer::PLAIN, l_cased,l_underscore,l_dash, l_aggressive);
-//             l_output_vec = l_tokenizer_en.tokenize_sentence(to_tokenize);
-        }
-        else if (l_lang.compare("car") == 0) 
-        {
-            l_tokenizer = new Tokenizer(Tokenizer::CARACTER, l_cased,l_underscore,l_dash, l_aggressive);
-//             l_output_vec = l_tokenizer.tokenize_sentence(to_tokenize);
-        }
-        else
-        {
-            l_tokenizer = new Tokenizer(Tokenizer::PLAIN, l_cased,l_underscore,l_dash, l_aggressive);
-            
-        }
         l_output_vec = l_tokenizer->tokenize_sentence(to_tokenize);
         l_output_vec = stemming(l_output_vec,l_stem);
         l_output_vec = filtering_stopwords(l_output_vec,l_stopwords);
@@ -232,5 +231,6 @@ int main ( int argc, char *argv[] )
         }
         cout << l_output << endl;
     }
+    delete(l_tokenizer);
     return EXIT_SUCCESS;
 }

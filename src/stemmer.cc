@@ -57,6 +57,7 @@ void qnlp::Stemmer::stem(istringstream & f_in, ostringstream & f_out)
     int lim = 10;
     sb_symbol * b = (sb_symbol *) malloc(lim * sizeof(sb_symbol));
     int pretty=2;
+//         unsigned 
         char ch; 
         {
             int i = 0;
@@ -71,11 +72,10 @@ void qnlp::Stemmer::stem(istringstream & f_in, ostringstream & f_out)
                     b = newb;
                     lim = lim + lim;
                 }
-                /* Update count of utf-8 characters. */
-                if (ch < 0x80 || ch > 0xBF) inlen += 1;
-                /* force lower case: */
+                // Update count of utf-8 characters.
+                inlen += 1;
+                // force lower case:
                 ch = tolower(ch);
-
                 b[i] = ch;
                 i++;
             }
@@ -84,11 +84,10 @@ void qnlp::Stemmer::stem(istringstream & f_in, ostringstream & f_out)
                 const sb_symbol * stemmed = sb_stemmer_stem(_stemmer, b, i);
                 if (stemmed == NULL)
                 {
-                    fprintf(stderr, "Out of memory");
+                    cerr << "Out of memory" << endl;
                     exit(1);
                 }
                 f_out << stemmed;
-//                 f_out.put(stemmed);
             }
         }
 }

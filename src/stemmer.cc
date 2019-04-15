@@ -87,7 +87,8 @@ void qnlp::Stemmer::stem(istringstream & f_in, ostringstream & f_out)
                     fprintf(stderr, "Out of memory");
                     exit(1);
                 }
-                f_out.put(stemmed);
+                f_out << stemmed;
+//                 f_out.put(stemmed);
             }
         }
 }

@@ -100,7 +100,6 @@ bool Tokenizer::read (string& token, bool newdoc) {
     xmlDom dom;
 
     while ((c = sb->sbumpc()) != EOF) {
-        if (c == '’') c = '\'';
         if (syntax == XHTML) {
             if (parserXHTML(c, dom) == 1) {
                 if (dom.tag == flag) 

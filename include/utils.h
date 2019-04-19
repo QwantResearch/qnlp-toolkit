@@ -22,4 +22,4 @@ bool EndsWith(std::string const &fullString, std::string const suffix);
 
 };
 
-#endif // QNLP_UTILS_H
+#endif // QNLP_UTILS_

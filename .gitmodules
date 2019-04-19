@@ -1,0 +1,9 @@
+[submodule "vendor/snowball"]
+	path = vendor/snowball
+	url = https://github.com/snowballstem/snowball.git
+[submodule "vendor/utfcpp"]
+	path = vendor/utfcpp
+	url = https://github.com/nemtrif/utfcpp.git
+[submodule "vendor/fastText"]
+	path = vendor/fastText
+	url = https://github.com/facebookresearch/fastText.git

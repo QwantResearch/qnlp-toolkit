@@ -11,11 +11,11 @@ find_package(OpenMP)
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${OpenMP_CXX_FLAGS}")
 MESSAGE( STATUS "CMAKE_CXX_FLAGS:         " ${CMAKE_CXX_FLAGS})
 
-include_directories(${CMAKE_SOURCE_DIR}/include)
-# include_directories(${CMAKE_SOURCE_DIR}/externals/)
-include_directories(${CMAKE_CURRENT_SOURCE_DIR}/externals/snowball/include)
-# include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../libstemmer/runtime)
-# include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../libstemmer/src_c)
+include_directories(${PROJECT_SOURCE_DIR}/include)
+# include_directories(${PROJECT_SOURCE_DIR}/externals/)
+include_directories(${PROJECT_SOURCE_DIR}/externals/snowball/include)
+# include_directories(${PROJECT_SOURCE_DIR}/../libstemmer/runtime)
+# include_directories(${PROJECT_SOURCE_DIR}/../libstemmer/src_c)
 link_directories(/usr/local/lib)
 SET(CMAKE_INSTALL_RPATH_USE_LINK_PATH TRUE)
 # SET(CMAKE_INSTALL_RPATH "${CMAKE_INSTALL_PREFIX}/lib")
@@ -45,7 +45,7 @@ endif(Boost_FOUND)
 #     message(SEND_ERROR "Cannot find snowball libraries. Terminating." )
 # endif(snowball_FOUND)
 
-add_subdirectory(externals/snowball)
+add_subdirectory(${PROJECT_SOURCE_DIR}/externals/snowball)
 
 # Set Release build type by default to get sane performance.
 # if(NOT CMAKE_BUILD_TYPE)
@@ -54,22 +54,22 @@ add_subdirectory(externals/snowball)
 
 message(STATUS "Build type: " ${CMAKE_BUILD_TYPE})
 
-# include_directories(${CMAKE_CURRENT_SOURCE_DIR}/include)
+# include_directories(${PROJECT_SOURCE_DIR}/include)
 # set(INCLUDE_DIRECTORIES
-#   ${CMAKE_CURRENT_SOURCE_DIR}/include
+#   ${PROJECT_SOURCE_DIR}/include
 #   )
 
 set(SOURCES
-  ${CMAKE_SOURCE_DIR}/src/bpe.cc  
-  ${CMAKE_SOURCE_DIR}/src/embeddings.cc  
-  ${CMAKE_SOURCE_DIR}/src/en_tokenizer.cc  
-  ${CMAKE_SOURCE_DIR}/src/fr_tokenizer.cc  
-  ${CMAKE_SOURCE_DIR}/src/tokenizer.cc  
-  ${CMAKE_SOURCE_DIR}/src/stemmer.cc  
-  ${CMAKE_SOURCE_DIR}/src/stopwords.cc
-  ${CMAKE_SOURCE_DIR}/src/utils.cc
-  ${CMAKE_SOURCE_DIR}/src/stemmer.cc  
-  ${CMAKE_SOURCE_DIR}/src/generalization.cc
+  ${PROJECT_SOURCE_DIR}/src/bpe.cc  
+  ${PROJECT_SOURCE_DIR}/src/embeddings.cc  
+  ${PROJECT_SOURCE_DIR}/src/en_tokenizer.cc  
+  ${PROJECT_SOURCE_DIR}/src/fr_tokenizer.cc  
+  ${PROJECT_SOURCE_DIR}/src/tokenizer.cc  
+  ${PROJECT_SOURCE_DIR}/src/stemmer.cc  
+  ${PROJECT_SOURCE_DIR}/src/stopwords.cc
+  ${PROJECT_SOURCE_DIR}/src/utils.cc
+  ${PROJECT_SOURCE_DIR}/src/stemmer.cc  
+  ${PROJECT_SOURCE_DIR}/src/generalization.cc
   )
   
 add_library(${PROJECT_NAME} SHARED ${SOURCES})

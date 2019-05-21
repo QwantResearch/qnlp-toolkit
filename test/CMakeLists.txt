@@ -1,7 +1,7 @@
 PROJECT(qnlp)
 
-include_directories(BEFORE ${CMAKE_SOURCE_DIR}/src)
-include_directories(${CMAKE_SOURCE_DIR}/include)
+include_directories(BEFORE ${PROJECT_SOURCE_DIR}/src)
+include_directories(${PROJECT_SOURCE_DIR}/include)
 link_directories(/usr/local/lib)
 SET(NLP_SRCS
     main_NLP.cc

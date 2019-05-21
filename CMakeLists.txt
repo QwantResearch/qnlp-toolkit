@@ -11,13 +11,18 @@ find_package(OpenMP)
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${OpenMP_CXX_FLAGS}")
 MESSAGE( STATUS "CMAKE_CXX_FLAGS:         " ${CMAKE_CXX_FLAGS})
 
+execute_process(COMMAND ln -s ${CMAKE_CURRENT_SOURCE_DIR}/vendor/fastText/src/ ${CMAKE_CURRENT_SOURCE_DIR}/vendor/fastText/fasttext)
 
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/include)
 # include_directories(${CMAKE_CURRENT_SOURCE_DIR}/externals/)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/externals/snowball/include)
+include_directories(${CMAKE_CURRENT_SOURCE_DIR}/vendor/fastText)
+
 # include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../libstemmer/runtime)
 # include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../libstemmer/src_c)
 link_directories(/usr/local/lib)
+link_directories(build/vendor/fastText)
+
 SET(CMAKE_INSTALL_RPATH_USE_LINK_PATH TRUE)
 # SET(CMAKE_INSTALL_RPATH "${CMAKE_INSTALL_PREFIX}/lib")
 
@@ -37,7 +42,7 @@ else(Boost_FOUND)
     message(SEND_ERROR "Cannot find Boost libraries. Terminating." )
 endif(Boost_FOUND)
 
-add_subdirectory(vendor/fastText)
+add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/vendor/fastText)
 
 
 # find_package(snowball)

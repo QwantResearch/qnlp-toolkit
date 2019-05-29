@@ -13,7 +13,8 @@ RUN apt-get -y update && \
         g++ \
         libboost-locale-dev \
         libboost-regex-dev \
-        libyaml-cpp-dev
+        libyaml-cpp-dev \
+	git
 
 COPY . /opt/qnlp-toolkit
 
@@ -27,9 +28,10 @@ WORKDIR /opt/qnlp-toolkit
 #         && cmake .. && make -j4 && make install \
 #         && ldconfig
 
-RUN mkdir -p build/ && cd build \
-    && cmake .. && make -j4 && make install \
-    && ldconfig
+RUN ./install.sh
+#RUN mkdir -p build/ && cd build \
+#    && cmake .. && make -j4 && make install \
+#    && ldconfig
 
 # TODO: remove libyaml-cpp-dev
 

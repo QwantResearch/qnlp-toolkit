@@ -1,9 +1,11 @@
-
 #include "utils.h"
 
 // void Trim(std::string& s) {
 //   boost::trim_if(s, boost::is_any_of(" \t\n"));
 // }
+
+using namespace qnlp;
+
 
 void qnlp::Split(const std::string& line, std::vector<std::string>& pieces, const std::string del) {
   size_t begin = 0;

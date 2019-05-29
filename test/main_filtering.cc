@@ -14,7 +14,7 @@
 
 
 using namespace std;
-// using namespace qnlp;
+using namespace qnlp;
 
 // typedef std::vector<uint32_t> value_test;
 
@@ -188,8 +188,8 @@ int main ( int argc, char *argv[] )
             if (l_input_cpt % 100000 == 0) cerr << "(" << l_input_cpt << ")";
             vec_line_src.clear();
             vec_line_tgt.clear();
-            qnlp::Split(line_src,vec_line_src," ");
-            qnlp::Split(line_tgt,vec_line_tgt," ");
+            Split(line_src,vec_line_src," ");
+            Split(line_tgt,vec_line_tgt," ");
             length_src=(int)vec_line_src.size();
             length_tgt=(int)vec_line_tgt.size();
             l_ratio_bool = true;
@@ -414,8 +414,8 @@ int main ( int argc, char *argv[] )
                 if (l_input_cpt % 100000 == 0) cerr << "(" << l_input_cpt << ")";
                 vec_line_src.clear();
                 vec_line_tgt.clear();
-                qnlp::Split(line_src,vec_line_src," ");
-                qnlp::Split(line_tgt,vec_line_tgt," ");
+                Split(line_src,vec_line_src," ");
+                Split(line_tgt,vec_line_tgt," ");
                 length_src=(int)vec_line_src.size();
                 length_tgt=(int)vec_line_tgt.size();
                 l_ratio_bool = true;

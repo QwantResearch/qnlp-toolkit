@@ -1,16 +1,17 @@
 cmake_minimum_required(VERSION 3.0.0)
 project(qnlp)
 
-add_subdirectory(vendor/fastText)
+# add_subdirectory(vendor/fastText)
 add_subdirectory(externals/snowball)
 
 set(CMAKE_VERBOSE_MAKEFILE ON)
 set(CMAKE_CXX_STANDARD 11)
 set(THREADS_PREFER_PTHREAD_FLAG ON)
 
+include_directories(/usr/include)
 include_directories(include)
 include_directories(externals/snowball/include)
-include_directories(vendor/fastText/src)
+#include_directories(BEFORE vendor/fastText/src)
 
 link_directories(/usr/lib
                  /usr/local/lib
@@ -34,7 +35,7 @@ set(SOURCES
 )
 
 set(LIBS
-  fasttext-static
+  fasttext
   snowball
 )
 
@@ -47,4 +48,7 @@ endif(Boost_FOUND)
 add_library(${PROJECT_NAME} ${SOURCES})
 target_link_libraries(${PROJECT_NAME} ${LIBS})
 
-install(TARGETS ${PROJECT_NAME} DESTINATION build/)
+add_subdirectory(test)
+
+install(TARGETS ${PROJECT_NAME} DESTINATION lib/)
+install(DIRECTORY include/ DESTINATION include/qnlp FILES_MATCHING PATTERN "*.h*")

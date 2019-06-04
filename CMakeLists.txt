@@ -2,6 +2,7 @@ cmake_minimum_required(VERSION 3.0.0)
 project(qnlp)
 
 # add_subdirectory(vendor/fastText)
+# add_subdirectory(vendor/sentencepiece)
 add_subdirectory(externals/snowball)
 
 set(CMAKE_VERBOSE_MAKEFILE ON)
@@ -32,6 +33,7 @@ set(SOURCES
   src/utils.cc
   src/stemmer.cc
   src/generalization.cc
+  src/spm.cc
 )
 
 set(LIBS

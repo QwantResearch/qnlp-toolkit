@@ -17,12 +17,23 @@ git submodule update --init --recursive
 echo "Installing dependencies (fastText)"
 
 pushd vendor/fastText
-	rm -rf build
-	mkdir -p build
-	pushd build
-		cmake .. -DCMAKE_INSTALL_PREFIX="${PREFIX}" -DCMAKE_BUILD_TYPE=Release
-		make -j 4 && make install
-	popd
+        rm -rf build
+        mkdir -p build
+        pushd build
+                cmake .. -DCMAKE_INSTALL_PREFIX="${PREFIX}" -DCMAKE_BUILD_TYPE=Release
+                make -j 4 && make install
+        popd
+popd
+
+echo "Installing dependencies (sentencepiece)"
+
+pushd vendor/sentencepiece
+        rm -rf build
+        mkdir -p build
+        pushd build
+                cmake .. -DCMAKE_INSTALL_PREFIX="${PREFIX}" -DCMAKE_BUILD_TYPE=Release
+                make -j 4 && make install
+        popd
 popd
 
 echo "Installing qnlp-toolkit"

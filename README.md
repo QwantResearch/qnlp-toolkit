@@ -22,8 +22,12 @@ Enhance the fasttext wrapper to add some GPU processing (which should be more fa
 > [Joulin, 2016c]	Armand Joulin, Edouard Grave, Piotr Bojanowski, Matthijs Douze,  Hervé Jégou and Tomas Mikolov: "FastText.zip: Compressing text classification models", arXiv preprint arXiv:1612.03651, 2016
 
 
+## qEMB wrapper
+A wrapper for FastText models (https://github.com/facebookresearch/fastText.git)
 ## qBPE wrapper
 This a wrapper the the Byte Pair Encoding algorithme applied to words. The main objective of this tool is to reduce the vocabulary for Neural Machine Translation toolkits. Limiting inputs and outputs enable to train faster and more accurate models.
+### sentencePiece wrapper
+This is a wrapper for google's sentencePiece models (https://github.com/google/sentencepiece)
 ### TODO
 To propose a BPE training step.
 ### References

@@ -1,6 +1,9 @@
 #!/usr/bin/env bash
 
 export PREFIX=/usr/local/
+if [ -n "$1" ]
+then
+    export PREFIX=$1
 
 echo "Prefix set to $PREFIX"
 
@@ -8,7 +11,7 @@ export CMAKE_PREFIX_PATH=$PREFIX
 
 git submodule update --init --recursive
 
-echo "Installing dependencies"
+echo "Installing dependencies (fastText)"
 
 pushd vendor/fastText
 	rm -rf build

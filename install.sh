@@ -21,7 +21,7 @@ pushd vendor/fastText
         mkdir -p build
         pushd build
                 cmake .. -DCMAKE_INSTALL_PREFIX="${PREFIX}" -DCMAKE_BUILD_TYPE=Release
-                make -j 4 && make install
+                make -j 8 && make install
         popd
 popd
 
@@ -32,7 +32,7 @@ pushd vendor/sentencepiece
         mkdir -p build
         pushd build
                 cmake .. -DCMAKE_INSTALL_PREFIX="${PREFIX}" -DCMAKE_BUILD_TYPE=Release
-                make -j 4 && make install
+                make -j 8 && make install
         popd
 popd
 
@@ -42,5 +42,5 @@ rm -rf build
 mkdir -p build
 pushd build
 	cmake .. -DCMAKE_INSTALL_PREFIX="${PREFIX}" -DCMAKE_PREFIX_PATH="${PREFIX}" -DCMAKE_BUILD_TYPE=Release 
-	make -j 4 && make install
+	make -j 8 && make install
 popd

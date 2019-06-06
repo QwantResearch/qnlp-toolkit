@@ -10,6 +10,7 @@
 #include "fr_tokenizer.h"
 #include "en_tokenizer.h"
 #include "bpe.h"
+#include "spm.h"
 #include "stemmer.h"
 #include "stopwords.h"
 #include "utils.h"
@@ -29,6 +30,7 @@ bool l_dash=false;
 bool l_stem=false;
 bool l_generalize=false;
 bool l_stopwords=false;
+bool l_spm_model=false;
 string l_lang="";
 string l_BPE="";
 int l_threads=4;
@@ -45,6 +47,7 @@ void usage()
             "--stopwords (-w)         remove stopwords (default false)\n"
             "--aggressive (-a)        equivalent to --dash and --underscore and every separators\n"
             "--BPE (-b)               Use Byte Pair Encoding preprocessing\n"
+            "--spm (-m)               Use sentencepiece model for Byte Pair Encoding preprocessing\n"
             "--generalize (-g)        remove numbers and replace them with a tag XNUMBER\n"
             "--embmodel (-e)          Load fasttext embeddings/prediction model\n"
             "--qlassify (-q)          predict class according the model loaded (need embmodel)\n"
@@ -57,7 +60,7 @@ void usage()
 
 void ProcessArgs(int argc, char** argv)
 {
-    const char* const short_opts = "gsvwqdcual:b:e:t:h";
+    const char* const short_opts = "mgsvwqdcual:b:e:t:h";
     const option long_opts[] = {
             {"stem", 0, nullptr, 's'},
             {"generalize", 0, nullptr, 'g'},
@@ -70,6 +73,7 @@ void ProcessArgs(int argc, char** argv)
             {"stopwords", 0, nullptr, 'w'},
             {"lang", 1, nullptr, 'l'},
             {"BPE", 1, nullptr, 'b'},
+            {"spm", 0, nullptr, 'm'},
             {"embmodel", 1, nullptr, 'e'},
 //             {"threads", 1, nullptr, 't'},
             {"help", 0, nullptr, 'h'},
@@ -91,6 +95,10 @@ void ProcessArgs(int argc, char** argv)
 
         case 'g':
             l_generalize = true;
+            break;
+
+        case 'm':
+            l_spm_model = true;
             break;
 
         case 'd':
@@ -193,6 +201,8 @@ int main ( int argc, char *argv[] )
     stringstream l_out;
     string line;
     Tokenizer* l_tokenizer;
+    BPE* bpemodel;
+    spm* spmmodel;
     if (l_lang.compare("fr") == 0) 
     {
         l_tokenizer = new Tokenizer_fr(Tokenizer::PLAIN, l_cased,l_underscore,l_dash, l_aggressive);
@@ -212,6 +222,17 @@ int main ( int argc, char *argv[] )
     {
         l_tokenizer = new Tokenizer(Tokenizer::PLAIN, l_cased,l_underscore,l_dash, l_aggressive);
     }
+    if ((int)l_BPE.size() != 0)
+    {
+        if (! l_spm_model)
+        {
+            bpemodel = new BPE(l_BPE);
+        }
+        else
+        {
+            spmmodel = new spm(l_BPE);
+        }
+    }
     while (std::getline(std::cin, line))
     {
         string to_tokenize=line;
@@ -221,9 +242,16 @@ int main ( int argc, char *argv[] )
         l_output_vec = generalize(l_output_vec,l_generalize);
         if ((int)l_BPE.size() != 0)
         {
+            if (! l_spm_model)
+            {
+//                BPE = new bpemodel(l_BPE);
+                l_output=bpemodel->apply_bpe_to_string(l_output_vec);
+            }
+            else
+            {
+                l_output=spmmodel->segment_str(l_output_vec);
+            }
             
-            BPE bpemodel(l_BPE);
-            l_output=bpemodel.apply_bpe_to_string(l_output_vec);
         }
         else
         {

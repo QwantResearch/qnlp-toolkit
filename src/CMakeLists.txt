@@ -14,8 +14,8 @@ SET(NLP_SRCS_LIBS
 add_library(qnlp SHARED ${NLP_SRCS_LIBS})
 ADD_LIBRARY(qnlp-static STATIC ${NLP_SRCS_LIBS})
 
-target_link_libraries(qnlp fasttext)
-target_link_libraries(qnlp-static fasttext)
+target_link_libraries(qnlp fasttext sentencepiece snowball)
+target_link_libraries(qnlp-static fasttext sentencepiece snowball)
 
 SET_TARGET_PROPERTIES(qnlp-static PROPERTIES OUTPUT_NAME qnlp)
 

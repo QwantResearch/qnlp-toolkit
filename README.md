@@ -2,6 +2,10 @@
 
 This toolkit ais to assemble the whole tools and libraries available for NLP pre-processing at Qwant.
 
+## Installation
+Automatic installation with the script: 
+> bash install.sh
+
 # Tools available
 ## qtokenizer
 The very first step for every NLP process is a tokenizer: a tool which segement text into tokens. These tokens  can be words or set of words. For example, "c'est-à-dire" or "aujourd'hui" are a tokens. The tokenizations rules are available for every european languages, but specific rules have been written for French and English.

@@ -8,7 +8,7 @@
 #include <vector>
 #include <map>
 #include <boost/locale.hpp>
-
+#include "utils.h"
 using namespace std;
 
 namespace qnlp {

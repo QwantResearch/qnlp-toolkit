@@ -125,13 +125,13 @@ bool Tokenizer::read (string& token, bool newdoc) {
             else // separatorRules(c) == true
             {
                 if (lowercased)
-                    c = tolower(c);
+                    c = ToLower(c);
                 token.push_back(c);
             } // separatorRules (c)
         } // do_read || syntax == PLAIN
         if ( syntax == CARACTER) 
         {
-            if (lowercased) c = tolower(c);
+            if (lowercased) c = ToLower(c);
             token.push_back(c);
             if (c == ' ') token="▁";
             else token=c;

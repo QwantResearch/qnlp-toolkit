@@ -46,6 +46,16 @@ bool qnlp::EndsWith(std::string const &fullString, std::string const suffix) {
   }
 }
 
+char  qnlp::ToLower(char& c)
+{
+    if (c > -129 && c < -97 && c != -105 )
+    {
+        return c+32;
+    }
+    return tolower(c);
+}
+
+
 // std::string EscapeRegex(std::string text) {
 //   std::stringstream result;
 //   for(char& c: text) {

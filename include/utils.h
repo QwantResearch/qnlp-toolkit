@@ -20,6 +20,8 @@ bool EndsWith(std::string const &fullString, std::string const suffix);
 
 // std::string E        scapeRegex(std::string text);
 
+char ToLower(char& c);
+
 };
 
 #endif // QNLP_UTILS_H

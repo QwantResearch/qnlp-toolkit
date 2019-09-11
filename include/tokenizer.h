@@ -54,6 +54,9 @@ class Tokenizer {
         void setAggressive(bool aggressive) 
             {this->aggressive = aggressive;}
 
+        void setNoPunct(bool noPunct) 
+            {this->no_punct = noPunct;}
+
         void setSyntax (int syntax)
             {this->syntax = syntax;}
 
@@ -80,6 +83,7 @@ class Tokenizer {
         bool dash; // set it to true if you want to split words with dash
         bool underscore; // set it to true if you want to split words with underscores
         bool aggressive; // set it to true if you want to split words with everyseparators
+        bool no_punct; // set it to true if you want to remove everyseparators implies to activate the aggressive mode 
         bool do_read;
 
         bool seps_wide (char& c);

@@ -76,17 +76,17 @@ bool Tokenizer_fr::proc(string& token, char& c) {
                         }
                         return true;
                     }
-                    sb->sungetc();
+                    if (!no_punct) sb->sungetc();
                     return true;
                 }
-                sb->sungetc();
+                if (!no_punct) sb->sungetc();
                 return true;
                 break;
         }
     }
     else
     {
-        sb->sungetc();
+        if (!no_punct) sb->sungetc();
         return true;
     }
     return false;
@@ -97,12 +97,12 @@ bool Tokenizer_fr::proc_empty(string& token, char& c){
     switch(c)
     {
         case '.':
-            token.push_back(c);
+            if (!no_punct) token.push_back(c);
             if ((c = sb->sbumpc()) != EOF)
             {
                 if (c == '.')
                 {
-                    token.push_back(c);
+                    if (!no_punct) token.push_back(c);
                     return false;
                 }
                 else
@@ -119,7 +119,7 @@ bool Tokenizer_fr::proc_empty(string& token, char& c){
         default:
             if (c < 0)
             {
-                token.push_back(c);
+                if (!no_punct) token.push_back(c);
                 if ((c = sb->sbumpc()) != EOF)
                 {
                     if (c < 0)
@@ -134,7 +134,7 @@ bool Tokenizer_fr::proc_empty(string& token, char& c){
                     }
                     else
                     {
-                        c=sb->sungetc();
+                        if (!no_punct) c=sb->sungetc();
                         return true;
                     }
                       
@@ -144,11 +144,11 @@ bool Tokenizer_fr::proc_empty(string& token, char& c){
                 {
                     if (c < 0)
                     {
-                        token.push_back(c);
+                        if (!no_punct) token.push_back(c);
                     }
                     else
                     {
-                        c=sb->sungetc();
+                        if (!no_punct) c=sb->sungetc();
                         return true;
                     }
                 }
@@ -156,7 +156,7 @@ bool Tokenizer_fr::proc_empty(string& token, char& c){
             }
             if (!seps(c) || c=='\n') 
             {
-                token.push_back(c);
+                if (!no_punct) token.push_back(c);
                 return true;
             }
             break;

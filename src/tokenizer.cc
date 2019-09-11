@@ -146,17 +146,19 @@ bool Tokenizer::proc (string& token, char& c) {
     if (!aggressive) {
         switch(c) {
             case '.':
+                if (no_punct) return true;
                 if (dot_proc(token,c)) return true;
                 else return false;
                 break;
 
             case ',':
+                if (no_punct) return true;
                 if (comma_proc(token,c)) return true;
                 else return false;
                 break;
 
             default:
-                sb->sungetc();
+                if (!no_punct) sb->sungetc();
                 return true;
                 break;
         }
@@ -164,7 +166,7 @@ bool Tokenizer::proc (string& token, char& c) {
         return true;
 
     } else {
-        sb->sungetc();
+        if (!no_punct) sb->sungetc();
         return true;
     }
 }
@@ -173,10 +175,10 @@ bool Tokenizer::proc (string& token, char& c) {
 bool Tokenizer::proc_empty (string& token, char& c) {
     switch(c) {
         case '.':
-            token.push_back(c);
+            if (!no_punct) token.push_back(c);
             if ((c = sb->sbumpc()) != EOF) {
                 if (c == '.') {
-                    token.push_back(c);
+                    if (!no_punct) token.push_back(c);
                     return false;
 
                 } else {
@@ -362,6 +364,8 @@ bool Tokenizer::seps_wide (char& c) {
         return (c >= '\x03a' && c <= '\x040') || (c >= '\x05b' && c <= '\x060') || (c >= '\x07b' && c <= '\x07e');
     }
 }
+
+
 
 int Tokenizer::parserXHTML(char& c, xmlDom& dom) {
     if (c == '<') {

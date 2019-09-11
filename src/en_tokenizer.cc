@@ -113,7 +113,7 @@ bool Tokenizer_en::proc(string& token, char& c)
     }
     else
     {
-        sb->sungetc();
+        if (!no_punct) sb->sungetc();
         return true;
     }
 }
@@ -164,12 +164,12 @@ bool Tokenizer_en::proc_empty(string& token, char& c)
             }
             break;
         case '.':
-            token.push_back(c);
+            if (!no_punct) token.push_back(c);
             if ((c = sb->sbumpc()) != EOF)
             {
                 if (c == '.')
                 {
-                    token.push_back(c);
+                    if (!no_punct) token.push_back(c);
                     return false;
                 }
                 else

@@ -24,6 +24,7 @@ using namespace qnlp;
 
 
 bool l_aggressive=false;
+bool l_no_punct=false;
 bool l_underscore=false;
 bool l_cased=false;
 bool l_dash=false;
@@ -46,6 +47,7 @@ void usage()
             "--underscore (-u)        split using underscores (default false)\n"
             "--stopwords (-w)         remove stopwords (default false)\n"
             "--aggressive (-a)        equivalent to --dash and --underscore and every separators\n"
+            "--no-punct (-p)          remove punctuation from tokenization\n"
             "--BPE (-b)               Use Byte Pair Encoding preprocessing\n"
             "--spm (-m)               Use sentencepiece model for Byte Pair Encoding preprocessing\n"
             "--generalize (-g)        remove numbers and replace them with a tag XNUMBER\n"
@@ -60,7 +62,7 @@ void usage()
 
 void ProcessArgs(int argc, char** argv)
 {
-    const char* const short_opts = "mgsvwqdcual:b:e:t:h";
+    const char* const short_opts = "mgspvwqdcual:b:e:t:h";
     const option long_opts[] = {
             {"stem", 0, nullptr, 's'},
             {"generalize", 0, nullptr, 'g'},
@@ -68,6 +70,7 @@ void ProcessArgs(int argc, char** argv)
             {"lowercased", 0, nullptr, 'c'},
             {"underscore", 0, nullptr, 'u'},
             {"aggressive", 0, nullptr, 'a'},
+            {"no-punct", 0, nullptr, 'p'},
             {"qclassify", 0, nullptr, 'q'},
             {"qvectorize", 0, nullptr, 'v'},
             {"stopwords", 0, nullptr, 'w'},
@@ -121,6 +124,10 @@ void ProcessArgs(int argc, char** argv)
             l_dash = true;
             l_underscore = true;
             l_aggressive = true;
+            break;
+
+        case 'p':
+            l_no_punct = true;
             break;
 
         case 'l':
@@ -233,6 +240,7 @@ int main ( int argc, char *argv[] )
             spmmodel = new spm(l_BPE);
         }
     }
+    l_tokenizer->setNoPunct(l_no_punct);
     while (std::getline(std::cin, line))
     {
         string to_tokenize=line;

@@ -192,12 +192,10 @@ bool Tokenizer_en::proc_empty(string& token, char& c)
                     if (c < 0)
                     {
                         token.push_back(c);
-//                                                     return false;
                     }
                     else
                     {
                         c=sb->sungetc();
-//                                         token=token.substr(0,((int)token.size())-1);
                         return true;
                     }
                       
@@ -208,12 +206,10 @@ bool Tokenizer_en::proc_empty(string& token, char& c)
                     if (c < 0)
                     {
                         token.push_back(c);
-//                                                     return false;
                     }
                     else
                     {
                         c=sb->sungetc();
-//                                         token=token.substr(0,((int)token.size())-1);
                         return true;
                     }
                 }
@@ -221,7 +217,7 @@ bool Tokenizer_en::proc_empty(string& token, char& c)
             }
             if (!seps(c) || c=='\n') 
             {
-                token.push_back(c);
+                if (!no_punct) token.push_back(c);
                 return true;
             }
             break;

@@ -166,24 +166,14 @@ string stemming(string input , bool l_stemming)
     }
     return input;
 }
-vector<string> stemming(vector<string> &input , bool l_stemming)
+vector<string> stemming(vector<string> &input , Stemmer& s)
 {
-    if (l_stemming)
-    {
-        Stemmer s(l_lang.c_str());
         return s.stem_sentence_vector(input);
-    }
-    return input;
 }
 
-vector<string> filtering_stopwords(vector<string> &input , bool l_stopwords)
+vector<string> filtering_stopwords(vector<string> &input , Stopwords & sw)
 {
-    if (l_stopwords)
-    {
-        Stopwords sw;
         return sw.filter_stopwords(input,l_lang);
-    }
-    return input;
 }
 
 vector<string> generalize(vector<string> &input , bool l_generalize)
@@ -210,6 +200,8 @@ int main ( int argc, char *argv[] )
     Tokenizer* l_tokenizer;
     BPE* bpemodel;
     spm* spmmodel;
+    Stopwords sw;
+    Stemmer stem(l_lang.c_str());
     if (l_lang.compare("fr") == 0) 
     {
         l_tokenizer = new Tokenizer_fr(Tokenizer::PLAIN, l_cased,l_underscore,l_dash, l_aggressive);
@@ -245,9 +237,12 @@ int main ( int argc, char *argv[] )
     {
         string to_tokenize=line;
         l_output_vec = l_tokenizer->tokenize_sentence(to_tokenize);
-        l_output_vec = stemming(l_output_vec,l_stem);
-        l_output_vec = filtering_stopwords(l_output_vec,l_stopwords);
-        l_output_vec = generalize(l_output_vec,l_generalize);
+        if (l_stem)  
+            l_output_vec = stemming(l_output_vec,stem);
+        if (l_stopwords) 
+            l_output_vec = filtering_stopwords(l_output_vec,sw);
+        if (l_generalize) 
+            l_output_vec  = generalize(l_output_vec,l_generalize);
         if ((int)l_BPE.size() != 0)
         {
             if (! l_spm_model)

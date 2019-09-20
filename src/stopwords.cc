@@ -33,6 +33,7 @@ bool Stopwords::checkword(string& token, string lang)
         {
             return true;
         }
+        return false;
     }
     return false;
 }

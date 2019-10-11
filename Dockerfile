@@ -7,6 +7,8 @@ LABEL maintainer="c.servan@qwantresearch.com"
 ENV TZ=Europe/Paris
 RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
 
+ENV LD_LIBRARY_PATH=/usr/local/lib
+
 RUN apt-get -y update && \
     apt-get -y install \
         cmake \

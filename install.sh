@@ -14,6 +14,8 @@ export CMAKE_PREFIX_PATH=$PREFIX
 
 export CXXFLAGS="-I$PREFIX/include -L$PREFIX/lib"
 
+set -eou pipefail
+
 echo "Installing dependencies (fastText)"
 
 pushd vendor/fastText

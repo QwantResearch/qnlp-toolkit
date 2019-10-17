@@ -31,7 +31,8 @@ pushd vendor/sentencepiece
         rm -rf build
         mkdir -p build
         pushd build
-                cmake .. -DCMAKE_INSTALL_PREFIX="${PREFIX}" -DCMAKE_BUILD_TYPE=Release
+         
+                cmake -DCMAKE_INSTALL_PREFIX="${PREFIX}" -DCMAKE_BUILD_TYPE=Release -DSPM_USE_BUILTIN_PROTOBUF=OFF  Protobuf_PROTOC_EXECUTABLE=/usr/local/bin/protoc ..
                 make -j 8 && make install
         popd
 popd

@@ -18,12 +18,12 @@ class Tokenizer {
         enum {PLAIN, XHTML, CARACTER};
 
         /** Constructor of the class tokenizer */
-        Tokenizer (istream* in, int syntax=PLAIN, bool lowercased=true, bool underscore=true, bool dash=true, bool aggressive=true):
-            in(in), syntax(syntax), lowercased(lowercased), underscore(underscore), dash(dash), aggressive(aggressive)
+        Tokenizer (istream* in, int syntax=PLAIN, bool lowercased=true, bool underscore=true, bool dash=true, bool aggressive=true, bool noPunct=true):
+            in(in), syntax(syntax), lowercased(lowercased), underscore(underscore), dash(dash), aggressive(aggressive), no_punct(noPunct)
             {sb = in->rdbuf();lang="gen";}
 
-        Tokenizer (int syntax=PLAIN, bool lowercased=true, bool underscore=true, bool dash=true, bool aggressive=true):
-            syntax(syntax), lowercased(lowercased), underscore(underscore), dash(dash), aggressive(aggressive)
+        Tokenizer (int syntax=PLAIN, bool lowercased=true, bool underscore=true, bool dash=true, bool aggressive=true, bool noPunct=true):
+            syntax(syntax), lowercased(lowercased), underscore(underscore), dash(dash), aggressive(aggressive), no_punct(noPunct)
             {istringstream iss("");sb = iss.rdbuf();lang="gen";}
 
         vector<string> tokenize_sentence(string &text);
@@ -35,11 +35,12 @@ class Tokenizer {
 
         bool read (string &token, bool newdoc);
 
-        void setParam(bool lowercased, bool underscore, bool dash, bool aggressive) {
+        void setParam(bool lowercased, bool underscore, bool dash, bool aggressive, bool noPunct) {
             this->lowercased = lowercased;
             this->underscore = underscore;
             this->dash = dash;
             this->aggressive = aggressive;
+            this->no_punct = noPunct;
         }
 
         void setLowercased(bool lowercased) 

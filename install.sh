@@ -7,12 +7,12 @@ then
     export PREFIX=$1
 fi 
 
+set -eou pipefail
+
 echo "Prefix set to $PREFIX"
 export CMAKE_PREFIX_PATH=$PREFIX
 
 export CXXFLAGS="-I$PREFIX/include -L$PREFIX/lib"
-
-git submodule update --init --recursive
 
 echo "Installing dependencies (fastText)"
 

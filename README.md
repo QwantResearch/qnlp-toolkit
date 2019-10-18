@@ -4,16 +4,18 @@ This toolkit ais to assemble the whole tools and libraries available for NLP pre
 
 ## Installation
 Automatic installation with the script: 
-> install.sh [-h] [-g] [-p PREFIX]
->		-h		help
->		-g 		activate the build of the third party protobuf for sentencepiece (default is activated)
->		-p PREFIX	specify a prefix (default /usr/local/)
+> install.sh [-h] [-g] [-p PREFIX] <br>
+>&nbsp;&nbsp;&nbsp;&nbsp;-h&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;help <br>
+>&nbsp;&nbsp;&nbsp;&nbsp;-g&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;activate the build of the third party protobuf for sentencepiece (default is activated) <br>
+>&nbsp;&nbsp;&nbsp;&nbsp;-p PREFIX&nbsp;&nbsp;&nbsp;&nbsp;specify a prefix (default /usr/local/) <br>
 
 
 
 # Tools available
-## qtokenizer
+## qnlp-tokenizer
 The very first step for every NLP process is a tokenizer: a tool which segement text into tokens. These tokens  can be words or set of words. For example, "c'est-à-dire" or "aujourd'hui" are a tokens. The tokenizations rules are available for every european languages, but specific rules have been written for French and English.
+## qnlp-filtering
+Enable to filter bitext according the sentence length, the sentence length ratio and other tricks.
 ### TODO
 To be possible to tokenize asian, indi, african and arabic languages.
 ### References

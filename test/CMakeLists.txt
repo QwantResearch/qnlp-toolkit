@@ -12,9 +12,9 @@ SET(FILTERING_SRCS
 )
 
 
-add_executable(qnlp-x ${NLP_SRCS})
+add_executable(qnlp-tokenizer ${NLP_SRCS})
 add_executable(qnlp-filtering ${FILTERING_SRCS})
 
-target_link_libraries(qnlp-x fasttext boost_regex snowball qnlp sentencepiece)
+target_link_libraries(qnlp-tokenizer fasttext boost_regex snowball qnlp sentencepiece)
 target_link_libraries(qnlp-filtering boost_regex qnlp)
-install(TARGETS qnlp-x qnlp-filtering DESTINATION bin)
+install(TARGETS qnlp-tokenizer qnlp-filtering DESTINATION bin)

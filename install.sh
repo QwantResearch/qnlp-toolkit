@@ -38,7 +38,7 @@ set -eou pipefail
 
 echo "Installing dependencies (fastText)"
 
-pushd vendor/fastText
+pushd third_party/fastText
         rm -rf build
         mkdir -p build
         pushd build
@@ -49,7 +49,7 @@ popd
 
 echo "Installing dependencies (sentencepiece)"
 
-pushd vendor/sentencepiece
+pushd third_party/sentencepiece
         rm -rf build
         mkdir -p build
         pushd build

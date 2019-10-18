@@ -2,10 +2,30 @@
 
 export PREFIX=/usr/local/
 
-if [ -n "$1" ]
-then
-    export PREFIX=$1
-fi 
+export USE_BUILTIN_PROTOBUF=0
+
+while getopts "h?gp:" opt; do
+    case "$opt" in
+    h|\?)
+        echo "install.sh [-h] [-g] [-p PREFIX]"
+	echo "		-h		help"
+	echo "		-g 		activate the build of the third party protobuf for sentencepiece (default is activated)"
+	echo "		-p PREFIX	specify a prefix (default /usr/local/)"
+        exit 0
+        ;;
+    g)  USE_BUILTIN_PROTOBUF=1
+        ;;
+    p)  PREFIX=$OPTARG
+        ;;
+    esac
+done
+
+
+#if [ -n "$1" ]
+#then
+#    export PREFIX=$1
+#fi 
+
 
 set -eou pipefail
 
@@ -33,8 +53,12 @@ pushd vendor/sentencepiece
         rm -rf build
         mkdir -p build
         pushd build
-         
-                cmake -DCMAKE_INSTALL_PREFIX="${PREFIX}" -DCMAKE_BUILD_TYPE=Release -DSPM_USE_BUILTIN_PROTOBUF=OFF  Protobuf_PROTOC_EXECUTABLE=/usr/local/bin/protoc ..
+         	if [ USE_BUILTIN_PROTOBUF -eq 1 ]
+		then
+        	        cmake -DCMAKE_INSTALL_PREFIX="${PREFIX}" -DCMAKE_BUILD_TYPE=Release -DSPM_USE_BUILTIN_PROTOBUF=OFF  Protobuf_PROTOC_EXECUTABLE=/usr/local/bin/protoc ..
+		else
+			cmake -DCMAKE_INSTALL_PREFIX="${PREFIX}" -DCMAKE_BUILD_TYPE=Release ..
+		fi
                 make -j 8 && make install
         popd
 popd

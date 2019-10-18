@@ -1,6 +1,6 @@
 [submodule "vendor/fastText"]
-	path = vendor/fastText
+	path = third_party/fastText
 	url = https://github.com/facebookresearch/fastText.git
 [submodule "vendor/sentencepiece"]
-	path = vendor/sentencepiece
+	path = third_party/sentencepiece
 	url = https://github.com/google/sentencepiece.git

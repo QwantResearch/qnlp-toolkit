@@ -53,7 +53,7 @@ pushd vendor/sentencepiece
         rm -rf build
         mkdir -p build
         pushd build
-         	if [ USE_BUILTIN_PROTOBUF -eq 1 ]
+         	if [ $USE_BUILTIN_PROTOBUF -eq 1 ]
 		then
         	        cmake -DCMAKE_INSTALL_PREFIX="${PREFIX}" -DCMAKE_BUILD_TYPE=Release -DSPM_USE_BUILTIN_PROTOBUF=OFF  Protobuf_PROTOC_EXECUTABLE=/usr/local/bin/protoc ..
 		else

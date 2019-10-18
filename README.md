@@ -4,7 +4,12 @@ This toolkit ais to assemble the whole tools and libraries available for NLP pre
 
 ## Installation
 Automatic installation with the script: 
-> bash install.sh
+> install.sh [-h] [-g] [-p PREFIX]
+>		-h		help
+>		-g 		activate the build of the third party protobuf for sentencepiece (default is activated)
+>		-p PREFIX	specify a prefix (default /usr/local/)
+
+
 
 # Tools available
 ## qtokenizer

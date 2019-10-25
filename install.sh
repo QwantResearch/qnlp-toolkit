@@ -9,7 +9,7 @@ while getopts "h?gp:" opt; do
     h|\?)
         echo "install.sh [-h] [-g] [-p PREFIX]"
 	echo "		-h		help"
-	echo "		-g 		activate the build of the third party protobuf for sentencepiece (default is activated)"
+	echo "		-g 		desactivate the build of the third party protobuf for sentencepiece (default is activated)"
 	echo "		-p PREFIX	specify a prefix (default /usr/local/)"
         exit 0
         ;;

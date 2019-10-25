@@ -2,7 +2,7 @@
 
 export PREFIX=/usr/local/
 
-export USE_BUILTIN_PROTOBUF=0
+export NOT_USE_BUILTIN_PROTOBUF=0
 
 while getopts "h?gp:" opt; do
     case "$opt" in
@@ -13,7 +13,7 @@ while getopts "h?gp:" opt; do
 	echo "		-p PREFIX	specify a prefix (default /usr/local/)"
         exit 0
         ;;
-    g)  USE_BUILTIN_PROTOBUF=1
+    g)  NOT_USE_BUILTIN_PROTOBUF=1
         ;;
     p)  PREFIX=$OPTARG
         ;;
@@ -53,7 +53,7 @@ pushd third_party/sentencepiece
         rm -rf build
         mkdir -p build
         pushd build
-         	if [ $USE_BUILTIN_PROTOBUF -eq 1 ]
+         	if [ $NOT_USE_BUILTIN_PROTOBUF -eq 1 ]
 		then
         	        cmake -DCMAKE_INSTALL_PREFIX="${PREFIX}" -DCMAKE_BUILD_TYPE=Release -DSPM_USE_BUILTIN_PROTOBUF=OFF  Protobuf_PROTOC_EXECUTABLE=/usr/local/bin/protoc ..
 		else

@@ -79,7 +79,6 @@ class Tokenizer {
         bool underscore; // set it to true if you want to split words with underscores
         bool aggressive; // set it to true if you want to split words with everyseparators
         bool no_punct; // set it to true if you want to remove everyseparators implies to activate the aggressive mode 
-        bool do_read;
 
         bool seps_wide (char& c);
         bool seps (char& c);

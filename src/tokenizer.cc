@@ -96,6 +96,7 @@ bool Tokenizer::read (string& token, bool newdoc, streambuf* sbuf) {
     char c;
     token.clear();
     newdoc = false;
+    bool do_read = false;
 
     xmlDom dom;
 

@@ -7,6 +7,7 @@ bool Tokenizer_fr::proc(string& token, char& c, streambuf* sbuf) {
     {
         if (is_nbr(token)) 
         {
+            cerr << "is nbr " << token << endl;
             if ((int)token.size() >= 2 && token[(int)token.size()-2] <= '\x039' && token[(int)token.size()-2] >= '\x030' && token[(int)token.size()-1] == '.')
             {
                 char l_char=token.substr((int)token.size()-1,1)[0];

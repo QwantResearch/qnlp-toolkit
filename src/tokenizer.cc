@@ -231,18 +231,26 @@ bool Tokenizer::dot_proc(string& token, char& c, streambuf* sbuf)
 {
     token.push_back(c);
     int tksize=(int)token.size();
-    if (is_nbr(token)) 
-    {
-        if (tksize > 2 && token[tksize-3] <= '\x039' && token[tksize-3] >= '\x030' && token[tksize-2] == '.' && seps(token[tksize-1]))
+    if (is_nbr(token)) {
+        if ((c = sbuf->sbumpc()) != EOF) {
+            if (!seps(c)) {
+                token.push_back(c);
+                return false;
+            } else {
+                token = token.substr(0,tksize-1);
+                sbuf->sungetc();
+                sbuf->sputbackc('.');
+                return true;
+            }
+        }
+        if ((c = sbuf->sbumpc()) == EOF) 
         {
-            
             c=sbuf->sungetc();
-            c=sbuf->sungetc();
-            sbuf->sputbackc(token[tksize-1]);
-            token=token.substr(0,tksize-2);
+            sbuf->sputbackc('.');
+            token=token.substr(0,tksize-1);
             return true;
         }
-        return false;
+        return true;
     }
     else if (is_abrv(token)) 
     {
@@ -280,24 +288,31 @@ bool Tokenizer::dot_proc(string& token, char& c, streambuf* sbuf)
 
 bool Tokenizer::comma_proc (string& token, char& c, streambuf* sbuf) {
     token.push_back(c);
-    
+    int tksize=(int)token.size();
     if (is_nbr(token)) {
         if ((c = sbuf->sbumpc()) != EOF) {
             if (!seps(c)) {
                 token.push_back(c);
                 return false;
             } else {
-                token = token.substr(0,(int)token.size()-1);
+                token = token.substr(0,tksize-1);
                 sbuf->sungetc();
                 sbuf->sputbackc(',');
                 return true;
             }
         }
+        if ((c = sbuf->sbumpc()) == EOF) 
+        {
+            c=sbuf->sungetc();
+            sbuf->sputbackc(',');
+            token=token.substr(0,tksize-1);
+            return true;
+        }
         return true;
 
     } else {
         c = sbuf->sungetc();
-        token = token.substr(0,(int)token.size()-1);
+        token = token.substr(0,tksize-1);
         return true;
     }
 

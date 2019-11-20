@@ -2,7 +2,7 @@
 
 using namespace qnlp;
 
-bool Tokenizer_en::proc(string& token, char& c) 
+bool Tokenizer_en::proc(string& token, char& c, streambuf* sbuf) 
 {
     int tksize=(int)token.size();
     if (!aggressive)
@@ -17,8 +17,8 @@ bool Tokenizer_en::proc(string& token, char& c)
             else
             {
                 token=token.substr(0,1);
-                sb->sungetc();
-                sb->sungetc();
+                sbuf->sungetc();
+                sbuf->sungetc();
                 return true;
             }
         }
@@ -27,7 +27,7 @@ bool Tokenizer_en::proc(string& token, char& c)
             case '\'':
                 token.push_back(c);
                 tksize=(int)token.size();
-                if ((c = sb->sbumpc()) != EOF)
+                if ((c = sbuf->sbumpc()) != EOF)
                 {
                     if (tksize == 2 && (token[0]=='O' || token[0]=='o'))
                     {
@@ -36,9 +36,9 @@ bool Tokenizer_en::proc(string& token, char& c)
                     }
                     if (tksize > 2 && c == 't' && token.at((tksize)-2) == 'n')
                     {
-                        sb->sungetc();
-                        sb->sputbackc('\'');
-                        sb->sputbackc('n');
+                        sbuf->sungetc();
+                        sbuf->sputbackc('\'');
+                        sbuf->sputbackc('n');
                         if (token.at((tksize)-3) == 'a')
                         {
                                 token=token.substr(0,(tksize)-1);
@@ -53,19 +53,19 @@ bool Tokenizer_en::proc(string& token, char& c)
                     {
                         if (tksize == 2 && token[0]!='n')
                         {
-                            sb->sungetc();
+                            sbuf->sungetc();
                             if (token[0]=='I' || token[0]=='i')
                             {
-                                sb->sputbackc('\'');
+                                sbuf->sputbackc('\'');
                                 token=token.substr(0,(tksize)-1);
                             }
                             return true;
                         }
                         if (tksize > 2 && c=='s')
                         {
-                            sb->sungetc();
-                            sb->sputbackc('\'');
-                            sb->sputbackc('s');
+                            sbuf->sungetc();
+                            sbuf->sputbackc('\'');
+                            sbuf->sputbackc('s');
                             token=token.substr(0,(tksize)-1);
                             return true;
                         }
@@ -75,73 +75,73 @@ bool Tokenizer_en::proc(string& token, char& c)
                               ((token[0]=='S' || token[0]=='s') && (token[1]=='H' || token[1]=='h') && (token[2]=='E' || token[2]=='e')) ||
                               ((token[0]=='H' || token[0]=='h') && (token[1]=='E' || token[1]=='e'))) 
                             {
-                                sb->sungetc();
-                                sb->sputbackc('\'');
+                                sbuf->sungetc();
+                                sbuf->sputbackc('\'');
                                 token=token.substr(0,(tksize)-1);
                                 return true;
                             }                            
                         }
                         if (seps(c))
                         {
-                            sb->sungetc();
-                            sb->sputbackc('\'');
-                            sb->sputbackc(c);
+                            sbuf->sungetc();
+                            sbuf->sputbackc('\'');
+                            sbuf->sputbackc(c);
                             token=token.substr(0,((int)token.size())-1);
                             return true;
                         }
                         token.push_back(c);
-                        // sb->sungetc();
+                        // sbuf->sungetc();
                         return true;
                     }
                 }
                 // if (token.at(0) == '\'' 
-                sb->sungetc();
+                sbuf->sungetc();
                 return true;
             case '.':
-                if (dot_proc(token,c)) return true;
+                if (dot_proc(token,c,sbuf)) return true;
                 else return false;
                 break;
             case ',':
-                if (comma_proc(token,c)) return true;
+                if (comma_proc(token,c,sbuf)) return true;
                 else return false;
                 break;
             default:
-                sb->sungetc();
+                sbuf->sungetc();
                 return true;
                 break;
         }
     }
     else
     {
-        if (!no_punct) sb->sungetc();
+        if (!no_punct) sbuf->sungetc();
         return true;
     }
 }
 
 
-bool Tokenizer_en::proc_empty(string& token, char& c)
+bool Tokenizer_en::proc_empty(string& token, char& c, streambuf* sbuf)
 {
     switch(c)
     {
         case '\'':
             token.push_back(c);
-            if ((c = sb->sbumpc()) != EOF)
+            if ((c = sbuf->sbumpc()) != EOF)
             {
                 if (c == 't' || c == 's' || c == 'm' || c == 'r')
                 {
                     token.push_back(c);
                     char c_tmp=c;
-                    if ((c = sb->sbumpc()) != EOF)
+                    if ((c = sbuf->sbumpc()) != EOF)
                     {
                         if (! seps(c) && c != 'e' )
                         {
-                            sb->sungetc();
+                            sbuf->sungetc();
                             if (c != '\'' )
                             {
-                                sb->sputbackc(c_tmp);
+                                sbuf->sputbackc(c_tmp);
                                 token=token.substr(0,((int)token.size())-1);
                             }
-                            sb->sputbackc(c);
+                            sbuf->sputbackc(c);
                             return true;
                         }
                         else
@@ -154,7 +154,7 @@ bool Tokenizer_en::proc_empty(string& token, char& c)
                 }
                 else
                 {
-                    sb->sungetc();
+                    sbuf->sungetc();
                     return true;
                 }
             }
@@ -165,7 +165,7 @@ bool Tokenizer_en::proc_empty(string& token, char& c)
             break;
         case '.':
             if (!no_punct) token.push_back(c);
-            if ((c = sb->sbumpc()) != EOF)
+            if ((c = sbuf->sbumpc()) != EOF)
             {
                 if (c == '.')
                 {
@@ -174,7 +174,7 @@ bool Tokenizer_en::proc_empty(string& token, char& c)
                 }
                 else
                 {
-                    sb->sungetc();
+                    sbuf->sungetc();
                     return true;
                 }
             }
@@ -187,7 +187,7 @@ bool Tokenizer_en::proc_empty(string& token, char& c)
             if (c < 0)
             {
                 token.push_back(c);
-                if ((c = sb->sbumpc()) != EOF)
+                if ((c = sbuf->sbumpc()) != EOF)
                 {
                     if (c < 0)
                     {
@@ -195,13 +195,13 @@ bool Tokenizer_en::proc_empty(string& token, char& c)
                     }
                     else
                     {
-                        c=sb->sungetc();
+                        c=sbuf->sungetc();
                         return true;
                     }
                       
                       
                 }
-                if ((c = sb->sbumpc()) != EOF)
+                if ((c = sbuf->sbumpc()) != EOF)
                 {
                     if (c < 0)
                     {
@@ -209,7 +209,7 @@ bool Tokenizer_en::proc_empty(string& token, char& c)
                     }
                     else
                     {
-                        c=sb->sungetc();
+                        c=sbuf->sungetc();
                         return true;
                     }
                 }

@@ -18,22 +18,18 @@ class Tokenizer {
         enum {PLAIN, XHTML, CARACTER};
 
         /** Constructor of the class tokenizer */
-        Tokenizer (istream* in, int syntax=PLAIN, bool lowercased=true, bool underscore=true, bool dash=true, bool aggressive=true, bool noPunct=true):
-            in(in), syntax(syntax), lowercased(lowercased), underscore(underscore), dash(dash), aggressive(aggressive), no_punct(noPunct)
-            {sb = in->rdbuf();lang="gen";}
-
         Tokenizer (int syntax=PLAIN, bool lowercased=true, bool underscore=true, bool dash=true, bool aggressive=true, bool noPunct=true):
             syntax(syntax), lowercased(lowercased), underscore(underscore), dash(dash), aggressive(aggressive), no_punct(noPunct)
-            {istringstream iss("");sb = iss.rdbuf();lang="gen";}
+            {lang="gen";}
 
         vector<string> tokenize_sentence(string &text);
         string tokenize_sentence_to_string(string &text);
-        vector<string> tokenize(void);
-        string tokenize_to_string(void);
+        vector<string> tokenize(streambuf* sbuf);
+        string tokenize_to_string(streambuf* sbuf);
         string normalize(string &token);
         vector<string> normalize(vector<string> &vecToken);
 
-        bool read (string &token, bool newdoc);
+        bool read (string &token, bool newdoc, streambuf* sbuf);
 
         void setParam(bool lowercased, bool underscore, bool dash, bool aggressive, bool noPunct) {
             this->lowercased = lowercased;
@@ -72,12 +68,10 @@ class Tokenizer {
         string getlang();
 
     protected:
-        virtual bool proc (string& token, char& c);
-        virtual bool proc_empty (string& token, char& c);
+        virtual bool proc (string& token, char& c, streambuf* sbuf);
+        virtual bool proc_empty (string& token, char& c, streambuf* sbuf);
         string lang;
 
-        istream* in;
-        streambuf* sb;
         int syntax;
 
         bool lowercased; // set it to true if you want your output to be lowercased
@@ -95,11 +89,11 @@ class Tokenizer {
         bool stopChecker (string& ref, string& leq);
         bool is_abrv (string& token);
         bool is_nbr (string& token);
-        bool dot_proc (string& token, char& c);
-        bool comma_proc (string& token, char& c);
+        bool dot_proc (string& token, char& c, streambuf* sbuf);
+        bool comma_proc (string& token, char& c, streambuf* sbuf);
         
         string flag;
-        int parserXHTML (char& c, xmlDom& dom);
+        int parserXHTML (char& c, xmlDom& dom, streambuf* sbuf);
 
         const map<string,string> html_codex = { {"<",">"}, {"<!--","-->"}, {"<!", ">"},
             {"<?", "?>"}, {"</", ">"} };

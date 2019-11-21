@@ -15,7 +15,8 @@ Automatic installation with the script:
 ## qnlp-tokenizer
 The very first step for every NLP process is a tokenizer: a tool which segement text into tokens. These tokens  can be words or set of words. For example, "c'est-à-dire" or "aujourd'hui" are a tokens. The tokenizations rules are available for every european languages, but specific rules have been written for French and English.
 ## qnlp-filtering
-Enable to filter bitext according the sentence length, the sentence length ratio and other tricks.
+Enable to filter bitext* according the sentence length, the sentence length ratio and other tricks.
+> *bitext: two bilingual corpora aligned sentence by sentence, the second one is the translation of the first one. They are used as training corpora for Neural Machine Translation
 ### TODO
 To be possible to tokenize asian, indi, african and arabic languages.
 ### References

@@ -5,7 +5,6 @@
 #include <iostream>
 #include <string.h>
 #include <vector>
-// #include <boost/program_options.hpp>
 #include "tokenizer.h"
 #include "fr_tokenizer.h"
 #include "en_tokenizer.h"
@@ -20,8 +19,6 @@
 using namespace std;
 using namespace qnlp;
 
-// typedef std::vector<uint32_t> value_test;
-
 
 bool l_aggressive=false;
 bool l_no_punct=false;
@@ -35,8 +32,6 @@ bool l_spm_model=false;
 string l_lang="";
 string l_BPE="";
 int l_threads=4;
-
-// HTable<value_test> _ht;
 
 void usage()
 {
@@ -55,7 +50,6 @@ void usage()
             "--qlassify (-q)          predict class according the model loaded (need embmodel)\n"
             "--qvectorize (-v)        give vector representation for the sentence/query (need embmodel)\n"
             "--lang <val> (-l)        set language (required)\n"
-//             "--threads <val> (-t)     set number of threads (default 4)\n"
             "--help (-h)             Show this message\n";
     exit(1);
 }
@@ -78,7 +72,6 @@ void ProcessArgs(int argc, char** argv)
             {"BPE", 1, nullptr, 'b'},
             {"spm", 0, nullptr, 'm'},
             {"embmodel", 1, nullptr, 'e'},
-//             {"threads", 1, nullptr, 't'},
             {"help", 0, nullptr, 'h'},
             {nullptr, 0, nullptr, 0}
     };
@@ -182,7 +175,6 @@ vector<string> generalize(vector<string> &input , bool l_generalize)
     if (l_generalize)
     {
         Generalization gen;
-//         dcerr << "herre" <<endl;
         tmp=gen.filter_numbers(input);
         return gen.filter_hours(tmp);
     }
@@ -205,17 +197,14 @@ int main ( int argc, char *argv[] )
     if (l_lang.compare("fr") == 0) 
     {
         l_tokenizer = new Tokenizer_fr(Tokenizer::PLAIN, l_cased,l_underscore,l_dash, l_aggressive);
-//             l_output_vec = l_tokenizer_fr.tokenize_sentence(to_tokenize);
     }
     else if (l_lang.compare("en") == 0) 
     {
         l_tokenizer = new Tokenizer_en(Tokenizer::PLAIN, l_cased,l_underscore,l_dash, l_aggressive);
-//             l_output_vec = l_tokenizer_en.tokenize_sentence(to_tokenize);
     }
     else if (l_lang.compare("car") == 0) 
     {
         l_tokenizer = new Tokenizer(Tokenizer::CARACTER, l_cased,l_underscore,l_dash, l_aggressive);
-//             l_output_vec = l_tokenizer.tokenize_sentence(to_tokenize);
     }
     else
     {
@@ -247,7 +236,6 @@ int main ( int argc, char *argv[] )
         {
             if (! l_spm_model)
             {
-//                BPE = new bpemodel(l_BPE);
                 l_output=bpemodel->apply_bpe_to_string(l_output_vec);
             }
             else

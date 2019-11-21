@@ -20,21 +20,12 @@ while getopts "h?gp:" opt; do
     esac
 done
 
-
-#if [ -n "$1" ]
-#then
-#    export PREFIX=$1
-#fi 
-
-
 set -eou pipefail
 
 echo "Prefix set to $PREFIX"
 export CMAKE_PREFIX_PATH=$PREFIX
 
 export CXXFLAGS="-I$PREFIX/include -L$PREFIX/lib"
-
-set -eou pipefail
 
 echo "Installing dependencies (fastText)"
 

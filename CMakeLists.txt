@@ -17,17 +17,17 @@ link_directories(/usr/lib
                  externals/snowball/lib)
 
 set(SOURCES
-  src/bpe.cc
-  src/embeddings.cc
-  src/en_tokenizer.cc
-  src/fr_tokenizer.cc
-  src/tokenizer.cc
-  src/stemmer.cc
-  src/stopwords.cc
-  src/utils.cc
-  src/stemmer.cc
-  src/generalization.cc
-  src/spm.cc
+  src/bpe.cpp
+  src/embeddings.cpp
+  src/en_tokenizer.cpp
+  src/fr_tokenizer.cpp
+  src/tokenizer.cpp
+  src/stemmer.cpp
+  src/stopwords.cpp
+  src/utils.cpp
+  src/stemmer.cpp
+  src/generalization.cpp
+  src/spm.cpp
 )
 
 set(LIBS

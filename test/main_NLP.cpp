@@ -225,7 +225,7 @@ int main ( int argc, char *argv[] )
     while (std::getline(std::cin, line))
     {
         string to_tokenize=line;
-        l_output_vec = l_tokenizer->tokenize_sentence(to_tokenize);
+        l_output_vec = l_tokenizer->tokenize(to_tokenize);
         if (l_stem)  
             l_output_vec = stemming(l_output_vec,stem);
         if (l_stopwords) 
@@ -249,6 +249,9 @@ int main ( int argc, char *argv[] )
             l_output=qnlp::Join(l_output_vec," ");      
         }
         cout << l_output << endl;
+//         cout << "ORI: " << line << endl;
+//         cout << "TOK: " << l_output << endl;
+//         cout << "NTK: " << qnlp::Join(l_output_vec_ntk," ") << endl;
     }
     delete(l_tokenizer);
     return EXIT_SUCCESS;

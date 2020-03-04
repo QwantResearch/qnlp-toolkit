@@ -25,6 +25,7 @@ class Tokenizer {
         vector<string> tokenize_sentence(string &text);
         string tokenize_sentence_to_string(string &text);
         vector<string> tokenize(streambuf* sbuf);
+        vector<string> tokenize(string & str);
         string tokenize_to_string(streambuf* sbuf);
         string normalize(string &token);
         vector<string> normalize(vector<string> &vecToken);
@@ -82,6 +83,8 @@ class Tokenizer {
 
         bool seps_wide (char& c);
         bool seps (char& c);
+        bool seps_wide (unsigned char& c);
+        bool seps (unsigned char& c);
 
         void add_seps (char& c, string& lang, string& token);
 
@@ -90,6 +93,16 @@ class Tokenizer {
         bool is_nbr (string& token);
         bool dot_proc (string& token, char& c, streambuf* sbuf);
         bool comma_proc (string& token, char& c, streambuf* sbuf);
+        
+        bool is_nbr (wstring& wtoken);
+        bool process_numbers(vector<wstring>& vecwtoken);
+        bool process_cots(vector<wstring>& vecwtoken);
+        bool process_dots(vector<wstring>& vecwtoken);
+        bool process_acronym(vector<wstring>& vecwtoken);
+        bool process_abrv(vector<wstring>& vecwtoken);
+        bool process_lowercase(vector<wstring>& vecwtoken);
+        vector<wstring> clean_vector(vector<wstring> vecwtoken);
+        
         
         string flag;
         int parserXHTML (char& c, xmlDom& dom, streambuf* sbuf);
@@ -100,6 +113,9 @@ class Tokenizer {
         const vector<string> abrvs = {"Mme.","Mmes.","Mlle.","Mlles.","MM.","M.","Mr.",
             "Vve.","Dr.","Drs.","Pr.","Prs.","Me.","Mes.","Mgr.","Art.","Fig.","art.",
             "fig.","etc.","e.g.","i.e.","cf.","av.","bc.", "J.C.", "J.-C."};
+        const vector<wstring> wabrvs = {L"Mme.",L"Mmes.",L"Mlle.",L"Mlles.",L"MM.",L"M.",L"Mr.",
+            L"Vve.",L"Dr.",L"Drs.",L"Pr.",L"Prs.",L"Me.",L"Mes.",L"Mgr.",L"Art.",L"Fig.",L"art.",
+            L"fig.",L"etc.",L"e.g.",L"i.e.",L"cf.",L"av.",L"bc.",L"J.C.",L"J.-C."};
 
 }; // class Tokenizer
 

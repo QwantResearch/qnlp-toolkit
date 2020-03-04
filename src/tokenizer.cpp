@@ -82,7 +82,6 @@ vector<string> Tokenizer::tokenize(string& str)
     wstring wtoken;
     utf8::utf8to16(str.begin(), str.end(), back_inserter(utf16str));
     auto utf16str_it=utf16str.begin();
-    
     while (utf16str_it != utf16str.end())
     {
         unsigned char wc=wtoken[0];
@@ -104,8 +103,7 @@ vector<string> Tokenizer::tokenize(string& str)
         
         utf16str_it++;
     }
-    if ((int)wtoken.size() > 0)
-    to_return_wchar.push_back(wtoken);
+    if ((int)wtoken.size() > 0) to_return_wchar.push_back(wtoken);
     wtoken.clear();
     process_numbers(to_return_wchar);
     process_cots(to_return_wchar);
@@ -606,7 +604,7 @@ bool qnlp::Tokenizer::process_abrv(vector<std::__cxx11::wstring>& vecwtoken)
 {
     auto vecwtoken_it=vecwtoken.begin();
     auto vecwtoken_it_prev=vecwtoken.begin();
-    vecwtoken_it++;
+    if (vecwtoken_it != vecwtoken.end()) vecwtoken_it++; else return false;
     wstring toTest;
     while (vecwtoken_it != vecwtoken.end() )
     {
@@ -637,7 +635,7 @@ bool qnlp::Tokenizer::process_dots(vector<std::__cxx11::wstring>& vecwtoken)
     {
         continue;
     }
-//     vecwtoken=clean_vector(vecwtoken);
+    vecwtoken=clean_vector(vecwtoken);
     return true;
 }
 
@@ -646,10 +644,10 @@ bool qnlp::Tokenizer::process_numbers(vector<std::__cxx11::wstring>& vecwtoken)
     auto vecwtoken_it=vecwtoken.begin();
     auto vecwtoken_it_prev=vecwtoken.begin();
     auto vecwtoken_it_next=vecwtoken.begin();
-    vecwtoken_it++;
-    vecwtoken_it_next++;
-    vecwtoken_it_next++;
     wstring toTest;
+    if (vecwtoken_it != vecwtoken.end())vecwtoken_it++; else return false;
+    if (vecwtoken_it_next != vecwtoken.end())vecwtoken_it_next++; else return false;
+    if (vecwtoken_it_next != vecwtoken.end())vecwtoken_it_next++; else return false;
     while (vecwtoken_it_next != vecwtoken.end())
     {
         if (is_nbr(*vecwtoken_it_prev) && is_nbr(*vecwtoken_it_next) && ((*vecwtoken_it)==L"." || (*vecwtoken_it)==L",") )

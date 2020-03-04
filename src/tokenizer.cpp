@@ -637,7 +637,7 @@ bool qnlp::Tokenizer::process_dots(vector<std::__cxx11::wstring>& vecwtoken)
     {
         continue;
     }
-    vecwtoken=clean_vector(vecwtoken);
+//     vecwtoken=clean_vector(vecwtoken);
     return true;
 }
 

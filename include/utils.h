@@ -24,6 +24,8 @@ bool EndsWith(std::string const &fullString, std::string const suffix);
 
 char ToLower(char& c);
 unsigned char  ToLower(unsigned char& c);
+unsigned short  ToLower(unsigned short& c);
+unsigned int  ToLower(unsigned int& c);
 
 };
 

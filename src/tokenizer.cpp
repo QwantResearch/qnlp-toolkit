@@ -78,15 +78,16 @@ vector<string> Tokenizer::tokenize(string& str)
 {
     vector<string> to_return;
     vector<unsigned short> utf16str;
+    vector<unsigned int> utf32str;
     vector<wstring> to_return_wchar;
     wstring wtoken;
+    bool process_numbers_todo=false;
     utf8::utf8to16(str.begin(), str.end(), back_inserter(utf16str));
     auto utf16str_it=utf16str.begin();
     while (utf16str_it != utf16str.end())
     {
-        unsigned char wc=wtoken[0];
-        unsigned char cwc=(*utf16str_it);
-//         if (seps(wc))
+        unsigned short wc=wtoken[0];
+        unsigned short cwc=(*utf16str_it);
         if (seps(wc))
         {
             if ((int)wtoken.size() > 0)
@@ -100,13 +101,17 @@ vector<string> Tokenizer::tokenize(string& str)
             wtoken.clear();
         }
         if (cwc != u' ' && cwc != u'\n' && cwc != u'\t') wtoken.push_back(cwc);
+        if (cwc < 58 && cwc > 47 ) process_numbers_todo=true;
         
         utf16str_it++;
     }
     if ((int)wtoken.size() > 0) to_return_wchar.push_back(wtoken);
     wtoken.clear();
-    process_numbers(to_return_wchar);
     process_cots(to_return_wchar);
+    while (process_numbers_todo && process_numbers(to_return_wchar) )
+    {
+        continue;
+    }
     process_dots(to_return_wchar);
     if (lowercased) process_lowercase(to_return_wchar);
     auto to_return_wchar_it=to_return_wchar.begin();
@@ -477,6 +482,50 @@ bool Tokenizer::seps_wide (unsigned char& c) {
 }
 
 
+bool Tokenizer::seps (unsigned int& c) {
+    if (c == u'-' && !dash ) return false;
+    if (c == u'_' && !underscore) return false;
+    return ((c <= '\x02F' && c > 0) || (c >= '\x03a' && c <= '\x040') || (c >= '\x05b' && c <= '\x060') || (c >= '\x07b' && c <= '\x07e'));
+//     {
+//         return true;
+//     } else {
+//         return (c == '\x07F');
+//     }
+}
+
+bool Tokenizer::seps_wide (unsigned int& c) {
+    if (c == '-' && !dash ) return false;
+    if (c == '_' && !underscore) return false;
+    if (c <= '\x02f' && c > 0) {
+        return true;
+    } else {
+        return (c >= '\x03a' && c <= '\x040') || (c >= '\x05b' && c <= '\x060') || (c >= '\x07b' && c <= '\x07e');
+    }
+}
+
+
+bool Tokenizer::seps (unsigned short& c) {
+    if (c == u'-' && !dash ) return false;
+    if (c == u'_' && !underscore) return false;
+    return ((c <= '\x02F' && c > 0) || (c >= '\x03a' && c <= '\x040') || (c >= '\x05b' && c <= '\x060') || (c >= '\x07b' && c <= '\x07e'));
+//     {
+//         return true;
+//     } else {
+//         return (c == '\x07F');
+//     }
+}
+
+bool Tokenizer::seps_wide (unsigned short& c) {
+    if (c == '-' && !dash ) return false;
+    if (c == '_' && !underscore) return false;
+    if (c <= '\x02f' && c > 0) {
+        return true;
+    } else {
+        return (c >= '\x03a' && c <= '\x040') || (c >= '\x05b' && c <= '\x060') || (c >= '\x07b' && c <= '\x07e');
+    }
+}
+
+
 
 
 int Tokenizer::parserXHTML(char& c, xmlDom& dom, streambuf* sbuf) {
@@ -631,11 +680,7 @@ bool qnlp::Tokenizer::process_dots(vector<std::__cxx11::wstring>& vecwtoken)
     {
         continue;
     }
-    while (process_numbers(vecwtoken))
-    {
-        continue;
-    }
-    vecwtoken=clean_vector(vecwtoken);
+//     vecwtoken=clean_vector(vecwtoken);
     return true;
 }
 
@@ -674,7 +719,7 @@ bool qnlp::Tokenizer::process_lowercase(vector<std::__cxx11::wstring>& vecwtoken
         auto wtoken_it=(*vecwtoken_it).begin();
         while (wtoken_it != (*vecwtoken_it).end())
         {
-            unsigned char wc=(*wtoken_it);
+            unsigned int wc=(*wtoken_it);
             (*wtoken_it)=ToLower(wc);
             wtoken_it++;
         }
@@ -697,7 +742,7 @@ bool Tokenizer::stopChecker (string& ref, string& leq) {
     return true;
 }
 
-vector<wstring> qnlp::Tokenizer::clean_vector(vector<wstring> vecwtoken)
+vector<wstring> qnlp::Tokenizer::clean_vector(vector<wstring>& vecwtoken)
 {
     vector<wstring> vecwtoken_to_return;
     auto vecwtoken_it=vecwtoken.begin();

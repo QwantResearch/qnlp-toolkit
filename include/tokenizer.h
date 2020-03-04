@@ -85,6 +85,11 @@ class Tokenizer {
         bool seps (char& c);
         bool seps_wide (unsigned char& c);
         bool seps (unsigned char& c);
+        bool seps_wide (unsigned int& c);
+        bool seps (unsigned int& c);
+
+        bool seps_wide (unsigned short& c);
+        bool seps (unsigned short& c);
 
         void add_seps (char& c, string& lang, string& token);
 
@@ -101,7 +106,7 @@ class Tokenizer {
         bool process_acronym(vector<wstring>& vecwtoken);
         bool process_abrv(vector<wstring>& vecwtoken);
         bool process_lowercase(vector<wstring>& vecwtoken);
-        vector<wstring> clean_vector(vector<wstring> vecwtoken);
+        vector<wstring> clean_vector(vector<wstring>& vecwtoken);
         
         
         string flag;

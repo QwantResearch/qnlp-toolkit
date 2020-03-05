@@ -22,15 +22,15 @@ class Tokenizer {
             syntax(syntax), lowercased(lowercased), underscore(underscore), dash(dash), aggressive(aggressive), no_punct(noPunct)
             {lang="gen";}
 
-        vector<string> tokenize_sentence(string &text);
-        string tokenize_sentence_to_string(string &text);
-        vector<string> tokenize(streambuf* sbuf);
+//         vector<string> tokenize_sentence(string &text);
+//         string tokenize_sentence_to_string(string &text);
+//         vector<string> tokenize(streambuf* sbuf);
         vector<string> tokenize(string & str);
-        string tokenize_to_string(streambuf* sbuf);
+//         string tokenize_to_string(streambuf* sbuf);
         string normalize(string &token);
         vector<string> normalize(vector<string> &vecToken);
 
-        bool read (string &token, bool newdoc, streambuf* sbuf);
+//         bool read (string &token, bool newdoc, streambuf* sbuf);
 
         void setParam(bool lowercased, bool underscore, bool dash, bool aggressive, bool noPunct) {
             this->lowercased = lowercased;
@@ -69,8 +69,9 @@ class Tokenizer {
         string getlang();
 
     protected:
-        virtual bool proc (string& token, char& c, streambuf* sbuf);
-        virtual bool proc_empty (string& token, char& c, streambuf* sbuf);
+//         virtual bool proc (string& token, char& c, streambuf* sbuf);
+//         virtual bool proc_empty (string& token, char& c, streambuf* sbuf);
+        virtual bool process_lang (vector<wstring>& vecwtoken);
         string lang;
 
         int syntax;
@@ -96,8 +97,8 @@ class Tokenizer {
         bool stopChecker (string& ref, string& leq);
         bool is_abrv (string& token);
         bool is_nbr (string& token);
-        bool dot_proc (string& token, char& c, streambuf* sbuf);
-        bool comma_proc (string& token, char& c, streambuf* sbuf);
+//         bool dot_proc (string& token, char& c, streambuf* sbuf);
+//         bool comma_proc (string& token, char& c, streambuf* sbuf);
         
         bool is_nbr (wstring& wtoken);
         bool is_separator (wstring& wtoken);
@@ -114,7 +115,7 @@ class Tokenizer {
         
         
         string flag;
-        int parserXHTML (char& c, xmlDom& dom, streambuf* sbuf);
+//         int parserXHTML (char& c, xmlDom& dom, streambuf* sbuf);
 
         const map<string,string> html_codex = { {"<",">"}, {"<!--","-->"}, {"<!", ">"},
             {"<?", "?>"}, {"</", ">"} };

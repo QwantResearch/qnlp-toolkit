@@ -20,59 +20,59 @@ string Tokenizer::normalize(string &token)
 }
 
 
-vector<string> Tokenizer::tokenize_sentence(string& text)
-{
-    istringstream iss(text);
-    vector<string> to_return;
-    streambuf* sbuf = iss.rdbuf();
-    string l_token;
-    while(read (l_token,false, sbuf)) 
-    {
-        if(!l_token.empty()) 
-        {
-                to_return.push_back(l_token);
-        }
-    }
-    if(!l_token.empty()) 
-    {
-            to_return.push_back(l_token);
-    }
-    return normalize(to_return);
-}
-
-string Tokenizer::tokenize_sentence_to_string(string& text)
-{
-    vector<string> tokenized=tokenize_sentence(text);
-    ostringstream oss;
-    string next;
-    string pred;
-    for (int l_inc=0; l_inc < (int) tokenized.size() ; l_inc++)
-    {
-        next=tokenized.at(l_inc);
-        if ((l_inc == 0) || (pred == "\n") || (next == "\n")) oss << next;
-        else oss << " " << next;
-        pred=next;
-    }
-    return oss.str();
-}
-
-vector<string> Tokenizer::tokenize(streambuf* sbuf)
-{
-    vector<string> to_return;
-    string l_token;
-    while(read (l_token,false,sbuf)) 
-    {
-        if(!l_token.empty()) 
-        {
-                to_return.push_back(l_token);
-        }
-    }
-    if(!l_token.empty()) 
-    {
-            to_return.push_back(l_token);
-    }
-    return normalize(to_return);
-}
+// vector<string> Tokenizer::tokenize_sentence(string& text)
+// {
+//     istringstream iss(text);
+//     vector<string> to_return;
+//     streambuf* sbuf = iss.rdbuf();
+//     string l_token;
+//     while(read (l_token,false, sbuf)) 
+//     {
+//         if(!l_token.empty()) 
+//         {
+//                 to_return.push_back(l_token);
+//         }
+//     }
+//     if(!l_token.empty()) 
+//     {
+//             to_return.push_back(l_token);
+//     }
+//     return normalize(to_return);
+// }
+// 
+// string Tokenizer::tokenize_sentence_to_string(string& text)
+// {
+//     vector<string> tokenized=tokenize_sentence(text);
+//     ostringstream oss;
+//     string next;
+//     string pred;
+//     for (int l_inc=0; l_inc < (int) tokenized.size() ; l_inc++)
+//     {
+//         next=tokenized.at(l_inc);
+//         if ((l_inc == 0) || (pred == "\n") || (next == "\n")) oss << next;
+//         else oss << " " << next;
+//         pred=next;
+//     }
+//     return oss.str();
+// }
+// 
+// vector<string> Tokenizer::tokenize(streambuf* sbuf)
+// {
+//     vector<string> to_return;
+//     string l_token;
+//     while(read (l_token,false,sbuf)) 
+//     {
+//         if(!l_token.empty()) 
+//         {
+//                 to_return.push_back(l_token);
+//         }
+//     }
+//     if(!l_token.empty()) 
+//     {
+//             to_return.push_back(l_token);
+//     }
+//     return normalize(to_return);
+// }
 
 vector<string> Tokenizer::tokenize(string& str)
 {
@@ -125,6 +125,7 @@ vector<string> Tokenizer::tokenize(string& str)
     }
     
     process_dots(to_return_wchar);
+    process_lang(to_return_wchar);
     if (lowercased) process_lowercase(to_return_wchar);
     auto to_return_wchar_it=to_return_wchar.begin();
     while (to_return_wchar_it != to_return_wchar.end())
@@ -138,254 +139,258 @@ vector<string> Tokenizer::tokenize(string& str)
     return to_return;
 }
 
-string Tokenizer::tokenize_to_string(streambuf* sbuf)
+// string Tokenizer::tokenize_to_string(streambuf* sbuf)
+// {
+//     vector<string> tokenized=tokenize(sbuf);
+//     ostringstream oss;
+//     string pred;
+//     string next;
+//     string output;
+//     for (int l_inc=0; l_inc < (int) tokenized.size() ; l_inc++)
+//     {
+//         next=tokenized.at(l_inc);
+//         if ((l_inc == 0) || (pred == "\n") || (next == "\n")) oss << next;
+//         else oss << " " << next;
+//         pred=next;
+//     }
+//     output=oss.str();
+//     return normalize(output);
+// }
+// 
+// 
+// 
+// 
+// bool Tokenizer::read (string& token, bool newdoc, streambuf* sbuf) {
+//     char c;
+//     token.clear();
+//     newdoc = false;
+//     bool do_read = false;
+// 
+//     xmlDom dom;
+// 
+//     while ((c = sbuf->sbumpc()) != EOF) {
+//         if (syntax == XHTML) {
+//             if (parserXHTML(c, dom, sbuf) == 1) {
+//                 if (dom.tag == flag) 
+//                     do_read = dom.status;
+//                 newdoc = do_read;
+//             } // parserXHTML(c, dom) == 1
+//         } // syntax == XHTML
+// 
+//         if (do_read || syntax == PLAIN) {
+//             if (seps_wide(c))
+//             {
+//                 if (!token.empty())
+//                 {
+//                     // **** Processing of not empty token ****
+//                             if (proc(token,c,sbuf)) return true;
+//                 }
+//                 else // token.empty() == true
+//                 {
+//                     // **** Processing of empty token ****
+//                             if (proc_empty(token,c,sbuf)) return true;
+//                 } // !token.empty()
+//             }
+//             else // separatorRules(c) == true
+//             {
+//                 if (lowercased)
+//                     c = ToLower(c);
+//                 token.push_back(c);
+//             } // separatorRules (c)
+//         } // do_read || syntax == PLAIN
+//         if ( syntax == CARACTER)
+//         {
+//             if (lowercased) c = ToLower(c);
+//             token.push_back(c);
+//             if (c == ' ') token="▁";
+//             else token=c;
+//             return true;
+//         } // syntax == CARACTER
+//     } // while
+// 
+//     return false;
+// }
+// 
+// bool Tokenizer::proc (string& token, char& c, streambuf* sbuf) {
+//     if (!aggressive) {
+//         switch(c) {
+//             case '.':
+//                 if (no_punct) return true;
+//                 if (dot_proc(token,c,sbuf)) return true;
+//                 else return false;
+//                 break;
+// 
+//             case ',':
+//                 if (no_punct) return true;
+//                 if (comma_proc(token,c,sbuf)) return true;
+//                 else return false;
+//                 break;
+// 
+//             default:
+//                 if (!no_punct) sbuf->sungetc();
+//                 return true;
+//                 break;
+//         }
+//         sbuf->sungetc();
+//         return true;
+// 
+//     } else {
+//         if (!no_punct) sbuf->sungetc();
+//         return true;
+//     }
+// }
+// 
+// 
+// bool Tokenizer::proc_empty (string& token, char& c, streambuf* sbuf) {
+//     switch(c) {
+//         case '.':
+//             if (!no_punct) token.push_back(c);
+//             if ((c = sbuf->sbumpc()) != EOF) {
+//                 if (c == '.') {
+//                     if (!no_punct) token.push_back(c);
+//                     return false;
+// 
+//                 } else {
+//                     sbuf->sungetc();
+//                     return true;
+//                 }
+// 
+//             } else {
+//                 return true;
+//             }
+// 
+//             break;
+// 
+//         default:
+//             if (c < 0) {
+//                 token.push_back(c);
+//                 if ((c = sbuf->sbumpc()) != EOF) {
+//                     if (c < 0) {
+//                         token.push_back(c);
+//                     } else {
+//                         c=sbuf->sungetc();
+//                         return true;
+//                     }
+//                 }
+// 
+//                 if ((c = sbuf->sbumpc()) != EOF) {
+//                     if (c < 0) {
+//                         token.push_back(c);
+//                     } else {
+//                         c = sbuf->sungetc();
+//                         return true;
+//                     }
+//                 }
+// 
+//                 return true;
+//             }
+// 
+//             if (!seps(c) || c == '\n') {
+//                 token.push_back(c);
+//                 return true;
+//             }
+// 
+//             break;
+//     }
+//     return false;
+// }
+// 
+// bool Tokenizer::dot_proc(string& token, char& c, streambuf* sbuf)
+// {
+//     token.push_back(c);
+//     int tksize=(int)token.size();
+//     if (is_nbr(token)) {
+//         if ((c = sbuf->sbumpc()) != EOF) {
+//             if (!seps(c)) {
+//                 token.push_back(c);
+//                 return false;
+//             } else {
+//                 token = token.substr(0,tksize-1);
+//                 sbuf->sungetc();
+//                 sbuf->sputbackc('.');
+//                 return true;
+//             }
+//         }
+//         if ((c = sbuf->sbumpc()) == EOF) 
+//         {
+//             c=sbuf->sungetc();
+//             sbuf->sputbackc('.');
+//             token=token.substr(0,tksize-1);
+//             return true;
+//         }
+//         return true;
+//     }
+//     else if (is_abrv(token)) 
+//     {
+//         if ((tksize >= 2 && token[tksize-2]<'\x05B' && token[tksize-2]>'\x040') || (tksize == 2 && (token[0]=='e' || token[0]=='i'  || token[0]=='c')))
+//         {
+//             if ((c = sbuf->sbumpc()) != EOF)
+//             {
+//                 if (!seps_wide(c))
+//                 {
+//                     
+//                     token.push_back(c);
+//                     return false;
+//                 }
+//                 else
+//                 {
+//                     sbuf->sungetc();
+//                     return true;
+//                 }
+//             }
+//             else
+//             {
+//                 return true;
+//             }
+//         }
+//         return true;
+//     }
+//     else
+//     {
+//         c=sbuf->sungetc();
+//         token=token.substr(0,(tksize)-1);
+//         return true;
+//     }
+//     return true;
+// }
+// 
+// bool Tokenizer::comma_proc (string& token, char& c, streambuf* sbuf) {
+//     token.push_back(c);
+//     int tksize=(int)token.size();
+//     if (is_nbr(token)) {
+//         if ((c = sbuf->sbumpc()) != EOF) {
+//             if (!seps(c)) {
+//                 token.push_back(c);
+//                 return false;
+//             } else {
+//                 token = token.substr(0,tksize-1);
+//                 sbuf->sungetc();
+//                 sbuf->sputbackc(',');
+//                 return true;
+//             }
+//         }
+//         if ((c = sbuf->sbumpc()) == EOF) 
+//         {
+//             c=sbuf->sungetc();
+//             sbuf->sputbackc(',');
+//             token=token.substr(0,tksize-1);
+//             return true;
+//         }
+//         return true;
+// 
+//     } else {
+//         c = sbuf->sungetc();
+//         token = token.substr(0,tksize-1);
+//         return true;
+//     }
+// 
+//     return true;
+// }
+
+bool Tokenizer::process_lang (vector<wstring>& vecwtoken)
 {
-    vector<string> tokenized=tokenize(sbuf);
-    ostringstream oss;
-    string pred;
-    string next;
-    string output;
-    for (int l_inc=0; l_inc < (int) tokenized.size() ; l_inc++)
-    {
-        next=tokenized.at(l_inc);
-        if ((l_inc == 0) || (pred == "\n") || (next == "\n")) oss << next;
-        else oss << " " << next;
-        pred=next;
-    }
-    output=oss.str();
-    return normalize(output);
-}
-
-
-
-
-bool Tokenizer::read (string& token, bool newdoc, streambuf* sbuf) {
-    char c;
-    token.clear();
-    newdoc = false;
-    bool do_read = false;
-
-    xmlDom dom;
-
-    while ((c = sbuf->sbumpc()) != EOF) {
-        if (syntax == XHTML) {
-            if (parserXHTML(c, dom, sbuf) == 1) {
-                if (dom.tag == flag) 
-                    do_read = dom.status;
-                newdoc = do_read;
-            } // parserXHTML(c, dom) == 1
-        } // syntax == XHTML
-
-        if (do_read || syntax == PLAIN) {
-            if (seps_wide(c))
-            {
-                if (!token.empty())
-                {
-                    // **** Processing of not empty token ****
-                            if (proc(token,c,sbuf)) return true;
-                }
-                else // token.empty() == true
-                {
-                    // **** Processing of empty token ****
-                            if (proc_empty(token,c,sbuf)) return true;
-                } // !token.empty()
-            }
-            else // separatorRules(c) == true
-            {
-                if (lowercased)
-                    c = ToLower(c);
-                token.push_back(c);
-            } // separatorRules (c)
-        } // do_read || syntax == PLAIN
-        if ( syntax == CARACTER)
-        {
-            if (lowercased) c = ToLower(c);
-            token.push_back(c);
-            if (c == ' ') token="▁";
-            else token=c;
-            return true;
-        } // syntax == CARACTER
-    } // while
-
-    return false;
-}
-
-bool Tokenizer::proc (string& token, char& c, streambuf* sbuf) {
-    if (!aggressive) {
-        switch(c) {
-            case '.':
-                if (no_punct) return true;
-                if (dot_proc(token,c,sbuf)) return true;
-                else return false;
-                break;
-
-            case ',':
-                if (no_punct) return true;
-                if (comma_proc(token,c,sbuf)) return true;
-                else return false;
-                break;
-
-            default:
-                if (!no_punct) sbuf->sungetc();
-                return true;
-                break;
-        }
-        sbuf->sungetc();
-        return true;
-
-    } else {
-        if (!no_punct) sbuf->sungetc();
-        return true;
-    }
-}
-
-
-bool Tokenizer::proc_empty (string& token, char& c, streambuf* sbuf) {
-    switch(c) {
-        case '.':
-            if (!no_punct) token.push_back(c);
-            if ((c = sbuf->sbumpc()) != EOF) {
-                if (c == '.') {
-                    if (!no_punct) token.push_back(c);
-                    return false;
-
-                } else {
-                    sbuf->sungetc();
-                    return true;
-                }
-
-            } else {
-                return true;
-            }
-
-            break;
-
-        default:
-            if (c < 0) {
-                token.push_back(c);
-                if ((c = sbuf->sbumpc()) != EOF) {
-                    if (c < 0) {
-                        token.push_back(c);
-                    } else {
-                        c=sbuf->sungetc();
-                        return true;
-                    }
-                }
-
-                if ((c = sbuf->sbumpc()) != EOF) {
-                    if (c < 0) {
-                        token.push_back(c);
-                    } else {
-                        c = sbuf->sungetc();
-                        return true;
-                    }
-                }
-
-                return true;
-            }
-
-            if (!seps(c) || c == '\n') {
-                token.push_back(c);
-                return true;
-            }
-
-            break;
-    }
-    return false;
-}
-
-bool Tokenizer::dot_proc(string& token, char& c, streambuf* sbuf)
-{
-    token.push_back(c);
-    int tksize=(int)token.size();
-    if (is_nbr(token)) {
-        if ((c = sbuf->sbumpc()) != EOF) {
-            if (!seps(c)) {
-                token.push_back(c);
-                return false;
-            } else {
-                token = token.substr(0,tksize-1);
-                sbuf->sungetc();
-                sbuf->sputbackc('.');
-                return true;
-            }
-        }
-        if ((c = sbuf->sbumpc()) == EOF) 
-        {
-            c=sbuf->sungetc();
-            sbuf->sputbackc('.');
-            token=token.substr(0,tksize-1);
-            return true;
-        }
-        return true;
-    }
-    else if (is_abrv(token)) 
-    {
-        if ((tksize >= 2 && token[tksize-2]<'\x05B' && token[tksize-2]>'\x040') || (tksize == 2 && (token[0]=='e' || token[0]=='i'  || token[0]=='c')))
-        {
-            if ((c = sbuf->sbumpc()) != EOF)
-            {
-                if (!seps_wide(c))
-                {
-                    
-                    token.push_back(c);
-                    return false;
-                }
-                else
-                {
-                    sbuf->sungetc();
-                    return true;
-                }
-            }
-            else
-            {
-                return true;
-            }
-        }
-        return true;
-    }
-    else
-    {
-        c=sbuf->sungetc();
-        token=token.substr(0,(tksize)-1);
-        return true;
-    }
     return true;
 }
-
-bool Tokenizer::comma_proc (string& token, char& c, streambuf* sbuf) {
-    token.push_back(c);
-    int tksize=(int)token.size();
-    if (is_nbr(token)) {
-        if ((c = sbuf->sbumpc()) != EOF) {
-            if (!seps(c)) {
-                token.push_back(c);
-                return false;
-            } else {
-                token = token.substr(0,tksize-1);
-                sbuf->sungetc();
-                sbuf->sputbackc(',');
-                return true;
-            }
-        }
-        if ((c = sbuf->sbumpc()) == EOF) 
-        {
-            c=sbuf->sungetc();
-            sbuf->sputbackc(',');
-            token=token.substr(0,tksize-1);
-            return true;
-        }
-        return true;
-
-    } else {
-        c = sbuf->sungetc();
-        token = token.substr(0,tksize-1);
-        return true;
-    }
-
-    return true;
-}
-
 
 bool Tokenizer::is_abrv (string& token) {
     int tksize = (int)token.size();
@@ -545,74 +550,74 @@ bool Tokenizer::seps_wide (unsigned short& c) {
 
 
 
-int Tokenizer::parserXHTML(char& c, xmlDom& dom, streambuf* sbuf) {
-    if (c == '<') {
-        string starter;
-        starter.push_back(c);
-
-        // Catch starter
-        while ((c = sbuf->sbumpc()) != EOF) {
-            if (!(starter.size() > 0 && (c == '-' || c == '/' || c == '?' || c == '!'))) {
-                break;
-            }
-
-            if (c == ' ' && starter.empty()) continue; // syntax errors
-            starter.push_back(c);
-        }
-
-        string stopper;
-        map<string,string>::const_iterator it = html_codex.find(starter);
-
-        if (it != html_codex.end()) {
-            stopper = it->second;
-        } else {
-            return 0;
-        }
-
-        if (dom.tag == "script" && starter != "</") return 0;
-
-        bool ignore_content = false;
-        if (starter == "<?" || starter == "<!" || starter == "<!--")
-            ignore_content = true;
-
-        sbuf->sungetc();
-
-        string tag;
-        string content;
-        string tmp;
-        bool get_tag = true;
-
-        while ((c = sbuf->sbumpc()) != EOF) {
-            if (c == '>' || c == '?' || c == '!' || c == '-') {
-                tmp.push_back(c);
-            } else {
-                tmp.clear();
-            }
-
-            if (c == ' ') {
-                if (tag.empty()) continue;
-                get_tag = false;
-            }
-
-            if (stopChecker(stopper, tmp)) {
-                dom.tag = tag;
-                dom.content = content;
-                dom.status = !(starter == "</");
-                return 1;
-            }
-
-            if (!ignore_content) {
-                if (get_tag) {
-                    tag.push_back(c);
-                } else {
-                    content.push_back(c);
-                }
-            }
-        }
-    }
-
-    return 0;
-}
+// int Tokenizer::parserXHTML(char& c, xmlDom& dom, streambuf* sbuf) {
+//     if (c == '<') {
+//         string starter;
+//         starter.push_back(c);
+// 
+//         // Catch starter
+//         while ((c = sbuf->sbumpc()) != EOF) {
+//             if (!(starter.size() > 0 && (c == '-' || c == '/' || c == '?' || c == '!'))) {
+//                 break;
+//             }
+// 
+//             if (c == ' ' && starter.empty()) continue; // syntax errors
+//             starter.push_back(c);
+//         }
+// 
+//         string stopper;
+//         map<string,string>::const_iterator it = html_codex.find(starter);
+// 
+//         if (it != html_codex.end()) {
+//             stopper = it->second;
+//         } else {
+//             return 0;
+//         }
+// 
+//         if (dom.tag == "script" && starter != "</") return 0;
+// 
+//         bool ignore_content = false;
+//         if (starter == "<?" || starter == "<!" || starter == "<!--")
+//             ignore_content = true;
+// 
+//         sbuf->sungetc();
+// 
+//         string tag;
+//         string content;
+//         string tmp;
+//         bool get_tag = true;
+// 
+//         while ((c = sbuf->sbumpc()) != EOF) {
+//             if (c == '>' || c == '?' || c == '!' || c == '-') {
+//                 tmp.push_back(c);
+//             } else {
+//                 tmp.clear();
+//             }
+// 
+//             if (c == ' ') {
+//                 if (tag.empty()) continue;
+//                 get_tag = false;
+//             }
+// 
+//             if (stopChecker(stopper, tmp)) {
+//                 dom.tag = tag;
+//                 dom.content = content;
+//                 dom.status = !(starter == "</");
+//                 return 1;
+//             }
+// 
+//             if (!ignore_content) {
+//                 if (get_tag) {
+//                     tag.push_back(c);
+//                 } else {
+//                     content.push_back(c);
+//                 }
+//             }
+//         }
+//     }
+// 
+//     return 0;
+// }
 
 bool qnlp::Tokenizer::process_cots(vector<std::__cxx11::wstring>& vecwtoken)
 {

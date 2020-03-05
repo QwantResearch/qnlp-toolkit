@@ -11,8 +11,7 @@ namespace qnlp {
             Tokenizer_en (int syntax=PLAIN, bool lowercased=true, bool underscore=true, bool dash=true, bool aggressive=true, bool nopunct=true):
                 Tokenizer (syntax, lowercased, underscore, dash, aggressive, nopunct){lang="en";};
         protected:
-            bool proc (string& token, char& c, streambuf* sbuf);
-            bool proc_empty (string& token, char& c, streambuf* sbuf);
+            bool process_lang(vector<std::__cxx11::wstring> & vecwtoken) override;
     };
 }
 

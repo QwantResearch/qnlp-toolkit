@@ -100,17 +100,27 @@ vector<string> Tokenizer::tokenize(string& str)
             to_return_wchar.push_back(wtoken);
             wtoken.clear();
         }
-        if (cwc != u' ' && cwc != u'\n' && cwc != u'\t') wtoken.push_back(cwc);
-        if (cwc < 58 && cwc > 47 ) process_numbers_todo=true;
+        if (cwc > 32 ) wtoken.push_back(cwc);
+        else
+        {
+            if ((int)wtoken.size() > 0)
+            to_return_wchar.push_back(wtoken);
+            wtoken.clear();
+            to_return_wchar.push_back(L"@@@");            
+        }
+        if (cwc > 47 && cwc < 58 ) process_numbers_todo=true;
         
         utf16str_it++;
     }
     if ((int)wtoken.size() > 0) to_return_wchar.push_back(wtoken);
     wtoken.clear();
     process_cots(to_return_wchar);
-    while (process_numbers_todo && process_numbers(to_return_wchar) )
+    if (process_numbers_todo)
     {
-        continue;
+        while (process_numbers(to_return_wchar) )
+        {
+            continue;
+        }
     }
     process_dots(to_return_wchar);
     if (lowercased) process_lowercase(to_return_wchar);
@@ -120,7 +130,7 @@ vector<string> Tokenizer::tokenize(string& str)
         string utf8str;
         wstring utf16str=(*to_return_wchar_it);
         utf8::utf16to8(utf16str.begin(), utf16str.end(), back_inserter(utf8str));
-        if ((int)utf8str.size() > 0) to_return.push_back(utf8str);
+        if ((int)utf8str.size() > 0 && utf8str.compare("@@@") != 0 ) to_return.push_back(utf8str);
         to_return_wchar_it++;
     }
     return to_return;
@@ -421,12 +431,10 @@ bool Tokenizer::is_nbr(wstring& wtoken) {
             l_i++;
             continue;
         } 
-
         if ((wtoken[l_i] <= 0x39 && wtoken[l_i] >= 0x30) || wtoken[l_i] == u'.' || wtoken[l_i] == u',')
             l_i++;
         else
             return false;
-
         l_i++;
     }
     return true;
@@ -507,7 +515,9 @@ bool Tokenizer::seps_wide (unsigned int& c) {
 bool Tokenizer::seps (unsigned short& c) {
     if (c == u'-' && !dash ) return false;
     if (c == u'_' && !underscore) return false;
-    return ((c <= '\x02F' && c > 0) || (c >= '\x03a' && c <= '\x040') || (c >= '\x05b' && c <= '\x060') || (c >= '\x07b' && c <= '\x07e'));
+    if (c == u'…' ) return true;
+    
+    return ((c <= '\x02F' && c > 0) || (c >= '\x03a' && c <= '\x040') || (c >= '\x05b' && c <= '\x060') || (c >= '\x07b' && c <= '\x07e') || (c >= '\x07f' && c <= '\x0a0'));
 //     {
 //         return true;
 //     } else {
@@ -516,8 +526,9 @@ bool Tokenizer::seps (unsigned short& c) {
 }
 
 bool Tokenizer::seps_wide (unsigned short& c) {
-    if (c == '-' && !dash ) return false;
-    if (c == '_' && !underscore) return false;
+    if (c == u'-' && !dash ) return false;
+    if (c == u'_' && !underscore) return false;
+    if (c == u'…' ) return true;
     if (c <= '\x02f' && c > 0) {
         return true;
     } else {
@@ -627,14 +638,19 @@ bool qnlp::Tokenizer::process_acronym(vector<std::__cxx11::wstring>& vecwtoken)
                     break;
                 }
             }
-            if (vecwtoken_it_end != vecwtoken_it)
+            if (vecwtoken_it_end >= vecwtoken_it)
             {
                 wstring toConcatenate;
+                wstring l_wtoken;
                 for (vecwtoken_it_curr=vecwtoken_it-1; vecwtoken_it_curr <= vecwtoken_it_end; vecwtoken_it_curr++)
                 {
+                    l_wtoken=toConcatenate+(*vecwtoken_it_curr);
+                    if (! is_nbr(l_wtoken))
+                    {
+                        toConcatenate=l_wtoken;
+                        (*vecwtoken_it_curr)=L"";
+                    }
                     
-                    toConcatenate=toConcatenate+(*vecwtoken_it_curr);
-                    (*vecwtoken_it_curr)=L"";
                 }
                 if ((int)toConcatenate.size() > 0)
                 {

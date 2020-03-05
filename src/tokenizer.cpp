@@ -492,4 +492,8 @@ string Tokenizer::getlang()
     return lang;
 }
 
-
+string Tokenizer::tokenize_sentence_to_string(string & str)
+{
+    vector<string> to_return = tokenize(str);
+    return qnlp::Join(to_return , " ");
+}

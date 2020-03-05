@@ -22,7 +22,9 @@ class Tokenizer {
             syntax(syntax), lowercased(lowercased), underscore(underscore), dash(dash), aggressive(aggressive), no_punct(noPunct)
             {lang="gen";}
 
+        string tokenize_sentence_to_string(string & str);
         vector<string> tokenize(string & str);
+        vector<string> tokenize_sentence(string & str) {return tokenize(str);};
         string normalize(string &token);
         vector<string> normalize(vector<string> &vecToken);
         void setParam(bool lowercased, bool underscore, bool dash, bool aggressive, bool noPunct) {

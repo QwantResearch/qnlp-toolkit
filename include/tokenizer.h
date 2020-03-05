@@ -100,12 +100,16 @@ class Tokenizer {
         bool comma_proc (string& token, char& c, streambuf* sbuf);
         
         bool is_nbr (wstring& wtoken);
+        bool is_separator (wstring& wtoken);
+        bool is_separator (string& token);
         bool process_numbers(vector<wstring>& vecwtoken);
         bool process_cots(vector<wstring>& vecwtoken);
         bool process_dots(vector<wstring>& vecwtoken);
         bool process_acronym(vector<wstring>& vecwtoken);
+        bool process_ldots(vector<wstring>& vecwtoken);
         bool process_abrv(vector<wstring>& vecwtoken);
         bool process_lowercase(vector<wstring>& vecwtoken);
+        bool print_vector(vector<wstring>& vecwtoken);
         vector<wstring> clean_vector(vector<wstring>& vecwtoken);
         
         
@@ -118,9 +122,14 @@ class Tokenizer {
         const vector<string> abrvs = {"Mme.","Mmes.","Mlle.","Mlles.","MM.","M.","Mr.",
             "Vve.","Dr.","Drs.","Pr.","Prs.","Me.","Mes.","Mgr.","Art.","Fig.","art.",
             "fig.","etc.","e.g.","i.e.","cf.","av.","bc.", "J.C.", "J.-C."};
-        const vector<wstring> wabrvs = {L"Mme.",L"Mmes.",L"Mlle.",L"Mlles.",L"MM.",L"M.",L"Mr.",
+        const vector<wstring> wabrvs = {L"Mme.",L"Mmes.",L"Mlle.",L"Mlles.",L"MM.",L"Mr.", 
             L"Vve.",L"Dr.",L"Drs.",L"Pr.",L"Prs.",L"Me.",L"Mes.",L"Mgr.",L"Art.",L"Fig.",L"art.",
-            L"fig.",L"etc.",L"e.g.",L"i.e.",L"cf.",L"av.",L"bc.",L"J.C.",L"J.-C."};
+            L"fig.",L"etc.",L"e.g.",L"i.e.",L"cf.",L"av.",L"bc.",L"J.C.",L"J.-C.",L".-C",L"J.-C",
+            L"J.S.",L"J.-S.",L".-S",L"J.-S",
+            L".g",L"e.g",L".e",L"i.e",L"p.ex.",L"p.ex",L".ex",L"P.ex.",L"P.ex",L".ex",L"P.EX.",L"P.EX",L".EX",
+            L"R&D",L"&D",
+        };
+//             ,L"M."
 
 }; // class Tokenizer
 

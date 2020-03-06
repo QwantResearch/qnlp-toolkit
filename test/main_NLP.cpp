@@ -196,19 +196,19 @@ int main ( int argc, char *argv[] )
     Stemmer stem(l_lang.c_str());
     if (l_lang.compare("fr") == 0) 
     {
-        l_tokenizer = new Tokenizer_fr(Tokenizer::PLAIN, l_cased,l_underscore,l_dash, l_aggressive);
+        l_tokenizer = new Tokenizer_fr(l_cased,l_underscore,l_dash, l_aggressive);
     }
     else if (l_lang.compare("en") == 0) 
     {
-        l_tokenizer = new Tokenizer_en(Tokenizer::PLAIN, l_cased,l_underscore,l_dash, l_aggressive);
+        l_tokenizer = new Tokenizer_en(l_cased,l_underscore,l_dash, l_aggressive);
     }
     else if (l_lang.compare("car") == 0) 
     {
-        l_tokenizer = new Tokenizer(Tokenizer::CARACTER, l_cased,l_underscore,l_dash, l_aggressive);
+        l_tokenizer = new Tokenizer(l_cased,l_underscore,l_dash, l_aggressive);
     }
     else
     {
-        l_tokenizer = new Tokenizer(Tokenizer::PLAIN, l_cased,l_underscore,l_dash, l_aggressive);
+        l_tokenizer = new Tokenizer(l_cased,l_underscore,l_dash, l_aggressive);
     }
     if ((int)l_BPE.size() != 0)
     {

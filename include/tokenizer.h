@@ -19,7 +19,10 @@ class Tokenizer {
 
         /** Constructor of the class tokenizer */
         Tokenizer (int syntax=PLAIN, bool lowercased=true, bool underscore=true, bool dash=true, bool aggressive=true, bool noPunct=true):
-            syntax(syntax), lowercased(lowercased), underscore(underscore), dash(dash), aggressive(aggressive), no_punct(noPunct)
+            syntax(syntax), lowercased(lowercased), underscore(underscore), dash(dash), aggressive(aggressive), no_punct(noPunct) // soon deprecated
+            {lang="gen";}
+        Tokenizer (bool lowercased=true, bool underscore=true, bool dash=true, bool aggressive=true, bool noPunct=true):
+            lowercased(lowercased), underscore(underscore), dash(dash), aggressive(aggressive), no_punct(noPunct)
             {lang="gen";}
 
         string tokenize_sentence_to_string(string & str);

@@ -71,7 +71,11 @@ vector<string> Tokenizer::tokenize(string& str)
     }
     
     process_dots(to_return_wchar);
-    process_lang(to_return_wchar);
+    
+    while (process_lang(to_return_wchar))
+    {
+        to_return_wchar=clean_vector(to_return_wchar);
+    }
     if (lowercased) process_lowercase(to_return_wchar);
     auto to_return_wchar_it=to_return_wchar.begin();
     while (to_return_wchar_it != to_return_wchar.end())
@@ -86,7 +90,7 @@ vector<string> Tokenizer::tokenize(string& str)
 }
 bool Tokenizer::process_lang (vector<wstring>& vecwtoken)
 {
-    return true;
+    return false;
 }
 
 bool Tokenizer::is_abrv (string& token) {

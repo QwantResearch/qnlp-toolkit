@@ -65,6 +65,8 @@ class Tokenizer {
 
     protected:
         virtual bool process_lang (vector<wstring>& vecwtoken);
+        const vector<wstring> wlang_process;
+        
         string lang;
 
         int syntax;
@@ -116,7 +118,7 @@ class Tokenizer {
             L"fig.",L"etc.",L"e.g.",L"i.e.",L"cf.",L"av.",L"bc.",L"J.C.",L"J.-C.",L".-C",L"J.-C",
             L"J.S.",L"J.-S.",L".-S",L"J.-S",
             L".g",L"e.g",L".e",L"i.e",L"p.ex.",L"p.ex",L".ex",L"P.ex.",L"P.ex",L".ex",L"P.EX.",L"P.EX",L".EX",
-            L"R&D",L"&D",
+            L"R&D",L"&D"
         };
 //             ,L"M."
 

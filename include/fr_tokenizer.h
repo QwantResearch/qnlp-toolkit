@@ -5,7 +5,8 @@
 
 namespace qnlp {
     
-    class Tokenizer_fr: public Tokenizer {
+    class Tokenizer_fr: public Tokenizer 
+    {
         public:
           
             Tokenizer_fr (int syntax=PLAIN, bool lowercased=true, bool underscore=true, bool dash=true, bool aggressive=true, bool nopunct=true):
@@ -13,6 +14,11 @@ namespace qnlp {
             
         protected:
             bool process_lang(vector<std::__cxx11::wstring> & vecwtoken) override;
+            const vector<wstring> wlang_process = {L"l'", L"L'", L"d'", L"D'", L"n'", L"N'", 
+                L"aujourd'hui", L"'hui", L"Aujourd'hui", L"c'", L"C'", L"d'accord", L"D'accord", L"qu'", L"Qu'", L"t'", L"T'",
+                L"s'", L"S'", L"n'", L"N'", L"'roll", L"'n'roll", L"rock'n'roll",
+            }; 
+            
     };
 }
 

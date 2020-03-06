@@ -8,6 +8,7 @@
 #include "tokenizer.h"
 #include "fr_tokenizer.h"
 #include "en_tokenizer.h"
+#include "car_tokenizer.h"
 #include "bpe.h"
 #include "spm.h"
 #include "stemmer.h"
@@ -196,19 +197,19 @@ int main ( int argc, char *argv[] )
     Stemmer stem(l_lang.c_str());
     if (l_lang.compare("fr") == 0) 
     {
-        l_tokenizer = new Tokenizer_fr(Tokenizer::PLAIN, l_cased,l_underscore,l_dash, l_aggressive);
+        l_tokenizer = new Tokenizer_fr(l_cased,l_underscore,l_dash, l_aggressive);
     }
     else if (l_lang.compare("en") == 0) 
     {
-        l_tokenizer = new Tokenizer_en(Tokenizer::PLAIN, l_cased,l_underscore,l_dash, l_aggressive);
+        l_tokenizer = new Tokenizer_en(l_cased,l_underscore,l_dash, l_aggressive);
     }
     else if (l_lang.compare("car") == 0) 
     {
-        l_tokenizer = new Tokenizer(Tokenizer::CARACTER, l_cased,l_underscore,l_dash, l_aggressive);
+        l_tokenizer = new Tokenizer_car(l_cased,l_underscore,l_dash, l_aggressive);
     }
     else
     {
-        l_tokenizer = new Tokenizer(Tokenizer::PLAIN, l_cased,l_underscore,l_dash, l_aggressive);
+        l_tokenizer = new Tokenizer(l_cased,l_underscore,l_dash, l_aggressive);
     }
     if ((int)l_BPE.size() != 0)
     {
@@ -225,7 +226,7 @@ int main ( int argc, char *argv[] )
     while (std::getline(std::cin, line))
     {
         string to_tokenize=line;
-        l_output_vec = l_tokenizer->tokenize_sentence(to_tokenize);
+        l_output_vec = l_tokenizer->tokenize(to_tokenize);
         if (l_stem)  
             l_output_vec = stemming(l_output_vec,stem);
         if (l_stopwords) 
@@ -249,6 +250,9 @@ int main ( int argc, char *argv[] )
             l_output=qnlp::Join(l_output_vec," ");      
         }
         cout << l_output << endl;
+//         cout << "ORI: " << line << endl;
+//         cout << "TOK: " << l_output << endl;
+//         cout << "NTK: " << qnlp::Join(l_output_vec_ntk," ") << endl;
     }
     delete(l_tokenizer);
     return EXIT_SUCCESS;

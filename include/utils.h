@@ -6,6 +6,8 @@
 #include <iostream>
 #include <sstream>
 #include <regex>
+#include "utf8/utf8.h"
+
 // #include <boost/algorithm/string.hpp>
 
 // void Trim(std::string& s);
@@ -21,6 +23,9 @@ bool EndsWith(std::string const &fullString, std::string const suffix);
 // std::string E        scapeRegex(std::string text);
 
 char ToLower(char& c);
+unsigned char  ToLower(unsigned char& c);
+unsigned short  ToLower(unsigned short& c);
+unsigned int  ToLower(unsigned int& c);
 
 };
 

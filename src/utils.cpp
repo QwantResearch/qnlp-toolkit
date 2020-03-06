@@ -55,6 +55,33 @@ char  qnlp::ToLower(char& c)
     return tolower(c);
 }
 
+unsigned char  qnlp::ToLower(unsigned char& c)
+{
+    if (c > 191 && c < 223 && c != 215 )
+    {
+        return c+32;
+    }
+    return tolower(c);
+}
+
+unsigned short  qnlp::ToLower(unsigned short& c)
+{
+    if (c > 191 && c < 223 && c != 215 )
+    {
+        return c+32;
+    }
+    return tolower(c);
+}
+
+unsigned int  qnlp::ToLower(unsigned int& c)
+{
+    if (c > 191 && c < 223 && c != 215 )
+    {
+        return c+32;
+    }
+    return tolower(c);
+}
+
 
 // std::string EscapeRegex(std::string text) {
 //   std::stringstream result;

@@ -15,6 +15,7 @@ vector<string> Tokenizer_car::tokenize(string& str)
     while (utf16str_it != utf16str.end())
     {
         unsigned short cwc=(*utf16str_it);
+        if (cwc == 32 ) cwc=u'▁';
         if (cwc > 31 ) 
         {
             wtoken.push_back(cwc);

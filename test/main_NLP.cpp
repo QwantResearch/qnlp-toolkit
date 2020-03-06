@@ -8,6 +8,7 @@
 #include "tokenizer.h"
 #include "fr_tokenizer.h"
 #include "en_tokenizer.h"
+#include "car_tokenizer.h"
 #include "bpe.h"
 #include "spm.h"
 #include "stemmer.h"
@@ -204,7 +205,7 @@ int main ( int argc, char *argv[] )
     }
     else if (l_lang.compare("car") == 0) 
     {
-        l_tokenizer = new Tokenizer(l_cased,l_underscore,l_dash, l_aggressive);
+        l_tokenizer = new Tokenizer_car(l_cased,l_underscore,l_dash, l_aggressive);
     }
     else
     {

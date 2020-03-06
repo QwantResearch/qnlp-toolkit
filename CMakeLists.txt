@@ -21,6 +21,7 @@ set(SOURCES
   src/embeddings.cpp
   src/en_tokenizer.cpp
   src/fr_tokenizer.cpp
+  src/car_tokenizer.cpp
   src/tokenizer.cpp
   src/stemmer.cpp
   src/stopwords.cpp

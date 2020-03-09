@@ -7,6 +7,9 @@ set(CMAKE_VERBOSE_MAKEFILE ON)
 set(CMAKE_CXX_STANDARD 11)
 set(THREADS_PREFER_PTHREAD_FLAG ON)
 
+set(CMAKE_CXX_FLAGS " -O3 ")
+set(CMAKE_C_FLAGS " -O3 ")
+
 include_directories(/usr/include)
 include_directories(include)
 include_directories(externals/snowball/include)

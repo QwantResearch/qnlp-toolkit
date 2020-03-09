@@ -68,6 +68,7 @@ class Tokenizer {
 
     protected:
         virtual bool process_lang (vector<wstring>& vecwtoken);
+        virtual bool process_cots(vector<wstring>& vecwtoken); 
         const vector<wstring> wlang_process;
         
         string lang;
@@ -99,10 +100,11 @@ class Tokenizer {
         bool is_separator (wstring& wtoken);
         bool is_separator (string& token);
         bool process_numbers(vector<wstring>& vecwtoken);
-        bool process_cots(vector<wstring>& vecwtoken);
+        
         bool process_dots(vector<wstring>& vecwtoken);
         bool process_acronym(vector<wstring>& vecwtoken);
         bool process_ldots(vector<wstring>& vecwtoken);
+        bool process_final_dots(vector<wstring>& vecwtoken);
         bool process_abrv(vector<wstring>& vecwtoken);
         bool process_lowercase(vector<wstring>& vecwtoken);
         bool print_vector(vector<wstring>& vecwtoken);
@@ -120,8 +122,13 @@ class Tokenizer {
             L"Vve.",L"Dr.",L"Drs.",L"Pr.",L"Prs.",L"Me.",L"Mes.",L"Mgr.",L"Art.",L"Fig.",L"art.",
             L"fig.",L"etc.",L"e.g.",L"i.e.",L"cf.",L"av.",L"bc.",L"J.C.",L"J.-C.",L".-C",L"J.-C",
             L"J.S.",L"J.-S.",L".-S",L"J.-S",
+            L"vs.", L"Vs.", L"v.",
+            L"st.", L"St.",
+            L"inc.", L"Inc.",
             L".g",L"e.g",L".e",L"i.e",L"p.ex.",L"p.ex",L".ex",L"P.ex.",L"P.ex",L".ex",L"P.EX.",L"P.EX",L".EX",
-            L"R&D",L"&D"
+            L"R&D",L"&D",
+            L"Jr.", L"Sr.",L"O'",L"Bros.",
+            L"pm.", L"am.", L"p.m.", L"a.m.", L".m", L"p.m", L"a.m",
         };
 //             ,L"M."
 

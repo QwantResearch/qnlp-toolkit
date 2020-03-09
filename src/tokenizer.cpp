@@ -2,6 +2,7 @@
 
 using namespace qnlp;
 
+using namespace std::chrono; 
 
 vector< string > Tokenizer::normalize(vector< string > &vecToken)
 {
@@ -34,6 +35,9 @@ vector<string> Tokenizer::tokenize(string& str)
     {
         unsigned short wc=wtoken[0];
         unsigned short cwc=(*utf16str_it);
+        if (cwc == 160)  cwc=32;
+        if (cwc == u'´') cwc=u'\'';
+        if (cwc == u'’') cwc=u'\'';
         if (seps(wc))
         {
             if ((int)wtoken.size() > 0)
@@ -47,7 +51,7 @@ vector<string> Tokenizer::tokenize(string& str)
             wtoken.clear();
             
         }
-        if (cwc > 32 ) wtoken.push_back(cwc);
+        if (cwc > 32) wtoken.push_back(cwc);
         else
         {
             if ((int)wtoken.size() > 0)
@@ -61,7 +65,10 @@ vector<string> Tokenizer::tokenize(string& str)
     }
     if ((int)wtoken.size() > 0) to_return_wchar.push_back(wtoken);
     wtoken.clear();
-    process_cots(to_return_wchar);
+    while (process_cots(to_return_wchar) )
+    {
+        continue;
+    }
     if (process_numbers_todo)
     {
         while (process_numbers(to_return_wchar) )
@@ -70,8 +77,11 @@ vector<string> Tokenizer::tokenize(string& str)
         }
     }
     
-    process_dots(to_return_wchar);
-    
+    while (process_dots(to_return_wchar))
+    {
+        to_return_wchar=clean_vector(to_return_wchar);
+    }
+    process_final_dots(to_return_wchar);
     while (process_lang(to_return_wchar))
     {
         to_return_wchar=clean_vector(to_return_wchar);
@@ -222,12 +232,16 @@ bool Tokenizer::seps_wide (unsigned int& c) {
 
 bool Tokenizer::seps (unsigned short& c) {
     if (c == u'-' && !dash ) return false;
-    if (c == u'‒' && !dash ) return false;
     if (c == u'_' && !underscore) return false;
     if (c == u'…' ) return true;
+    if (c == u'‒' ) return true;
+    if (c == u'–' ) return true;
+    if (c == u'—' ) return true;
     if (c == u'«' ) return true;
     if (c == u'»' ) return true;
     if (c == u'€' ) return true;
+    if (c == u'“' ) return true;
+    if (c == u'”' ) return true;
     
     return ((c <= '\x02F' && c > 0) || (c >= '\x03a' && c <= '\x040') || (c >= '\x05b' && c <= '\x060') || (c >= '\x07b' && c <= '\x07e') || (c >= '\x07f' && c <= '\x0bf'));
 //     {
@@ -253,7 +267,7 @@ bool Tokenizer::seps_wide (unsigned short& c) {
 
 bool qnlp::Tokenizer::process_cots(vector<std::__cxx11::wstring>& vecwtoken)
 {
-    return true;
+    return false;
 }
 
 
@@ -317,8 +331,11 @@ bool qnlp::Tokenizer::process_abrv(vector<std::__cxx11::wstring>& vecwtoken)
     auto vecwtoken_it_prev=vecwtoken.begin();
     if (vecwtoken_it != vecwtoken.end()) vecwtoken_it++; else return false;
     wstring toTest;
-    while (vecwtoken_it != vecwtoken.end() )
+    bool sep_test=false;
+    while (vecwtoken_it != vecwtoken.end())
     {
+        sep_test=false;
+        if (is_separator((*vecwtoken_it_prev)) && vecwtoken_it_prev != vecwtoken.begin()) {vecwtoken_it_prev--;sep_test=true;}
         toTest=(*vecwtoken_it_prev)+(*vecwtoken_it);
         if (std::find(wabrvs.begin(), wabrvs.end(), toTest) != wabrvs.end()) // && (*vecwtoken_it) == L"."
         {
@@ -328,6 +345,7 @@ bool qnlp::Tokenizer::process_abrv(vector<std::__cxx11::wstring>& vecwtoken)
         }
         vecwtoken_it++;
         vecwtoken_it_prev++;
+        if (sep_test) vecwtoken_it_prev++;
     }
     return false;
 }
@@ -337,17 +355,16 @@ bool qnlp::Tokenizer::process_dots(vector<std::__cxx11::wstring>& vecwtoken)
     while (process_abrv(vecwtoken))
     {
         vecwtoken=clean_vector(vecwtoken);
-        continue;
     }
     while (process_acronym(vecwtoken))
     {
-        continue;
+        vecwtoken=clean_vector(vecwtoken);
     }
     while (process_ldots(vecwtoken))
     {
         continue;
     }
-    return true;
+    return false;
 }
 
 bool qnlp::Tokenizer::process_numbers(vector<std::__cxx11::wstring>& vecwtoken)
@@ -452,6 +469,19 @@ bool qnlp::Tokenizer::process_ldots(vector<wstring>& vecwtoken)
         vecwtoken_it--;
     }
     return false;
+}
+
+bool qnlp::Tokenizer::process_final_dots(vector<std::__cxx11::wstring>& vecwtoken)
+{
+    vector<wstring> vecwtoken_to_return;
+    auto vecwtoken_it=vecwtoken.end();
+    if (vecwtoken_it != vecwtoken.begin()) vecwtoken_it--; else return false;
+    if ((int)(*vecwtoken_it).size() == 2 && (*vecwtoken_it)[0] != u'.' && (*vecwtoken_it)[1] == u'.')
+    {
+        (*vecwtoken_it)=(*vecwtoken_it).substr(0,1);
+        vecwtoken.push_back(L".");
+    }
+    return true;
 }
 
 bool qnlp::Tokenizer::is_separator(string& token)

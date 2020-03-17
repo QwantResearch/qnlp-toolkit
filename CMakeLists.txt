@@ -51,4 +51,4 @@ target_link_libraries(${PROJECT_NAME} ${LIBS})
 add_subdirectory(test)
 
 install(TARGETS ${PROJECT_NAME} DESTINATION lib/)
-install(DIRECTORY include/ DESTINATION include/qnlp FILES_MATCHING PATTERN "*.h*")
+install(DIRECTORY include/ DESTINATION include/ FILES_MATCHING PATTERN "*.h*")

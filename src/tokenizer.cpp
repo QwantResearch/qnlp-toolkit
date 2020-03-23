@@ -51,7 +51,7 @@ vector<string> Tokenizer::tokenize(string& str)
             wtoken.clear();
             
         }
-        if (cwc > 32) wtoken.push_back(cwc);
+        if (cwc > 32 || cwc == 10) wtoken.push_back(cwc);
         else
         {
             if ((int)wtoken.size() > 0)
@@ -189,6 +189,8 @@ bool Tokenizer::seps_wide (char& c) {
 bool Tokenizer::seps (unsigned char& c) {
     if (c == u'-' && !dash ) return false;
     if (c == u'_' && !underscore) return false;
+    if (c == u'\n' ) return true;
+    if (c == u'\r' ) return true;
     return ((c <= '\x02F' && c > 0) || (c >= '\x03a' && c <= '\x040') || (c >= '\x05b' && c <= '\x060') || (c >= '\x07b' && c <= '\x07e'));
 //     {
 //         return true;

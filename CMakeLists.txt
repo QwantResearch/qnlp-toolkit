@@ -13,6 +13,7 @@ set(CMAKE_C_FLAGS " -O3 ")
 include_directories(/usr/include)
 include_directories(include)
 include_directories(externals/snowball/include)
+include_directories(third_party/fastText/src)
 
 link_directories(/usr/lib
                  /usr/local/lib

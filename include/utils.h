@@ -1,6 +1,7 @@
 #ifndef QNLP_UTILS_H
 #define QNLP_UTILS_H
 #pragma once
+
 #include <string>
 #include <vector>
 #include <iostream>

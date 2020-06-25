@@ -15,7 +15,7 @@ namespace qnlp {
                 Tokenizer (lowercased, underscore, dash, aggressive, nopunct){lang="fr";};
             
         protected:
-            bool process_lang(vector<std::__cxx11::wstring> & vecwtoken) override;
+            bool process_lang(vector<wstring> & vecwtoken) override;
             bool process_cots(vector<wstring>& vecwtoken) override; 
             const vector<wstring> wlang_process = {
 //                 L"l'", L"L'", L"d'", L"D'", L"n'", L"N'", L"c'", L"C'", L"t'", L"T'", L"j'", L"J'", L"qu'", L"Qu'", L"s'", L"S'", L"jusqu'", L"Jusqu'", L"lorsqu'", L"Lorsqu'",

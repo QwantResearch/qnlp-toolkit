@@ -267,7 +267,7 @@ bool Tokenizer::seps_wide (unsigned short& c) {
 
 
 
-bool qnlp::Tokenizer::process_cots(vector<std::__cxx11::wstring>& vecwtoken)
+bool qnlp::Tokenizer::process_cots(vector<wstring>& vecwtoken)
 {
     return false;
 }
@@ -327,7 +327,7 @@ bool qnlp::Tokenizer::process_acronym(vector<wstring>& vecwtoken)
     (*vecwtoken_end_it)=toConcatenate;
     return true;
 }
-bool qnlp::Tokenizer::process_abrv(vector<std::__cxx11::wstring>& vecwtoken)
+bool qnlp::Tokenizer::process_abrv(vector<wstring>& vecwtoken)
 {
     auto vecwtoken_it=vecwtoken.begin();
     auto vecwtoken_it_prev=vecwtoken.begin();
@@ -352,7 +352,7 @@ bool qnlp::Tokenizer::process_abrv(vector<std::__cxx11::wstring>& vecwtoken)
     return false;
 }
 
-bool qnlp::Tokenizer::process_dots(vector<std::__cxx11::wstring>& vecwtoken)
+bool qnlp::Tokenizer::process_dots(vector<wstring>& vecwtoken)
 {
     while (process_abrv(vecwtoken))
     {
@@ -369,7 +369,7 @@ bool qnlp::Tokenizer::process_dots(vector<std::__cxx11::wstring>& vecwtoken)
     return false;
 }
 
-bool qnlp::Tokenizer::process_numbers(vector<std::__cxx11::wstring>& vecwtoken)
+bool qnlp::Tokenizer::process_numbers(vector<wstring>& vecwtoken)
 {
     auto vecwtoken_it=vecwtoken.begin();
     auto vecwtoken_it_prev=vecwtoken.begin();
@@ -395,7 +395,7 @@ bool qnlp::Tokenizer::process_numbers(vector<std::__cxx11::wstring>& vecwtoken)
 
 }
 
-bool qnlp::Tokenizer::process_lowercase(vector<std::__cxx11::wstring>& vecwtoken)
+bool qnlp::Tokenizer::process_lowercase(vector<wstring>& vecwtoken)
 {
     auto vecwtoken_it=vecwtoken.begin();
     while (vecwtoken_it != vecwtoken.end())
@@ -473,7 +473,7 @@ bool qnlp::Tokenizer::process_ldots(vector<wstring>& vecwtoken)
     return false;
 }
 
-bool qnlp::Tokenizer::process_final_dots(vector<std::__cxx11::wstring>& vecwtoken)
+bool qnlp::Tokenizer::process_final_dots(vector<wstring>& vecwtoken)
 {
     vector<wstring> vecwtoken_to_return;
     auto vecwtoken_it=vecwtoken.end();
@@ -496,7 +496,7 @@ bool qnlp::Tokenizer::is_separator(string& token)
     return false;
 }
 
-bool qnlp::Tokenizer::is_separator(std::__cxx11::wstring& wtoken)
+bool qnlp::Tokenizer::is_separator(wstring& wtoken)
 {
     if ((int)wtoken.size() == 3)
     {
@@ -505,7 +505,7 @@ bool qnlp::Tokenizer::is_separator(std::__cxx11::wstring& wtoken)
     }
     return false;
 }
-bool qnlp::Tokenizer::print_vector(vector<std::__cxx11::wstring>& vecwtoken)
+bool qnlp::Tokenizer::print_vector(vector<wstring>& vecwtoken)
 {
     auto vecwtoken_it=vecwtoken.begin();
     while (vecwtoken_it != vecwtoken.end())

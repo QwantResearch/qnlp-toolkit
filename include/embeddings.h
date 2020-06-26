@@ -8,7 +8,7 @@
 #include <vector>
 #include <map>
 
-#include "fasttext/fasttext.h"
+#include "fasttext.h"
 // #include "tokenizer.h"
 
 using namespace std;

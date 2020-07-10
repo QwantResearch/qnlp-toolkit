@@ -15,7 +15,7 @@ const sb_symbol* qnlp::Stemmer::stem(const char* word)
     return sb_stemmer_stem(_stemmer, to_stem, (int)sizeof(word));
 }
 
-string qnlp::Stemmer::stem(string word)
+string qnlp::Stemmer::stem(string& word)
 {
     stringstream ss;
     const sb_symbol* to_stem = reinterpret_cast<const unsigned char*>(word.c_str());
@@ -24,7 +24,7 @@ string qnlp::Stemmer::stem(string word)
     l_oss << sb_stemmer_stem(_stemmer, to_stem , (int)word.size());
     return l_oss.str();
 }
-string qnlp::Stemmer::stem_sentence(string sentence)
+string qnlp::Stemmer::stem_sentence(string& sentence)
 {
     vector<string> sentence_splited;
     string to_return;
@@ -37,7 +37,7 @@ string qnlp::Stemmer::stem_sentence(string sentence)
     return to_return;
 }
 
-vector<string> qnlp::Stemmer::stem_sentence_vector(vector<string> sentence)
+vector<string> qnlp::Stemmer::stem_sentence_vector(vector<string>& sentence)
 {
     vector<string>  to_return;
     for (int i=0; i<(int)sentence.size(); i++)

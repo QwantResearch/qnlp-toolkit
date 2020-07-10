@@ -74,3 +74,7 @@ vector< string > Generalization::filter_hours(vector< string >& sentence)
     }
     return to_return;
 }
+
+
+
+

@@ -533,3 +533,10 @@ string Tokenizer::tokenize_sentence_to_string(string & str)
     vector<string> to_return = tokenize(str);
     return qnlp::Join(to_return , " ");
 }
+
+std::string qnlp::Tokenizer::detokenize_sentence_to_string(std::string& str)
+{
+    string to_return = std::regex_replace (str,(*cot_regex),"'");
+    return to_return;
+}
+

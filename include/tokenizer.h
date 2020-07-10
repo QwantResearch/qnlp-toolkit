@@ -7,6 +7,7 @@
 #include <string>
 #include <vector>
 #include <map>
+#include <regex>
 #include <boost/locale.hpp>
 #include "utils.h"
 using namespace std;
@@ -20,12 +21,13 @@ class Tokenizer {
         /** Constructor of the class tokenizer */
         Tokenizer (int syntax=PLAIN, bool lowercased=true, bool underscore=true, bool dash=true, bool aggressive=true, bool noPunct=true):
             syntax(syntax), lowercased(lowercased), underscore(underscore), dash(dash), aggressive(aggressive), no_punct(noPunct) // soon deprecated
-            {lang="gen";}
+            {lang="gen";cot_regex=new regex("[ ]*'[ ]*");}
         Tokenizer (bool lowercased=true, bool underscore=true, bool dash=true, bool aggressive=true, bool noPunct=true):
             lowercased(lowercased), underscore(underscore), dash(dash), aggressive(aggressive), no_punct(noPunct)
-            {lang="gen";}
-
+            {lang="gen";cot_regex=new regex("[ ]*'[ ]*");}
+        ~Tokenizer() {delete cot_regex ;}
         string tokenize_sentence_to_string(string & str);
+        string detokenize_sentence_to_string(string & str);
         virtual vector<string> tokenize(string & str);
         vector<string> tokenize_sentence(string & str) {return tokenize(str);};
         string normalize(string &token);
@@ -130,6 +132,8 @@ class Tokenizer {
             L"Jr.", L"Sr.",L"O'",L"Bros.",
             L"pm.", L"am.", L"p.m.", L"a.m.", L".m", L"p.m", L"a.m",
         };
+        
+        std::regex * cot_regex;
 //             ,L"M."
 
 }; // class Tokenizer

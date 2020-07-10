@@ -16,10 +16,10 @@ class Stemmer {
     public:
         /** Constructor of the class Stemmer */
         Stemmer (const char * lang);
-        string stem(string word);
+        string stem(string& word);
         const sb_symbol* stem(const char* word);
-        string stem_sentence(string sentence);
-        vector<string> stem_sentence_vector(vector<string> sentence);
+        string stem_sentence(string& sentence);
+        vector<string> stem_sentence_vector(vector<string>& sentence);
         ~Stemmer();
         void stem(istringstream & f_in, ostringstream & f_out);
     private:

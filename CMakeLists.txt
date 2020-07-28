@@ -13,16 +13,12 @@ set(CMAKE_C_FLAGS " -O3 ")
 include_directories(/usr/include)
 include_directories(include)
 include_directories(externals/snowball/include)
-include_directories(third_party/fastText/src)
 
 link_directories(/usr/lib
                  /usr/local/lib
-                 build/vendor/fastText
                  externals/snowball/lib)
 
 set(SOURCES
-  src/bpe.cpp
-  src/embeddings.cpp
   src/en_tokenizer.cpp
   src/fr_tokenizer.cpp
   src/car_tokenizer.cpp
@@ -32,11 +28,9 @@ set(SOURCES
   src/utils.cpp
   src/stemmer.cpp
   src/generalization.cpp
-  src/spm.cpp
 )
 
 set(LIBS
-  fasttext
   snowball
 )
 

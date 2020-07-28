@@ -31,7 +31,6 @@ set(SOURCES
 )
 
 set(LIBS
-  fasttext
   snowball
 )
 

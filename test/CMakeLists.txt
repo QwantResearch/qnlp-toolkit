@@ -4,7 +4,7 @@ include_directories(BEFORE ${CMAKE_CURRENT_SOURCE_DIR}/src)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/include)
 link_directories(/usr/local/lib)
 SET(NLP_SRCS
-    main_NLP.cpp
+    main_tokenizer.cpp
 )
 
 SET(FILTERING_SRCS

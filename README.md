@@ -6,7 +6,6 @@ This toolkit ais to assemble the whole tools and libraries available for NLP pre
 Automatic installation with the script: 
 > install.sh [-h] [-g] [-p PREFIX] <br>
 >&nbsp;&nbsp;&nbsp;&nbsp;-h&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;help <br>
->&nbsp;&nbsp;&nbsp;&nbsp;-g&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;activate the build of the third party protobuf for sentencepiece (default is activated) <br>
 >&nbsp;&nbsp;&nbsp;&nbsp;-p PREFIX&nbsp;&nbsp;&nbsp;&nbsp;specify a prefix (default /usr/local/) <br>
 
 

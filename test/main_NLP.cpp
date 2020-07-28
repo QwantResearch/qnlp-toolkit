@@ -9,8 +9,6 @@
 #include "fr_tokenizer.h"
 #include "en_tokenizer.h"
 #include "car_tokenizer.h"
-#include "bpe.h"
-#include "spm.h"
 #include "stemmer.h"
 #include "stopwords.h"
 #include "utils.h"
@@ -29,9 +27,7 @@ bool l_dash=false;
 bool l_stem=false;
 bool l_generalize=false;
 bool l_stopwords=false;
-bool l_spm_model=false;
 string l_lang="";
-string l_BPE="";
 int l_threads=4;
 
 void usage()
@@ -44,12 +40,7 @@ void usage()
             "--stopwords (-w)         remove stopwords (default false)\n"
             "--aggressive (-a)        equivalent to --dash and --underscore and every separators\n"
             "--no-punct (-p)          remove punctuation from tokenization\n"
-            "--BPE (-b)               Use Byte Pair Encoding preprocessing\n"
-            "--spm (-m)               Use sentencepiece model for Byte Pair Encoding preprocessing\n"
             "--generalize (-g)        remove numbers and replace them with a tag XNUMBER\n"
-            "--embmodel (-e)          Load fasttext embeddings/prediction model\n"
-            "--qlassify (-q)          predict class according the model loaded (need embmodel)\n"
-            "--qvectorize (-v)        give vector representation for the sentence/query (need embmodel)\n"
             "--lang <val> (-l)        set language (required)\n"
             "--help (-h)             Show this message\n";
     exit(1);
@@ -57,7 +48,7 @@ void usage()
 
 void ProcessArgs(int argc, char** argv)
 {
-    const char* const short_opts = "mgspvwqdcual:b:e:t:h";
+    const char* const short_opts = "gspvwqdcual:e:t:h";
     const option long_opts[] = {
             {"stem", 0, nullptr, 's'},
             {"generalize", 0, nullptr, 'g'},
@@ -66,12 +57,8 @@ void ProcessArgs(int argc, char** argv)
             {"underscore", 0, nullptr, 'u'},
             {"aggressive", 0, nullptr, 'a'},
             {"no-punct", 0, nullptr, 'p'},
-            {"qclassify", 0, nullptr, 'q'},
-            {"qvectorize", 0, nullptr, 'v'},
             {"stopwords", 0, nullptr, 'w'},
             {"lang", 1, nullptr, 'l'},
-            {"BPE", 1, nullptr, 'b'},
-            {"spm", 0, nullptr, 'm'},
             {"embmodel", 1, nullptr, 'e'},
             {"help", 0, nullptr, 'h'},
             {nullptr, 0, nullptr, 0}
@@ -92,10 +79,6 @@ void ProcessArgs(int argc, char** argv)
 
         case 'g':
             l_generalize = true;
-            break;
-
-        case 'm':
-            l_spm_model = true;
             break;
 
         case 'd':
@@ -126,10 +109,6 @@ void ProcessArgs(int argc, char** argv)
 
         case 'l':
             l_lang = optarg;
-            break;
-
-        case 'b':
-            l_BPE = optarg;
             break;
 
         case 'h': // -h or --help
@@ -191,8 +170,6 @@ int main ( int argc, char *argv[] )
     stringstream l_out;
     string line;
     Tokenizer* l_tokenizer;
-    BPE* bpemodel;
-    spm* spmmodel;
     Stopwords sw;
     Stemmer stem(l_lang.c_str());
     if (l_lang.compare("fr") == 0) 
@@ -211,17 +188,6 @@ int main ( int argc, char *argv[] )
     {
         l_tokenizer = new Tokenizer(l_cased,l_underscore,l_dash, l_aggressive);
     }
-    if ((int)l_BPE.size() != 0)
-    {
-        if (! l_spm_model)
-        {
-            bpemodel = new BPE(l_BPE);
-        }
-        else
-        {
-            spmmodel = new spm(l_BPE);
-        }
-    }
     l_tokenizer->setNoPunct(l_no_punct);
     while (std::getline(std::cin, line))
     {
@@ -233,18 +199,6 @@ int main ( int argc, char *argv[] )
             l_output_vec = filtering_stopwords(l_output_vec,sw);
         if (l_generalize) 
             l_output_vec  = generalize(l_output_vec,l_generalize);
-        if ((int)l_BPE.size() != 0)
-        {
-            if (! l_spm_model)
-            {
-                l_output=bpemodel->apply_bpe_to_string(l_output_vec);
-            }
-            else
-            {
-                l_output=spmmodel->segment_str(l_output_vec);
-            }
-            
-        }
         else
         {
             l_output=qnlp::Join(l_output_vec," ");      

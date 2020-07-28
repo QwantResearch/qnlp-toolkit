@@ -49,12 +49,6 @@ void usage()
             "--minlength (-l)     min sentence length to filter\n"
             "--maxlength (-L)     min sentence length to filter\n"
             "--gzip (-g)          process gzip files (unavailable)\n"
-//             "--BPE (-b)               Use Byte Pair Encoding preprocessing\n"
-//             "--embmodel (-e)          Load fasttext embeddings/prediction model\n"
-//             "--qlassify (-q)          predict class according the model loaded (need embmodel)\n"
-//             "--qvectorize (-v)        give vector representation for the sentence/query (need embmodel)\n"
-//             "--lang <val> (-l)        set language (required)\n"
-//             "--threads <val> (-t)     set number of threads (default 4)\n"
             "--help (-h)             Show this message\n";
     exit(1);
 }

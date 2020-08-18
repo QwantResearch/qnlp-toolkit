@@ -5,24 +5,12 @@
 #include <iostream>
 #include <string.h>
 #include <vector>
-// #include <boost/program_options.hpp>
-// #include "tokenizer.h"
-// #include "fr_tokenizer.h"
-// #include "en_tokenizer.h"
-// #include "bpe.h"
 #include "utils.h"
 
 
 using namespace std;
 using namespace qnlp;
 
-// typedef std::vector<uint32_t> value_test;
-
-
-// bool l_aggressive=false;
-// bool l_underscore=false;
-// bool l_cased=false;
-// bool l_dash=false;
 bool l_gz=false;
 bool l_analyse=false;
 string l_input="";

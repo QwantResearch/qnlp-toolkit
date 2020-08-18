@@ -1,16 +1,16 @@
-#ifndef CAR_TOKENIZER_H
-#define CAR_TOKENIZER_H
+#ifndef CHAR_TOKENIZER_H
+#define CHAR_TOKENIZER_H
 
 #include "tokenizer.h"
 
 namespace qnlp {
     
-    class Tokenizer_car: public Tokenizer {
+    class Tokenizer_char: public Tokenizer {
         public:
           
-            Tokenizer_car (int syntax=PLAIN, bool lowercased=true, bool underscore=true, bool dash=true, bool aggressive=true, bool nopunct=true):
+            Tokenizer_char (int syntax=PLAIN, bool lowercased=true, bool underscore=true, bool dash=true, bool aggressive=true, bool nopunct=true):
                 Tokenizer (syntax, lowercased, underscore, dash, aggressive, nopunct){lang="en";};
-            Tokenizer_car (bool lowercased=true, bool underscore=true, bool dash=true, bool aggressive=true, bool nopunct=true):
+            Tokenizer_char (bool lowercased=true, bool underscore=true, bool dash=true, bool aggressive=true, bool nopunct=true):
                 Tokenizer (syntax, lowercased, underscore, dash, aggressive, nopunct){lang="car";};
         protected:
 //             bool process_lang(vector<std::__cxx11::wstring> & vecwtoken) override;
@@ -24,4 +24,4 @@ namespace qnlp {
     };
 }
 
-#endif // EN_TOKENIZER_H
+#endif // CHAR_TOKENIZER_H

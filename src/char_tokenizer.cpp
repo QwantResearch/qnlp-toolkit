@@ -1,8 +1,8 @@
-#include "car_tokenizer.h"
+#include "char_tokenizer.h"
 
 using namespace qnlp;
 
-vector<string> Tokenizer_car::tokenize(string& str)
+vector<string> Tokenizer_char::tokenize(string& str)
 {
     vector<string> to_return;
     vector<unsigned short> utf16str;

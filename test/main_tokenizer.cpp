@@ -8,7 +8,7 @@
 #include "tokenizer.h"
 #include "fr_tokenizer.h"
 #include "en_tokenizer.h"
-#include "car_tokenizer.h"
+#include "char_tokenizer.h"
 #include "stemmer.h"
 #include "stopwords.h"
 #include "utils.h"
@@ -180,9 +180,9 @@ int main ( int argc, char *argv[] )
     {
         l_tokenizer = new Tokenizer_en(l_cased,l_underscore,l_dash, l_aggressive);
     }
-    else if (l_lang.compare("car") == 0) 
+    else if (l_lang.compare("char") == 0) 
     {
-        l_tokenizer = new Tokenizer_car(l_cased,l_underscore,l_dash, l_aggressive);
+        l_tokenizer = new Tokenizer_char(l_cased,l_underscore,l_dash, l_aggressive);
     }
     else
     {

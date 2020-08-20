@@ -11,13 +11,14 @@ namespace qnlp {
             Tokenizer_char (int syntax=PLAIN, bool lowercased=true, bool underscore=true, bool dash=true, bool aggressive=true, bool nopunct=true):
                 Tokenizer (syntax, lowercased, underscore, dash, aggressive, nopunct){lang="en";};
             Tokenizer_char (bool lowercased=true, bool underscore=true, bool dash=true, bool aggressive=true, bool nopunct=true):
-                Tokenizer (syntax, lowercased, underscore, dash, aggressive, nopunct){lang="car";};
+                Tokenizer (lowercased, underscore, dash, aggressive, nopunct){lang="car";};
         protected:
-//             bool process_lang(vector<std::__cxx11::wstring> & vecwtoken) override;
-//             const vector<wstring> wlang_process = {L"'s", L"'t", L"'ll", L"'roll", L"'n'roll", L"n'roll", L"rock'n'roll",
-//             };     
-//             const vector<wstring> wlang_process_not = {L"don't", L"isn't", L"didn't",
-//             };     
+            bool process_lang(vector<std::wstring> & vecwtoken) override {return false;};
+            bool process_cots(vector<std::wstring> & vecwtoken) override {return false;};
+            const vector<wstring> wlang_process = {
+            };     
+            const vector<wstring> wlang_process_not = {
+            };     
             vector<string> tokenize(string& str) override;
 
             

@@ -11,7 +11,7 @@ namespace qnlp {
             Tokenizer_en (int syntax=PLAIN, bool lowercased=true, bool underscore=true, bool dash=true, bool aggressive=true, bool nopunct=true):
                 Tokenizer (syntax, lowercased, underscore, dash, aggressive, nopunct){lang="en";};
             Tokenizer_en (bool lowercased=true, bool underscore=true, bool dash=true, bool aggressive=true, bool nopunct=true):
-                Tokenizer (syntax, lowercased, underscore, dash, aggressive, nopunct){lang="en";};
+                Tokenizer (lowercased, underscore, dash, aggressive, nopunct){lang="en";};
         protected:
             bool process_lang(vector<wstring> & vecwtoken) override;
             const vector<wstring> wlang_process = {L"'s", L"'t", L"'ll", L"'roll", L"'n'roll", L"n'roll", L"rock'n'roll", L"n'b",  L"n'B", L"'n'b",  L"'n'B", L"r'n'b",  L"R'n'B", 

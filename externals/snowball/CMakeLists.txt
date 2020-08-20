@@ -27,7 +27,7 @@ ADD_LIBRARY(snowball-static STATIC ${SOURCES})
 SET_TARGET_PROPERTIES(snowball-static PROPERTIES OUTPUT_NAME snowball)
 
 install(TARGETS snowball snowball-static DESTINATION lib)
-install(FILES ${CMAKE_CURRENT_SOURCE_DIR}/include/libstemmer.h DESTINATION include/snowball)
+install(FILES ${CMAKE_CURRENT_SOURCE_DIR}/include/libstemmer.h DESTINATION include)
 
 # target_link_libraries(libstemmer fasttext )
 # target_include_directories(${PROJECT_NAME} PUBLIC ${INCLUDE_DIRECTORIES})

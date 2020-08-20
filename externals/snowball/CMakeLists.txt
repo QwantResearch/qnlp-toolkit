@@ -21,12 +21,14 @@ FILE(GLOB SOURCES
   ${CMAKE_CURRENT_SOURCE_DIR}/src_c/*.c
 )
   
-add_library(snowball SHARED ${SOURCES})
-ADD_LIBRARY(snowball-static STATIC ${SOURCES})
+# add_library(snowball SHARED ${SOURCES})
+# ADD_LIBRARY(snowball-static STATIC ${SOURCES})
+add_library(snowball STATIC ${SOURCES})
 
-SET_TARGET_PROPERTIES(snowball-static PROPERTIES OUTPUT_NAME snowball)
+SET_TARGET_PROPERTIES(snowball PROPERTIES OUTPUT_NAME snowball)
 
-install(TARGETS snowball snowball-static DESTINATION lib)
+#install(TARGETS snowball snowball-static DESTINATION lib)
+install(TARGETS snowball DESTINATION lib)
 install(FILES ${CMAKE_CURRENT_SOURCE_DIR}/include/libstemmer.h DESTINATION include)
 
 # target_link_libraries(libstemmer fasttext )

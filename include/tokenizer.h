@@ -1,5 +1,5 @@
-#ifndef TOKENIZER_H
-#define TOKENIZER_H
+#ifndef QNLP_TOKENIZER_H
+#define QNLP_TOKENIZER_H
 
 #include <iostream>
 #include <fstream>
@@ -140,4 +140,4 @@ class Tokenizer {
 
 } //namespace qnlp
 
-#endif // TOKENIZER_H
+#endif // QNLP_TOKENIZER_H

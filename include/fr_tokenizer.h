@@ -1,5 +1,5 @@
-#ifndef FR_TOKENIZER_H
-#define FR_TOKENIZER_H
+#ifndef QNLP_FR_TOKENIZER_H
+#define QNLP_FR_TOKENIZER_H
 
 #include "tokenizer.h"
 
@@ -28,4 +28,4 @@ namespace qnlp {
     };
 }
 
-#endif // FR_TOKENIZER_H
+#endif // QNLP_FR_TOKENIZER_H

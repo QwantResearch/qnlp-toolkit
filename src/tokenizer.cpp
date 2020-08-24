@@ -200,6 +200,24 @@ bool Tokenizer::seps (unsigned char& c) {
 //     }
 }
 
+bool Tokenizer::seps_ext (unsigned char& c) {
+    if (c == u'-') return true;
+    if (c == u'_') return true;
+    if (c == u'…' ) return true;
+    if (c == u'‒' ) return true;
+    if (c == u'–' ) return true;
+    if (c == u'—' ) return true;
+    if (c == u'«' ) return true;
+    if (c == u'»' ) return true;
+    if (c == u'€' ) return true;
+    if (c == u'“' ) return true;
+    if (c == u'”' ) return true;
+    if (c == u'"' ) return true;
+    return ((c <= '\x02F' && c > 0) || (c >= '\x03a' && c <= '\x040') || (c >= '\x05b' && c <= '\x060') || (c >= '\x07b' && c <= '\x07e') || (c >= '\x07f' && c <= '\x0bf'));
+}
+
+
+
 bool Tokenizer::seps_wide (unsigned char& c) {
     if (c == '-' && !dash ) return false;
     if (c == '_' && !underscore) return false;
@@ -214,12 +232,38 @@ bool Tokenizer::seps_wide (unsigned char& c) {
 bool Tokenizer::seps (unsigned int& c) {
     if (c == u'-' && !dash ) return false;
     if (c == u'_' && !underscore) return false;
+    if (c == u'…' ) return true;
+    if (c == u'‒' ) return true;
+    if (c == u'–' ) return true;
+    if (c == u'—' ) return true;
+    if (c == u'«' ) return true;
+    if (c == u'»' ) return true;
+    if (c == u'€' ) return true;
+    if (c == u'“' ) return true;
+    if (c == u'”' ) return true;
+    if (c == u'"' ) return true;
     return ((c <= '\x02F' && c > 0) || (c >= '\x03a' && c <= '\x040') || (c >= '\x05b' && c <= '\x060') || (c >= '\x07b' && c <= '\x07e'));
 //     {
 //         return true;
 //     } else {
 //         return (c == '\x07F');
 //     }
+}
+
+bool Tokenizer::seps_ext (unsigned int& c) {
+    if (c == u'-') return true;
+    if (c == u'_') return true;
+    if (c == u'…' ) return true;
+    if (c == u'‒' ) return true;
+    if (c == u'–' ) return true;
+    if (c == u'—' ) return true;
+    if (c == u'«' ) return true;
+    if (c == u'»' ) return true;
+    if (c == u'€' ) return true;
+    if (c == u'“' ) return true;
+    if (c == u'”' ) return true;
+    if (c == u'"' ) return true;
+    return ((c <= '\x02F' && c > 0) || (c >= '\x03a' && c <= '\x040') || (c >= '\x05b' && c <= '\x060') || (c >= '\x07b' && c <= '\x07e') || (c >= '\x07f' && c <= '\x0bf'));
 }
 
 bool Tokenizer::seps_wide (unsigned int& c) {
@@ -252,6 +296,21 @@ bool Tokenizer::seps (unsigned short& c) {
 //     } else {
 //         return (c == '\x07F');
 //     }
+}
+bool Tokenizer::seps_ext (unsigned short& c) {
+    if (c == u'-') return true;
+    if (c == u'_') return true;
+    if (c == u'…' ) return true;
+    if (c == u'‒' ) return true;
+    if (c == u'–' ) return true;
+    if (c == u'—' ) return true;
+    if (c == u'«' ) return true;
+    if (c == u'»' ) return true;
+    if (c == u'€' ) return true;
+    if (c == u'“' ) return true;
+    if (c == u'”' ) return true;
+    if (c == u'"' ) return true;
+    return ((c <= '\x02F' && c > 0) || (c >= '\x03a' && c <= '\x040') || (c >= '\x05b' && c <= '\x060') || (c >= '\x07b' && c <= '\x07e') || (c >= '\x07f' && c <= '\x0bf'));
 }
 
 bool Tokenizer::seps_wide (unsigned short& c) {
@@ -361,7 +420,7 @@ bool qnlp::Tokenizer::process_no_punct(vector<wstring>& vecwtoken)
     {
         wstring toTest = (*vecwtoken_it);
         unsigned char t = toTest[0];
-        if ((int)toTest.size() != 1 || (! seps(t)))
+        if ((int)toTest.size() != 1 || (! seps_ext(t)))
         {
             to_return.push_back((*vecwtoken_it));
         }

@@ -90,6 +90,9 @@ class Tokenizer {
         bool seps (unsigned char& c);
         bool seps_wide (unsigned int& c);
         bool seps (unsigned int& c);
+        bool seps_ext (unsigned short& c);
+        bool seps_ext (unsigned int& c);
+        bool seps_ext (unsigned char& c);
 
         bool seps_wide (unsigned short& c);
         bool seps (unsigned short& c);

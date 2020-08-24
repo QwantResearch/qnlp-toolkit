@@ -39,6 +39,7 @@ class Tokenizer {
             this->aggressive = aggressive;
             this->no_punct = noPunct;
         }
+        string printParam();
 
         void setLowercased(bool lowercased) 
             {this->lowercased =lowercased;}
@@ -107,6 +108,7 @@ class Tokenizer {
         bool process_acronym(vector<wstring>& vecwtoken);
         bool process_ldots(vector<wstring>& vecwtoken);
         bool process_final_dots(vector<wstring>& vecwtoken);
+        bool process_no_punct(vector<wstring>& vecwtoken);
         bool process_abrv(vector<wstring>& vecwtoken);
         bool process_lowercase(vector<wstring>& vecwtoken);
         bool print_vector(vector<wstring>& vecwtoken);

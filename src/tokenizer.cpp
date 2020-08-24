@@ -87,6 +87,7 @@ vector<string> Tokenizer::tokenize(string& str)
         to_return_wchar=clean_vector(to_return_wchar);
     }
     if (lowercased) process_lowercase(to_return_wchar);
+    if (no_punct) process_no_punct(to_return_wchar);
     auto to_return_wchar_it=to_return_wchar.begin();
     while (to_return_wchar_it != to_return_wchar.end())
     {
@@ -244,7 +245,7 @@ bool Tokenizer::seps (unsigned short& c) {
     if (c == u'€' ) return true;
     if (c == u'“' ) return true;
     if (c == u'”' ) return true;
-    
+    if (c == u'"' ) return true;
     return ((c <= '\x02F' && c > 0) || (c >= '\x03a' && c <= '\x040') || (c >= '\x05b' && c <= '\x060') || (c >= '\x07b' && c <= '\x07e') || (c >= '\x07f' && c <= '\x0bf'));
 //     {
 //         return true;
@@ -350,6 +351,24 @@ bool qnlp::Tokenizer::process_abrv(vector<wstring>& vecwtoken)
         if (sep_test) vecwtoken_it_prev++;
     }
     return false;
+}
+
+bool qnlp::Tokenizer::process_no_punct(vector<wstring>& vecwtoken)
+{
+    auto vecwtoken_it=vecwtoken.begin();
+    vector<wstring> to_return;
+    while (vecwtoken_it != vecwtoken.end())
+    {
+        wstring toTest = (*vecwtoken_it);
+        unsigned char t = toTest[0];
+        if ((int)toTest.size() != 1 || (! seps(t)))
+        {
+            to_return.push_back((*vecwtoken_it));
+        }
+        vecwtoken_it++;
+    }
+    vecwtoken = to_return;
+    return true;
 }
 
 bool qnlp::Tokenizer::process_dots(vector<wstring>& vecwtoken)
@@ -539,4 +558,14 @@ std::string qnlp::Tokenizer::detokenize_sentence_to_string(std::string& str)
     string to_return = std::regex_replace (str,(*cot_regex),"'");
     return to_return;
 }
-
+string qnlp::Tokenizer::printParam()
+{
+    string to_return = "Parameters of the Tokenizer: \n";
+    to_return = to_return + "lang\t" + lang + "\n";
+    to_return = to_return + "no_punct\t" + to_string(no_punct) + "\n";
+    to_return = to_return + "lowercased\t" + to_string(lowercased) + "\n";
+    to_return = to_return + "dash\t" + to_string(dash) + "\n";
+    to_return = to_return + "underscore\t" + to_string(underscore) + "\n";
+    to_return = to_return + "aggressive\t" + to_string(aggressive) + "\n";
+    return to_return;
+}

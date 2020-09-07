@@ -72,7 +72,8 @@ class Tokenizer {
     protected:
         virtual bool process_lang (vector<wstring>& vecwtoken);
         virtual bool process_cots(vector<wstring>& vecwtoken); 
-        const vector<wstring> wlang_process;
+        vector<wstring> wlang_process;
+        vector<wstring> wlang_process_not;
         
         string lang;
 

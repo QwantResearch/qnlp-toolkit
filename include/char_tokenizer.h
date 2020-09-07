@@ -15,10 +15,6 @@ namespace qnlp {
         protected:
             bool process_lang(vector<std::wstring> & vecwtoken) override {return false;};
             bool process_cots(vector<std::wstring> & vecwtoken) override {return false;};
-            const vector<wstring> wlang_process = {
-            };     
-            const vector<wstring> wlang_process_not = {
-            };     
             vector<string> tokenize(string& str) override;
 
             
